@@ -153,11 +153,11 @@ namespace PhishFood.Migrations
                 columns: new[] { "ID", "CategoryID", "Type" },
                 values: new object[,]
                 {
-                    { 1, null, "Email Phishing" },
-                    { 2, null, "SMS Phishing" },
-                    { 3, null, "Voice Phishing" },
-                    { 4, null, "Spear Phishing" },
-                    { 5, null, "Whale Phishing" }
+                    { 1, 1, "Email Phishing" },
+                    { 2, 1, "SMS Phishing" },
+                    { 3, 1, "Voice Phishing" },
+                    { 4, 1, "Spear Phishing" },
+                    { 5, 1, "Whale Phishing" }
                 });
 
             migrationBuilder.CreateIndex(

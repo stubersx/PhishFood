@@ -18,11 +18,11 @@ namespace PhishFood.Models
                 new Category { ID = 1, Type = "Phishing" }
                 );
             modelBuilder.Entity<SubCategory>().HasData(
-                new SubCategory { ID = 1, Type = "Email Phishing" },
-                new SubCategory { ID = 2, Type = "SMS Phishing" },
-                new SubCategory { ID = 3, Type = "Voice Phishing" },
-                new SubCategory { ID = 4, Type = "Spear Phishing" },
-                new SubCategory { ID = 5, Type = "Whale Phishing" }
+                new SubCategory { ID = 1, Type = "Email Phishing", CategoryID = 1 },
+                new SubCategory { ID = 2, Type = "SMS Phishing", CategoryID = 1 },
+                new SubCategory { ID = 3, Type = "Voice Phishing", CategoryID = 1 },
+                new SubCategory { ID = 4, Type = "Spear Phishing", CategoryID = 1 },
+                new SubCategory { ID = 5, Type = "Whale Phishing", CategoryID = 1 }
                 );
         }
     }
