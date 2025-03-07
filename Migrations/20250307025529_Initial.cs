@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace PhishFood.Migrations
 {
     /// <inheritdoc />
@@ -44,7 +46,7 @@ namespace PhishFood.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryID = table.Column<int>(type: "int", nullable: false)
+                    CategoryID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -53,8 +55,7 @@ namespace PhishFood.Migrations
                         name: "FK_SubCategories_Categories_CategoryID",
                         column: x => x.CategoryID,
                         principalTable: "Categories",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -140,6 +141,23 @@ namespace PhishFood.Migrations
                         column: x => x.SubCategoryID,
                         principalTable: "SubCategories",
                         principalColumn: "ID");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "ID", "Type" },
+                values: new object[] { 1, "Phishing" });
+
+            migrationBuilder.InsertData(
+                table: "SubCategories",
+                columns: new[] { "ID", "CategoryID", "Type" },
+                values: new object[,]
+                {
+                    { 1, null, "Email Phishing" },
+                    { 2, null, "SMS Phishing" },
+                    { 3, null, "Voice Phishing" },
+                    { 4, null, "Spear Phishing" },
+                    { 5, null, "Whale Phishing" }
                 });
 
             migrationBuilder.CreateIndex(

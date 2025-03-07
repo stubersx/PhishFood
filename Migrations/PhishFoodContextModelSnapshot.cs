@@ -37,6 +37,13 @@ namespace PhishFood.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Type = "Phishing"
+                        });
                 });
 
             modelBuilder.Entity("PhishFood.Models.Result", b =>
@@ -95,7 +102,7 @@ namespace PhishFood.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int?>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
@@ -107,6 +114,33 @@ namespace PhishFood.Migrations
                     b.HasIndex("CategoryID");
 
                     b.ToTable("SubCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Type = "Email Phishing"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Type = "SMS Phishing"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Type = "Voice Phishing"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Type = "Spear Phishing"
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Type = "Whale Phishing"
+                        });
                 });
 
             modelBuilder.Entity("PhishFood.Models.Testing", b =>
@@ -208,9 +242,7 @@ namespace PhishFood.Migrations
                 {
                     b.HasOne("PhishFood.Models.Category", "Category")
                         .WithMany("SubCategories")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryID");
 
                     b.Navigation("Category");
                 });
