@@ -119,26 +119,31 @@ namespace PhishFood.Migrations
                         new
                         {
                             ID = 1,
+                            CategoryID = 1,
                             Type = "Email Phishing"
                         },
                         new
                         {
                             ID = 2,
+                            CategoryID = 1,
                             Type = "SMS Phishing"
                         },
                         new
                         {
                             ID = 3,
+                            CategoryID = 1,
                             Type = "Voice Phishing"
                         },
                         new
                         {
                             ID = 4,
+                            CategoryID = 1,
                             Type = "Spear Phishing"
                         },
                         new
                         {
                             ID = 5,
+                            CategoryID = 1,
                             Type = "Whale Phishing"
                         });
                 });
