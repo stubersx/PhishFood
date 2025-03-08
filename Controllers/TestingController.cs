@@ -19,10 +19,17 @@ namespace PhishFood.Controllers
         }
 
         // GET: Testing
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery)
         {
             var phishFoodContext = _context.Testings.Include(t => t.Category).Include(t => t.SubCategory);
-            return View(await phishFoodContext.ToListAsync());
+            var filteredItems = phishFoodContext;
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                filteredItems = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Testing, SubCategory?>)phishFoodContext.Where(i =>
+                    i.Question.Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase) ||
+                    i.Category.Type.Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            return View(await filteredItems.ToListAsync());
         }
 
         // GET: Testing/Details/5
@@ -62,9 +69,16 @@ namespace PhishFood.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(testing);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(testing);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"An error occurred while saving: {ex.Message}");
+                }
             }
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", testing.CategoryID);
             ViewData["SubCategoryID"] = new SelectList(_context.SubCategories, "ID", "Type", testing.SubCategoryID);
