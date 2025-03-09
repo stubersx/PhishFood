@@ -21,15 +21,25 @@ namespace PhishFood.Controllers
         // GET: Testing
         public async Task<IActionResult> Index(string searchQuery)
         {
-            var phishFoodContext = _context.Testings.Include(t => t.Category).Include(t => t.SubCategory);
-            var filteredItems = phishFoodContext;
+            // Start by including the Category to filter by Category.Name
+            var testingsQuery = _context.Testings.Include(t => t.Category).Include(t => t.SubCategory).AsQueryable();
+
+            // If searchQuery is provided, filter Testings by Question text and Category name
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                filteredItems = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Testing, SubCategory?>)phishFoodContext.Where(i =>
-                    i.Question.Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase) ||
-                    i.Category.Type.Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase)).ToList();
+                var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
+
+                testingsQuery = testingsQuery.Where(t =>
+                    t.Question.ToLower().Contains(normalizedSearchQuery) ||  // Search in Question Text
+                    t.Category.Type.ToLower().Contains(normalizedSearchQuery) ||
+                    t.SubCategory.Type.ToLower().Contains(normalizedSearchQuery)// Search in Category Name
+                );
             }
-            return View(await filteredItems.ToListAsync());
+
+            // Get the list of filtered Testings asynchronously
+            var testings = await testingsQuery.ToListAsync();
+
+            return View(testings);  // Return the filtered Testings to the View
         }
 
         // GET: Testing/Details/5
