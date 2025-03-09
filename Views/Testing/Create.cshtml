@@ -43,7 +43,8 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Explanation" class="control-label"></label>
-                    <input asp-for="Explanation" class="form-control" />
+                    <div id="editor2"></div>
+                    <input asp-for="Explanation" class="form-control" id="Explanation" name="Explanation" hidden />
                     <span asp-validation-for="Explanation" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -91,19 +92,28 @@
                 modules: { toolbar: toolbarOptions },
                 theme: 'snow'
             });
+            let quill2 = new Quill('#editor2', {
+                modules: { toolbar: toolbarOptions },
+                theme: 'snow'
+            });
 
             // When the form is submitted, ensure the Quill content is placed in the hidden input
             $('form').submit(function (e) {
                 // Get the Quill content (HTML) and set it to the hidden input field for Question
                 var questionContent = quill.root.innerHTML;
+                var explanationContent = quill2.root.innerHTML;
                 $('#Question').val(questionContent); // Assign the content to the hidden input field
+                $('#Explanation').val(explanationContent); // Assign the content to the hidden input field
 
                 // If no content is entered, trigger validation
                 if (!questionContent.trim()) {
                     e.preventDefault(); // Prevent form submission if content is empty
                     alert('The Question field cannot be empty.'); // You can customize this message
                 }
-            console.log('Hidden Question input value:', $('#Question').val()); // Log the value of the hidden input field
+            if (!explanationContent.trim()) {
+                e.preventDefault(); // Prevent form submission if content is empty
+                alert('The Explanation field cannot be empty.'); // You can customize this message
+            }
             });
     </script>
 </body>
