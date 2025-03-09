@@ -19,10 +19,27 @@ namespace PhishFood.Controllers
         }
 
         // GET: Testing
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery)
         {
-            var phishFoodContext = _context.Testings.Include(t => t.Category).Include(t => t.SubCategory);
-            return View(await phishFoodContext.ToListAsync());
+            // Start by including the Category to filter by Category.Name
+            var testingsQuery = _context.Testings.Include(t => t.Category).Include(t => t.SubCategory).AsQueryable();
+
+            // If searchQuery is provided, filter Testings by Question text and Category name
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
+
+                testingsQuery = testingsQuery.Where(t =>
+                    t.Question.ToLower().Contains(normalizedSearchQuery) ||  // Search in Question Text
+                    t.Category.Type.ToLower().Contains(normalizedSearchQuery) ||
+                    t.SubCategory.Type.ToLower().Contains(normalizedSearchQuery)// Search in Category Name
+                );
+            }
+
+            // Get the list of filtered Testings asynchronously
+            var testings = await testingsQuery.ToListAsync();
+
+            return View(testings);  // Return the filtered Testings to the View
         }
 
         // GET: Testing/Details/5
@@ -62,9 +79,16 @@ namespace PhishFood.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(testing);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(testing);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"An error occurred while saving: {ex.Message}");
+                }
             }
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", testing.CategoryID);
             ViewData["SubCategoryID"] = new SelectList(_context.SubCategories, "ID", "Type", testing.SubCategoryID);

@@ -15,7 +15,7 @@
             @Html.DisplayNameFor(model => model.Question)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Question)
+            @Html.Raw(Model.Question)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Key)
@@ -45,7 +45,7 @@
             @Html.DisplayNameFor(model => model.Explanation)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Explanation)
+            @Html.Raw(Model.Explanation)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
