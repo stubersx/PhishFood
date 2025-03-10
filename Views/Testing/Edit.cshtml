@@ -3,67 +3,112 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<body>
+    <h1>Edit</h1>
 
-<h1>Edit</h1>
-
-<h4>Testing</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
-            <div class="form-group">
-                <label asp-for="Question" class="control-label"></label>
-                <input asp-for="Question" class="form-control" />
-                <span asp-validation-for="Question" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Key" class="control-label"></label>
-                <input asp-for="Key" class="form-control" />
-                <span asp-validation-for="Key" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Option1" class="control-label"></label>
-                <input asp-for="Option1" class="form-control" />
-                <span asp-validation-for="Option1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Option2" class="control-label"></label>
-                <input asp-for="Option2" class="form-control" />
-                <span asp-validation-for="Option2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Option3" class="control-label"></label>
-                <input asp-for="Option3" class="form-control" />
-                <span asp-validation-for="Option3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Explanation" class="control-label"></label>
-                <input asp-for="Explanation" class="form-control" />
-                <span asp-validation-for="Explanation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryID" class="control-label"></label>
-                <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
-                <span asp-validation-for="CategoryID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SubCategoryID" class="control-label"></label>
-                <select asp-for="SubCategoryID" class="form-control" asp-items="ViewBag.SubCategoryID"></select>
-                <span asp-validation-for="SubCategoryID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <h4>Testing</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ID" />
+                <div class="form-group">
+                    <label asp-for="Question" class="control-label"></label>
+                    <div id="editor" class="quill-editor"></div>
+                    <input type="hidden" id="Question" asp-for="Question" />
+                    <span asp-validation-for="Question" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Key" class="control-label"></label>
+                    <input asp-for="Key" class="form-control" />
+                    <span asp-validation-for="Key" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Option1" class="control-label"></label>
+                    <input asp-for="Option1" class="form-control" />
+                    <span asp-validation-for="Option1" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Option2" class="control-label"></label>
+                    <input asp-for="Option2" class="form-control" />
+                    <span asp-validation-for="Option2" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Option3" class="control-label"></label>
+                    <input asp-for="Option3" class="form-control" />
+                    <span asp-validation-for="Option3" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Explanation" class="control-label"></label>
+                    <div id="editor2" class="quill-editor"></div>
+                    <input type="hidden" id="Explanation" asp-for="Explanation" />
+                    <span asp-validation-for="Explanation" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoryID" class="control-label"></label>
+                    <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
+                    <span asp-validation-for="CategoryID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SubCategoryID" class="control-label"></label>
+                    <select asp-for="SubCategoryID" class="form-control" asp-items="ViewBag.SubCategoryID"></select>
+                    <span asp-validation-for="SubCategoryID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Initialize Quill
+            const toolbarOptions = [
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote'],
+                ['link', 'image', 'video'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'indent': '-1' }, { 'indent': '+1' }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+                ['clean']
+            ];
 
+            let quill = new Quill('#editor', {
+                modules: { toolbar: toolbarOptions },
+                theme: 'snow'
+            });
+            let quill2 = new Quill('#editor2', {
+                modules: { toolbar: toolbarOptions },
+                theme: 'snow'
+            });
+
+            // Populate the Quill editor with the existing content (raw HTML from the model)
+            var existingQuestionContent = '@Html.Raw(Model.Question)';
+            var existingExplanationContent = '@Html.Raw(Model.Explanation)';
+            quill.root.innerHTML = existingQuestionContent;
+            quill2.root.innerHTML = existingExplanationContent;
+
+            // When the form is submitted, update the hidden input field with Quill content
+            $('form').submit(function () {
+                // Get the HTML content from Quill and place it into the hidden field
+                $('#Question').val(quill.root.innerHTML);
+                $('#Explanation').val(quill2.root.innerHTML);
+            });
+        });
+    </script>
+</body>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
