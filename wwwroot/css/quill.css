@@ -1,0 +1,50 @@
+/* font */
+.ql-font-serif {
+    font-family: serif;
+}
+
+.ql-font-sans-serif {
+    font-family: sans-serif;
+}
+
+.ql-font-monospace {
+    font-family: monospace;
+}
+
+/* size */
+.ql-size-small {
+    font-size: small;
+}
+
+.ql-size-large {
+    font-size: large;
+}
+
+.ql-size-huge {
+    font-size: x-large;
+}
+
+/* align */
+.ql-align-left {
+    text-align: left;
+}
+
+.ql-align-center {
+    text-align: center;
+}
+
+.ql-align-center {
+    text-align: right;
+}
+
+.ql-align-justify {
+    text-align: justify;
+}
+
+/* image */
+p > img {
+    max-width: 200px; /* let users change image size? */
+}
+
+/* indent */
+/* bulleted list */
