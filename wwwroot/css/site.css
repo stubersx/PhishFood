@@ -20,3 +20,15 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+nav {
+    background: #004235; /* #03A680 */
+}
+
+/* home/index */
+.home {
+    background: url('/images/hawkowl.png') no-repeat;
+    background-size: contain;
+    background-position: center;
+    height: 90vh;
+}

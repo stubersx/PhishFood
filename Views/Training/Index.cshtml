@@ -4,6 +4,24 @@
     ViewData["Title"] = "Index";
 }
 
+@section style {
+    <style>
+        body {
+            background: url('/images/island.jpg') no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+}
+
+@section script {
+    <script>
+        var element = document.getElementById("wrapper");
+        element.classList.remove("container");
+        element.classList.add("container-fluid");
+    </script>
+}
+
 <h1>Index</h1>
 
 <p>
@@ -28,7 +46,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Content)
+                @Html.Raw(item.Content)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.Type)
