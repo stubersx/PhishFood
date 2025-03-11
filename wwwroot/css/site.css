@@ -32,3 +32,43 @@ nav {
     background-position: center;
     height: 90vh;
 }
+.footer div {
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #008165;
+}
+.center {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.save-button {
+    margin: 10px;
+    width: 50%;
+    box-shadow: 1px 1px 1px;
+    background-color: #008165;
+    border: none;
+    border-radius: 5px;
+}
+.center {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.create-button {
+    border: none;
+    box-shadow: 1px 1px 1px;
+    background-color: #008165;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+.submit-button {
+    background-color: #008165;
+    border: none;
+    box-shadow: 1px 1px 1px;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 10px;
+}
