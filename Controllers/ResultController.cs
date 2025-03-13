@@ -19,10 +19,56 @@ namespace PhishFood.Controllers
         }
 
         // GET: Result
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery, string sortOrder)
         {
-            var phishFoodContext = _context.Results.Include(r => r.Category).Include(r => r.Student);
-            return View(await phishFoodContext.ToListAsync());
+            // Initialize the base query to get the Results
+            var resultsQuery = _context.Results.Include(r => r.Category).Include(r => r.Student).AsQueryable();
+
+            // If searchQuery is provided, filter the results
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                // Try to parse the searchQuery as a DateTime
+                DateTime searchDate;
+                if (DateTime.TryParse(searchQuery, out searchDate))
+                {
+                    // Filter results where Date matches the parsed search date (ignoring time part)
+                    resultsQuery = resultsQuery.Where(r => r.Date.Date == searchDate.Date);
+                }
+                else
+                {
+                    // Perform other filters for non-date query (Score, Category, StudentID, etc.)
+                    var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
+
+                    resultsQuery = resultsQuery.Where(t =>
+                        t.Score.ToString().Contains(normalizedSearchQuery) ||
+                        t.Category.Type.ToLower().Contains(normalizedSearchQuery) ||
+                        t.StudentID.ToLower().Contains(normalizedSearchQuery)
+                    );
+                }
+            }
+
+            // Sorting logic based on the sortOrder parameter
+            switch (sortOrder)
+            {
+                case "date_asc":
+                    resultsQuery = resultsQuery.OrderBy(r => r.Date);
+                    break;
+                case "date_desc":
+                    resultsQuery = resultsQuery.OrderByDescending(r => r.Date);
+                    break;
+                default:
+                    // Unsorted or default sorting can be left as is
+                    break;
+            }
+
+            // Get the list of filtered results asynchronously
+            var results = await resultsQuery.ToListAsync();
+
+            // Store the current sort order in ViewData to persist between requests
+            ViewData["SortOrder"] = sortOrder;
+            ViewData["SearchQuery"] = searchQuery;
+
+            return View(results);
         }
 
         // GET: Result/Details/5

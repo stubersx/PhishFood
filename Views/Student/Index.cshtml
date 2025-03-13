@@ -4,14 +4,24 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
+<h1 style="text-align: center;">Students</h1>
+<hr />
+<p class="center">
+    <button class="create-button"><a asp-action="Create" style="text-decoration: none; color: white; font-size: 18px;">Create New</a></button>
 </p>
+<div class="center">
+    <!-- Search Form -->
+    <form method="get">
+        <button type="submit" class="submit-button">Search</button>
+        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
@@ -24,6 +34,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
