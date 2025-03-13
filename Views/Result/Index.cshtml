@@ -4,16 +4,37 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
+<h1 style="text-align: center;">Student Results</h1>
+<hr />
+<p class="center">
+    <button class="create-button"><a asp-action="Create" style="text-decoration: none; color: white; font-size: 18px;">Create New</a></button>
 </p>
+<div class="center">
+    <!-- Search Form -->
+    <form method="get">
+        <button type="submit" class="submit-button">Search</button>
+        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Date)
+                <a href="@Url.Action("Index", new { searchQuery = ViewData["SearchQuery"], sortOrder = GetNextSortOrder() })">
+                    Date
+                    @if (ViewData["SortOrder"]?.ToString() == "date_asc")
+                    {
+                        <span>&#8593;</span> <!-- Upward arrow for Ascending -->
+                    }
+                    else if (ViewData["SortOrder"]?.ToString() == "date_desc")
+                    {
+                        <span>&#8595;</span> <!-- Downward arrow for Descending -->
+                    }
+                    else
+                    {
+                        <span>&#9650;</span> <!-- Default arrow (unsorted) -->
+                    }
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Score)
@@ -28,6 +49,7 @@
         </tr>
     </thead>
     <tbody>
+
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -51,3 +73,23 @@
 }
     </tbody>
 </table>
+@functions {
+    // This helper function will toggle between ascending, descending, and unsorted states
+    public string GetNextSortOrder()
+    {
+        var currentSortOrder = ViewData["SortOrder"]?.ToString();
+
+        if (currentSortOrder == "date_asc")
+        {
+            return "date_desc";
+        }
+        else if (currentSortOrder == "date_desc")
+        {
+            return "";  // Unsorted state
+        }
+        else
+        {
+            return "date_asc";
+        }
+    }
+}
