@@ -17,9 +17,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" style="width: 10vw" /></a>
+                <a class="navbar-brand logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" alt="NMC Logo" /></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -60,8 +60,12 @@
     </div>
 
     <footer class="footer text-white bg-black">
-        <div class="container">
-            &copy; 2025 - Northwestern Michigan College. All rights reserved. Contact: (231) 995-3020</a>
+        <div class="container pt-3">
+            <p>&copy; 2025 - Northwestern Michigan College. All rights reserved.</p>&nbsp;
+            <p>
+                Contact:&nbsp;<a href="tel:+12319953020" class="text-white fw-bold">(231) 995-3020</a>&nbsp;or&nbsp;
+                <a href="https://helpdesk.nmc.edu/helpdesk/WebObjects/Helpdesk.woa/wo/0.11.1.1.13.7.4.1" target="_blank" class="text-white fw-bold">Submit a Ticket</a>
+            </p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
