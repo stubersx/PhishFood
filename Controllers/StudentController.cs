@@ -19,9 +19,27 @@ namespace PhishFood.Controllers
         }
 
         // GET: Student
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery)
         {
-            return View(await _context.Students.ToListAsync());
+            // Start by querying the Students table (no need to include individual properties)
+            var studentsQuery = _context.Students.AsQueryable();
+
+            // If searchQuery is provided, filter students by first name, last name, and ID
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
+
+                studentsQuery = studentsQuery.Where(t =>
+                    t.FirstName.ToLower().Contains(normalizedSearchQuery) ||  // Search by First Name
+                    t.LastName.ToLower().Contains(normalizedSearchQuery) ||   // Search by Last Name
+                    t.ID.ToString().ToLower().Contains(normalizedSearchQuery)  // Search by ID (ensure ID is converted to string for the comparison)
+                );
+            }
+
+            // Get the list of filtered students asynchronously
+            var students = await studentsQuery.ToListAsync();
+
+            return View(students);  // Return the filtered students to the View
         }
 
         // GET: Student/Details/5
