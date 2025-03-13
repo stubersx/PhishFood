@@ -59,7 +59,7 @@ namespace PhishFood.Controllers
             {
                 _context.Add(category);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", "SubCategory");
             }
             return View(category);
         }

@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 nav {
@@ -30,11 +30,22 @@ nav {
     background: url('/images/hawkowl.png') no-repeat;
     background-size: contain;
     background-position: center;
-    height: 90vh;
+    height: 80vh;
+}
+.logo {
+    max-height: 60px;
+}
+.logo img {
+    max-height: 60px;
+}
+.nav-link {
+    font-size: 1.1rem;
+    text-align: center;
 }
 .footer div {
     min-width: 100%;
     display: flex;
+    flex-wrap: wrap-reverse;
     align-items: center;
     justify-content: center;
     background-color: #008165;
@@ -44,6 +55,8 @@ nav {
     align-content: center;
     justify-content: center;
 }
+
+/* testing pages */
 .save-button {
     margin: 10px;
     width: 50%;
@@ -51,11 +64,6 @@ nav {
     background-color: #008165;
     border: none;
     border-radius: 5px;
-}
-.center {
-    display: flex;
-    align-content: center;
-    justify-content: center;
 }
 .create-button {
     border: none;
