@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PhishFood.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,22 +40,23 @@ namespace PhishFood.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubCategories",
+                name: "Subcategories",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryID = table.Column<int>(type: "int", nullable: true)
+                    CategoryID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubCategories", x => x.ID);
+                    table.PrimaryKey("PK_Subcategories", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_SubCategories_Categories_CategoryID",
+                        name: "FK_Subcategories_Categories_CategoryID",
                         column: x => x.CategoryID,
                         principalTable: "Categories",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -99,7 +100,7 @@ namespace PhishFood.Migrations
                     Option3 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Explanation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryID = table.Column<int>(type: "int", nullable: false),
-                    SubCategoryID = table.Column<int>(type: "int", nullable: true)
+                    SubcategoryID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -111,9 +112,9 @@ namespace PhishFood.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Testings_SubCategories_SubCategoryID",
-                        column: x => x.SubCategoryID,
-                        principalTable: "SubCategories",
+                        name: "FK_Testings_Subcategories_SubcategoryID",
+                        column: x => x.SubcategoryID,
+                        principalTable: "Subcategories",
                         principalColumn: "ID");
                 });
 
@@ -125,7 +126,7 @@ namespace PhishFood.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryID = table.Column<int>(type: "int", nullable: false),
-                    SubCategoryID = table.Column<int>(type: "int", nullable: true)
+                    SubcategoryID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -137,9 +138,9 @@ namespace PhishFood.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Trainings_SubCategories_SubCategoryID",
-                        column: x => x.SubCategoryID,
-                        principalTable: "SubCategories",
+                        name: "FK_Trainings_Subcategories_SubcategoryID",
+                        column: x => x.SubcategoryID,
+                        principalTable: "Subcategories",
                         principalColumn: "ID");
                 });
 
@@ -149,7 +150,7 @@ namespace PhishFood.Migrations
                 values: new object[] { 1, "Phishing" });
 
             migrationBuilder.InsertData(
-                table: "SubCategories",
+                table: "Subcategories",
                 columns: new[] { "ID", "CategoryID", "Type" },
                 values: new object[,]
                 {
@@ -171,8 +172,8 @@ namespace PhishFood.Migrations
                 column: "StudentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubCategories_CategoryID",
-                table: "SubCategories",
+                name: "IX_Subcategories_CategoryID",
+                table: "Subcategories",
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
@@ -181,9 +182,9 @@ namespace PhishFood.Migrations
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Testings_SubCategoryID",
+                name: "IX_Testings_SubcategoryID",
                 table: "Testings",
-                column: "SubCategoryID");
+                column: "SubcategoryID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trainings_CategoryID",
@@ -191,9 +192,9 @@ namespace PhishFood.Migrations
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Trainings_SubCategoryID",
+                name: "IX_Trainings_SubcategoryID",
                 table: "Trainings",
-                column: "SubCategoryID");
+                column: "SubcategoryID");
         }
 
         /// <inheritdoc />
@@ -212,7 +213,7 @@ namespace PhishFood.Migrations
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "SubCategories");
+                name: "Subcategories");
 
             migrationBuilder.DropTable(
                 name: "Categories");

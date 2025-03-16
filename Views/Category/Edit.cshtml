@@ -4,29 +4,37 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Category</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
-                <span asp-validation-for="Type" class="text-danger"></span>
+<div class="add-content">
+    <div class="wrapper edit">
+        <h1>@ViewData["Title"] <i class="fa fa-file-text-o"></i></h1>
+        <div class="items">
+            <button class="btn btn-outline-success active">1. Category</button>
+            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
+            <button class="btn btn-outline-success" disabled>2. Subcategory</button>
+            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
+            <button class="btn btn-outline-success" disabled>3. Training</button>
+            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
+            <button class="btn btn-outline-success" disabled>4. Testing</button>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="offset-lg-3 col-lg-6">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="ID" />
+                    <div class="form-group create">
+                        <label asp-for="Type" class="control-label"></label>
+                        <input asp-for="Type" class="form-control" />
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                    <div class="form-group btns">
+                        <input type="submit" value="Save" class="btn btn-outline-danger" />
+                        <a asp-action="CategoryView" asp-controller="Subcategory" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

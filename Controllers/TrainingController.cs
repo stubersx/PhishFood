@@ -21,7 +21,7 @@ namespace PhishFood.Controllers
         // GET: Training
         public async Task<IActionResult> Index()
         {
-            var phishFoodContext = _context.Trainings.Include(t => t.Category).Include(t => t.SubCategory);
+            var phishFoodContext = _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory);
             return View(await phishFoodContext.ToListAsync());
         }
 
@@ -35,7 +35,7 @@ namespace PhishFood.Controllers
 
             var training = await _context.Trainings
                 .Include(t => t.Category)
-                .Include(t => t.SubCategory)
+                .Include(t => t.Subcategory)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (training == null)
             {
@@ -49,7 +49,7 @@ namespace PhishFood.Controllers
         public IActionResult Create()
         {
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type");
-            ViewData["SubCategoryID"] = new SelectList(_context.SubCategories, "ID", "Type");
+            ViewData["SubcategoryID"] = new SelectList(_context.Subcategories, "ID", "Type");
             return View();
         }
 
@@ -58,7 +58,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Content,CategoryID,SubCategoryID")] Training training)
+        public async Task<IActionResult> Create([Bind("ID,Content,CategoryID,SubcategoryID")] Training training)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace PhishFood.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", training.CategoryID);
-            ViewData["SubCategoryID"] = new SelectList(_context.SubCategories, "ID", "Type", training.SubCategoryID);
+            ViewData["SubcategoryID"] = new SelectList(_context.Subcategories, "ID", "Type", training.SubcategoryID);
             return View(training);
         }
 
@@ -85,7 +85,7 @@ namespace PhishFood.Controllers
                 return NotFound();
             }
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", training.CategoryID);
-            ViewData["SubCategoryID"] = new SelectList(_context.SubCategories, "ID", "Type", training.SubCategoryID);
+            ViewData["SubcategoryID"] = new SelectList(_context.Subcategories, "ID", "Type", training.SubcategoryID);
             return View(training);
         }
 
@@ -94,7 +94,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Content,CategoryID,SubCategoryID")] Training training)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Content,CategoryID,SubcategoryID")] Training training)
         {
             if (id != training.ID)
             {
@@ -122,7 +122,7 @@ namespace PhishFood.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", training.CategoryID);
-            ViewData["SubCategoryID"] = new SelectList(_context.SubCategories, "ID", "Type", training.SubCategoryID);
+            ViewData["SubcategoryID"] = new SelectList(_context.Subcategories, "ID", "Type", training.SubcategoryID);
             return View(training);
         }
 
@@ -136,7 +136,7 @@ namespace PhishFood.Controllers
 
             var training = await _context.Trainings
                 .Include(t => t.Category)
-                .Include(t => t.SubCategory)
+                .Include(t => t.Subcategory)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (training == null)
             {
