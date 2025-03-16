@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhishFood.Models
 {
-    public class Student
+    public class Student    // automatically created from registration information?
     {
         [Required]
         [Display(Name = "NMC ID")]

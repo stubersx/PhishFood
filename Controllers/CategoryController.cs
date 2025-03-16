@@ -57,9 +57,15 @@ namespace PhishFood.Controllers
         {
             if (ModelState.IsValid)
             {
+                foreach (var item in _context.Categories)
+                {
+                    if (item.Type == category.Type)
+                        return RedirectToAction("Create", "Subcategory");
+                }
+
                 _context.Add(category);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "SubCategory");
+                return RedirectToAction("Create", "Subcategory", category);
             }
             return View(category);
         }
@@ -110,7 +116,7 @@ namespace PhishFood.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("CategoryView","Subcategory");
             }
             return View(category);
         }

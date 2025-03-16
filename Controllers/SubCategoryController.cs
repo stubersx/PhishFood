@@ -6,26 +6,39 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhishFood.Models;
+using PhishFood.ViewModels;
 
 namespace PhishFood.Controllers
 {
-    public class SubCategoryController : Controller
+    public class SubcategoryController : Controller
     {
         private readonly PhishFoodContext _context;
 
-        public SubCategoryController(PhishFoodContext context)
+        public SubcategoryController(PhishFoodContext context)
         {
             _context = context;
         }
 
-        // GET: SubCategory
+        // GET: Subcategory/CategoryView
+        public async Task<IActionResult> CategoryView()
+        {
+            var data = new CategoryViewModel
+            {
+                Categories = await _context.Categories.ToListAsync(),
+                Subcategories = await _context.Subcategories.ToListAsync()
+            };
+
+            return View(data);
+        }
+
+        // GET: Subcategory
         public async Task<IActionResult> Index()
         {
-            var phishFoodContext = _context.SubCategories.Include(s => s.Category);
+            var phishFoodContext = _context.Subcategories.Include(s => s.Category);
             return View(await phishFoodContext.ToListAsync());
         }
 
-        // GET: SubCategory/Details/5
+        // GET: Subcategory/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +46,48 @@ namespace PhishFood.Controllers
                 return NotFound();
             }
 
-            var subCategory = await _context.SubCategories
+            var subcategory = await _context.Subcategories
                 .Include(s => s.Category)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (subCategory == null)
+            if (subcategory == null)
             {
                 return NotFound();
             }
 
-            return View(subCategory);
+            return View(subcategory);
         }
 
-        // GET: SubCategory/Create
-        public IActionResult Create()
+        // GET: Subcategory/Create
+        public IActionResult Create(Category category)
         {
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type");
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", !String.IsNullOrEmpty(category.Type) ? category.ID : "");
             return View();
         }
 
-        // POST: SubCategory/Create
+        // POST: Subcategory/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Type,CategoryID")] SubCategory subCategory)
+        public async Task<IActionResult> Create([Bind("ID,Type,CategoryID")] Subcategory subcategory)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(subCategory);
+                foreach (var item in _context.Subcategories)
+                {
+                    if (item.Type == subcategory.Type)
+                        return RedirectToAction("Create", "Training");
+                }
+
+                _context.Add(subcategory);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", "Training", subcategory);
             }
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", subCategory.CategoryID);
-            return View(subCategory);
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", subcategory.CategoryID);
+            return View(subcategory);
         }
 
-        // GET: SubCategory/Edit/5
+        // GET: Subcategory/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +95,23 @@ namespace PhishFood.Controllers
                 return NotFound();
             }
 
-            var subCategory = await _context.SubCategories.FindAsync(id);
-            if (subCategory == null)
+            var subcategory = await _context.Subcategories.FindAsync(id);
+            if (subcategory == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", subCategory.CategoryID);
-            return View(subCategory);
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", subcategory.CategoryID);
+            return View(subcategory);
         }
 
-        // POST: SubCategory/Edit/5
+        // POST: Subcategory/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Type,CategoryID")] SubCategory subCategory)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Type,CategoryID")] Subcategory subcategory)
         {
-            if (id != subCategory.ID)
+            if (id != subcategory.ID)
             {
                 return NotFound();
             }
@@ -101,12 +120,12 @@ namespace PhishFood.Controllers
             {
                 try
                 {
-                    _context.Update(subCategory);
+                    _context.Update(subcategory);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SubCategoryExists(subCategory.ID))
+                    if (!SubcategoryExists(subcategory.ID))
                     {
                         return NotFound();
                     }
@@ -115,13 +134,13 @@ namespace PhishFood.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("CategoryView", "Subcategory");
             }
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", subCategory.CategoryID);
-            return View(subCategory);
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", subcategory.CategoryID);
+            return View(subcategory);
         }
 
-        // GET: SubCategory/Delete/5
+        // GET: Subcategory/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,35 +148,35 @@ namespace PhishFood.Controllers
                 return NotFound();
             }
 
-            var subCategory = await _context.SubCategories
+            var subcategory = await _context.Subcategories
                 .Include(s => s.Category)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (subCategory == null)
+            if (subcategory == null)
             {
                 return NotFound();
             }
 
-            return View(subCategory);
+            return View(subcategory);
         }
 
-        // POST: SubCategory/Delete/5
+        // POST: Subcategory/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var subCategory = await _context.SubCategories.FindAsync(id);
-            if (subCategory != null)
+            var subcategory = await _context.Subcategories.FindAsync(id);
+            if (subcategory != null)
             {
-                _context.SubCategories.Remove(subCategory);
+                _context.Subcategories.Remove(subcategory);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SubCategoryExists(int id)
+        private bool SubcategoryExists(int id)
         {
-            return _context.SubCategories.Any(e => e.ID == id);
+            return _context.Subcategories.Any(e => e.ID == id);
         }
     }
 }

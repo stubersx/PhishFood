@@ -5,14 +5,16 @@ namespace PhishFood.Models
     public class Training
     {
         public int ID { get; set; }
-        [Required]
+        [Required(ErrorMessage = "The Content is required.")]
         public string Content { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "The Category is required.")]
+        [Display(Name = "Category")]
         public int? CategoryID { get; set; }
         public Category? Category { get; set; }
 
-        public int? SubCategoryID { get; set; }
-        public SubCategory? SubCategory { get; set; }
+        [Display(Name = "Subcategory")]
+        public int? SubcategoryID { get; set; }
+        public Subcategory? Subcategory { get; set; }
     }
 }

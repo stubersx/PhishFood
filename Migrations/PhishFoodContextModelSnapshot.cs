@@ -94,7 +94,7 @@ namespace PhishFood.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("PhishFood.Models.SubCategory", b =>
+            modelBuilder.Entity("PhishFood.Models.Subcategory", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -103,6 +103,7 @@ namespace PhishFood.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("CategoryID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
@@ -113,7 +114,7 @@ namespace PhishFood.Migrations
 
                     b.HasIndex("CategoryID");
 
-                    b.ToTable("SubCategories");
+                    b.ToTable("Subcategories");
 
                     b.HasData(
                         new
@@ -184,14 +185,14 @@ namespace PhishFood.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SubCategoryID")
+                    b.Property<int?>("SubcategoryID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("CategoryID");
 
-                    b.HasIndex("SubCategoryID");
+                    b.HasIndex("SubcategoryID");
 
                     b.ToTable("Testings");
                 });
@@ -212,14 +213,14 @@ namespace PhishFood.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SubCategoryID")
+                    b.Property<int?>("SubcategoryID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("CategoryID");
 
-                    b.HasIndex("SubCategoryID");
+                    b.HasIndex("SubcategoryID");
 
                     b.ToTable("Trainings");
                 });
@@ -243,11 +244,13 @@ namespace PhishFood.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("PhishFood.Models.SubCategory", b =>
+            modelBuilder.Entity("PhishFood.Models.Subcategory", b =>
                 {
                     b.HasOne("PhishFood.Models.Category", "Category")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("CategoryID");
+                        .WithMany("Subcategories")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
                 });
@@ -260,13 +263,13 @@ namespace PhishFood.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PhishFood.Models.SubCategory", "SubCategory")
+                    b.HasOne("PhishFood.Models.Subcategory", "Subcategory")
                         .WithMany("Testings")
-                        .HasForeignKey("SubCategoryID");
+                        .HasForeignKey("SubcategoryID");
 
                     b.Navigation("Category");
 
-                    b.Navigation("SubCategory");
+                    b.Navigation("Subcategory");
                 });
 
             modelBuilder.Entity("PhishFood.Models.Training", b =>
@@ -277,20 +280,20 @@ namespace PhishFood.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PhishFood.Models.SubCategory", "SubCategory")
+                    b.HasOne("PhishFood.Models.Subcategory", "Subcategory")
                         .WithMany("Trainings")
-                        .HasForeignKey("SubCategoryID");
+                        .HasForeignKey("SubcategoryID");
 
                     b.Navigation("Category");
 
-                    b.Navigation("SubCategory");
+                    b.Navigation("Subcategory");
                 });
 
             modelBuilder.Entity("PhishFood.Models.Category", b =>
                 {
                     b.Navigation("Results");
 
-                    b.Navigation("SubCategories");
+                    b.Navigation("Subcategories");
 
                     b.Navigation("Testings");
 
@@ -302,7 +305,7 @@ namespace PhishFood.Migrations
                     b.Navigation("Results");
                 });
 
-            modelBuilder.Entity("PhishFood.Models.SubCategory", b =>
+            modelBuilder.Entity("PhishFood.Models.Subcategory", b =>
                 {
                     b.Navigation("Testings");
 

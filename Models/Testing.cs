@@ -19,10 +19,12 @@ namespace PhishFood.Models
         public string Explanation { get; set; } = string.Empty;
 
         [Required]
+        [Display(Name = "Category")]
         public int? CategoryID { get; set; }
         public Category? Category { get; set; }
 
-        public int? SubCategoryID { get; set; }
-        public SubCategory? SubCategory { get; set; }
+        [Display(Name = "Subcategory")]
+        public int? SubcategoryID { get; set; }
+        public Subcategory? Subcategory { get; set; }
     }
 }
