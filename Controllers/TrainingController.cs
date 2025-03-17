@@ -19,10 +19,27 @@ namespace PhishFood.Controllers
         }
 
         // GET: Training
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchQuery)
         {
-            var phishFoodContext = _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory);
-            return View(await phishFoodContext.ToListAsync());
+            // Start by including the Category to filter by Category.Name
+            var trainingQuery = _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
+
+            // If searchQuery is provided, filter Testings by Question text and Category name
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
+
+                trainingQuery = trainingQuery.Where(t =>
+                    t.Content.ToLower().Contains(normalizedSearchQuery) ||  // Search in Question Text
+                    t.Category.Type.ToLower().Contains(normalizedSearchQuery) ||
+                    t.Subcategory.Type.ToLower().Contains(normalizedSearchQuery)// Search in Category Name
+                );
+            }
+
+            // Get the list of filtered Testings asynchronously
+            var training = await trainingQuery.ToListAsync();
+
+            return View(training);  // Return the filtered Testings to the View
         }
 
         // GET: Training/Details/5

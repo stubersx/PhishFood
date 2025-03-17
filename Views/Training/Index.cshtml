@@ -4,62 +4,61 @@
     ViewData["Title"] = "Index";
 }
 
-@section style {
-    <style>
-        body {
-            background: url('/images/island.jpg') no-repeat;
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-}
-
-@section script {
-    <script>
-        var element = document.getElementById("wrapper");
-        element.classList.remove("container");
-        element.classList.add("container-fluid");
-    </script>
-}
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
+<h1 style="text-align: center;">Training Content</h1>
+<hr />
+<p class="center">
+    <button class="create-button"><a asp-action="Create" style="text-decoration: none; color: white; font-size: 18px;">Create New</a></button>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Subcategory)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.Raw(item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subcategory.Type)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="center">
+    <!-- Search Form -->
+    <form method="get">
+        <button type="submit" class="submit-button">Search</button>
+        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
+    </form>
+</div>
+<div class="center">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Category)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Subcategory)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.Raw(item.ID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subcategory.Type)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No Results found</p>
+    }
+</div>
