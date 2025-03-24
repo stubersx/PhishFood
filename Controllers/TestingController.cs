@@ -21,7 +21,20 @@ namespace PhishFood.Controllers
         // Testing/TakeTest
         public async Task<IActionResult> TakeTest()
         {
-            return View(await _context.Testings.ToListAsync());
+            var tests = _context.Testings // Assuming you have a DbContext
+                 .Include(t => t.Category)
+                 .Include(t => t.Subcategory)
+                 .ToList();
+
+            var categories = _context.Testings
+                .Select(t => t.Category.Type)
+                .Distinct().
+                ToList();
+
+            ViewData["Tests"] = tests;
+            ViewData["Categories"] = categories ?? new List<string>();
+
+            return View();
         }
 
         // GET: Testing
