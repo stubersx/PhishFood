@@ -4,4 +4,34 @@
     ViewData["Title"] = "Taketest";
 }
 
-<h1 style="text-align: center;">Take test</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select a Test</title>
+
+</head>
+<body>
+    <h2 class="center">Graded Unit Tests</h2>
+    <div class="grid-container center">
+        @foreach (var test in Model)
+        {
+            <div class="test-card">
+                <h3>@test.Category.Type</h3>
+                <a href="@Url.Action("StartTest", "Test", new { id = test.ID })">Start Test</a>
+            </div>
+        }
+    </div>
+    <hr />
+    <h2 class="center">Practice Tests</h2>
+    <div class="grid-container">
+        @foreach (var test in Model)
+        {
+            <div class="test-card">
+                <h3>@test.Category.Type</h3>
+                <p>@test.Subcategory.Type</p>
+                <a href="@Url.Action("StartTest", "Test", new { id = test.ID })">Start Test</a>
+            </div>
+        }
+    </div>
+</body>
+</html>
