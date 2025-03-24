@@ -26,7 +26,15 @@ namespace PhishFood.Controllers
                  .Include(t => t.Subcategory)
                  .ToList();
 
-            return View(tests);
+            var categories = _context.Testings
+                .Select(t => t.Category.Type)
+                .Distinct().
+                ToList();
+
+            ViewData["Tests"] = tests;
+            ViewData["Categories"] = categories ?? new List<string>();
+
+            return View();
         }
 
         // GET: Testing
