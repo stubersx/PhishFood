@@ -37,6 +37,49 @@ namespace PhishFood.Controllers
             return View();
         }
 
+        public async Task<IActionResult> StartTest(string category, string subcategory = null)
+        {
+            var query = _context.Testings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(t => t.Category.Type == category);
+            }
+
+            if (!string.IsNullOrEmpty(subcategory))
+            {
+                query = query.Where(t => t.Subcategory.Type == subcategory);
+            }
+
+            var randomQuestions = await query.OrderBy(r => Guid.NewGuid()).Take(10).ToListAsync();
+
+            if (randomQuestions.Count == 0)
+            {
+                return NotFound("No test questions found for the selected category.");
+            }
+
+            ViewBag.Category = category;
+            ViewBag.Subcategory = subcategory;
+
+            return View("TestView", randomQuestions);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SubmitTest(List<TestAnswer> Answers)
+        {
+            int correctCount = 0;
+            foreach (var answer in Answers)
+            {
+                var question = await _context.Testings.FindAsync(answer.QuestionId);
+                if (question != null && question.Key == answer.SelectedOption)
+                {
+                    correctCount++;
+                }
+            }
+
+            ViewBag.Score = $"{correctCount} / {Answers.Count}";
+            return View("TestResults");
+        }
+
         // GET: Testing
         public async Task<IActionResult> Index(string searchQuery)
         {

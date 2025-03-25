@@ -20,7 +20,7 @@
         {
             <div class="test-card">
                 <h3>@cat</h3>
-                <a href="">Start Test</a>
+                <a href="@Url.Action("StartTest", "Testing", new { category = cat })">Start Test</a>
             </div>
         }
     </div>
@@ -33,7 +33,7 @@
             <div class="test-card">
                 <h3>@test.Category.Type</h3>
                 <p>@test.Subcategory.Type</p>
-                <a href="@Url.Action("StartTest", "Test", new { id = test.ID })">Start Test</a>
+                <a href="@Url.Action("StartTest", "Testing", new { category = test.Category.Type, subcategory = test.Subcategory.Type })">Start Test</a>
             </div>
         }
     </div>
