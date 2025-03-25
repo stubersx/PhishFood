@@ -20,7 +20,7 @@
         {
             <div class="test-card">
                 <h3>@cat</h3>
-                <a href="@Url.Action("StartTest", "Testing", new { category = cat })">Start Test</a>
+                <a href="@Url.Action("GradedTestWarning", "Testing", new { category = cat })">Start Test</a>
             </div>
         }
     </div>
@@ -28,12 +28,11 @@
     <h2 class="center">Practice Tests</h2>
     <br />
     <div class="grid-container">
-        @foreach (var test in tests)
+        @foreach (var subcategory in ViewData["Subcategories"] as List<string>)
         {
             <div class="test-card">
-                <h3>@test.Category.Type</h3>
-                <p>@test.Subcategory.Type</p>
-                <a href="@Url.Action("StartTest", "Testing", new { category = test.Category.Type, subcategory = test.Subcategory.Type })">Start Test</a>
+                <h3>@subcategory</h3>
+                <a href="@Url.Action("StartTest", "Testing", new { subcategory = subcategory })">Start Test</a>
             </div>
         }
     </div>

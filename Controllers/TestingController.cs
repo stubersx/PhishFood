@@ -21,18 +21,21 @@ namespace PhishFood.Controllers
         // Testing/TakeTest
         public async Task<IActionResult> TakeTest()
         {
-            var tests = _context.Testings // Assuming you have a DbContext
-                 .Include(t => t.Category)
-                 .Include(t => t.Subcategory)
-                 .ToList();
+            var tests = await _context.Testings
+                .Include(t => t.Category)
+                .Include(t => t.Subcategory)
+                .ToListAsync();
 
-            var categories = _context.Testings
-                .Select(t => t.Category.Type)
-                .Distinct().
-                ToList();
+            var categories = tests.Select(t => t.Category.Type).Distinct().ToList();
+            var subcategories = tests
+                .Where(t => t.Subcategory != null)
+                .Select(t => t.Subcategory.Type)
+                .Distinct()
+                .ToList();
 
             ViewData["Tests"] = tests;
-            ViewData["Categories"] = categories ?? new List<string>();
+            ViewData["Categories"] = categories;
+            ViewData["Subcategories"] = subcategories;
 
             return View();
         }
@@ -58,11 +61,27 @@ namespace PhishFood.Controllers
                 return NotFound("No test questions found for the selected category.");
             }
 
+            // Shuffle the options for each question
+            foreach (var question in randomQuestions)
+            {
+                var options = new List<string> { question.Key, question.Option1, question.Option2, question.Option3 };
+                options = options.OrderBy(o => Guid.NewGuid()).ToList();
+
+                question.Key = options[0];
+                question.Option1 = options[1];
+                question.Option2 = options[2];
+                question.Option3 = options[3];
+            }
+
+            // Randomize the order of questions
+            randomQuestions = randomQuestions.OrderBy(q => Guid.NewGuid()).ToList();
+
             ViewBag.Category = category;
             ViewBag.Subcategory = subcategory;
 
             return View("TestView", randomQuestions);
         }
+
         [HttpPost]
         public async Task<IActionResult> SubmitTest(List<TestAnswer> Answers)
         {
@@ -78,6 +97,16 @@ namespace PhishFood.Controllers
 
             ViewBag.Score = $"{correctCount} / {Answers.Count}";
             return View("TestResults");
+        }
+
+        public IActionResult GradedTestWarning(string category)
+        {
+            if (string.IsNullOrEmpty(category))
+            {
+                return RedirectToAction("TakeTest");
+            }
+
+            return View("GradedTestWarning", category);
         }
 
         // GET: Testing
