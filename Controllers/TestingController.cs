@@ -82,6 +82,23 @@ namespace PhishFood.Controllers
             return View("TestView", randomQuestions);
         }
 
+        public async Task<IActionResult> TestView(int? categoryId, int? subcategoryId)
+        {
+            var tests = await _context.Testings
+                .Where(t => (categoryId == null || t.CategoryID == categoryId) && (subcategoryId == null || t.SubcategoryID == subcategoryId))
+                .Include(t => t.Category)
+                .Include(t => t.Subcategory)
+                .OrderBy(t => Guid.NewGuid()) // Randomize question order
+                .Take(10) // Take 10 random questions
+                .ToListAsync();
+
+            ViewData["Category"] = tests.FirstOrDefault()?.Category?.Type;
+            ViewData["Subcategory"] = tests.FirstOrDefault()?.Subcategory?.Type;
+
+            return View(tests);
+        }
+
+        // Action to handle test submission and calculate score
         [HttpPost]
         public async Task<IActionResult> SubmitTest(List<TestAnswer> Answers)
         {
@@ -97,6 +114,11 @@ namespace PhishFood.Controllers
 
             ViewBag.Score = $"{correctCount} / {Answers.Count}";
             return View("TestResults");
+        }
+        // Action to display the final score
+        public IActionResult TestResults(int score)
+        {
+            return View(score);
         }
 
         public IActionResult GradedTestWarning(string category)
