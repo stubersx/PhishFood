@@ -102,19 +102,46 @@ namespace PhishFood.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitTest(List<TestAnswer> Answers)
         {
+            if (Answers == null || Answers.Count == 0)
+            {
+                return BadRequest("No answers provided.");
+            }
+
+            // Assume student is logged in and their ID is available
+            string studentId = User.Identity.Name; // Adjust this based on your authentication setup. Use student login information to identify 
+
             int correctCount = 0;
+            int categoryId = 0; // Default value; will be updated below
+
             foreach (var answer in Answers)
             {
-                var question = await _context.Testings.FindAsync(answer.QuestionId);
-                if (question != null && question.Key == answer.SelectedOption)
+                var question = await _context.Testings.Include(q => q.Category).FirstOrDefaultAsync(q => q.ID == answer.QuestionId);
+                if (question != null)
                 {
-                    correctCount++;
+                    if (categoryId == 0) categoryId = question.Category.ID; // Store the category
+                    if (question.Key == answer.SelectedOption)
+                    {
+                        correctCount++;
+                    }
                 }
             }
+
+            // Save the test result
+            var testResult = new Result
+            {
+                Date = DateTime.Now,
+                Score = correctCount,
+                CategoryID = categoryId,
+                StudentID = studentId
+            };
+
+            _context.Results.Add(testResult);
+            await _context.SaveChangesAsync();
 
             ViewBag.Score = $"{correctCount} / {Answers.Count}";
             return View("TestResults");
         }
+
         // Action to display the final score
         public IActionResult TestResults(int score)
         {
