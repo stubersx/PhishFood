@@ -1,5 +1,31 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<PhishFood.Models.Training>
+
 @{
+    ViewData["Title"] = "Selection";
 }
+
+@section style {
+    <style>
+        body {
+            background: url('/images/island.jpg') no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+ }
+
+@section script {
+    <script>
+        var element = document.getElementById("wrapper");
+        element.classList.remove("container");
+        element.classList.add("container-fluid");
+    </script>
+ }
+
+<h1>@ViewData["Title"] - View</h1>
+
+<a asp-action="Train">
+    <div>
+        Phishing
+    </div>
+</a>

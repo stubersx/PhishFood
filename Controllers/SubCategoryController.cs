@@ -58,9 +58,10 @@ namespace PhishFood.Controllers
         }
 
         // GET: Subcategory/Create
-        public IActionResult Create(Category category)
+        public IActionResult Create()
         {
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", !String.IsNullOrEmpty(category.Type) ? category.ID : "");
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type");
+            //Category category - ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", !String.IsNullOrEmpty(category.Type) ? category.ID : "");
             return View();
         }
 
@@ -76,12 +77,12 @@ namespace PhishFood.Controllers
                 foreach (var item in _context.Subcategories)
                 {
                     if (item.Type == subcategory.Type)
-                        return RedirectToAction("Create", "Training");
+                        return RedirectToAction("CategoryView");
                 }
 
                 _context.Add(subcategory);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "Training", subcategory);
+                return RedirectToAction("CategoryView", subcategory);
             }
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type", subcategory.CategoryID);
             return View(subcategory);
@@ -171,7 +172,7 @@ namespace PhishFood.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("CategoryView", "Subcategory");
         }
 
         private bool SubcategoryExists(int id)
