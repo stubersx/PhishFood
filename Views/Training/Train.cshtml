@@ -1,7 +1,12 @@
 ﻿@model IEnumerable<PhishFood.Models.Training>
 
 @{
-    ViewData["Title"] = "Train";
+    ViewData["Title"] = "Training Content";
 }
 
-<h1>@ViewData["Title"] - View</h1>
+@foreach (var item in Model)
+{
+    <div class="content">
+        @Html.Raw(item.Content)
+    </div>  
+}

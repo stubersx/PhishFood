@@ -10,13 +10,12 @@
 <div class="add-content">
     <div class="wrapper p-5">
         <div class="dropdown">
-            <p class="text-start">
-                <button class="btn btn-outline-danger dropbtn" onclick="Dropdown()">+ New</button>
+            <p class="text-start mb-3">
+                <a class="btn btn-outline-danger" asp-action="Create" asp-controller="Category">+ Category</a>
+                <a class="btn btn-outline-danger" asp-action="Create" asp-controller="Subcategory">+ Subcategory</a>
             </p>
-            <div id="dropdown-content" class="dropdown-content">
-                <a asp-action="Create" asp-controller="Category">Category</a>
-                <a asp-action="Create" asp-controller="Subcategory">Subcategory</a>
-            </div>
+            <p class="text-start">
+            </p>
         </div>
 
         <table class="table table-bordered">

@@ -18,10 +18,22 @@ namespace PhishFood.Controllers
             _context = context;
         }
 
-        // Training/Train
-        public async Task<IActionResult> Train()
+        // Training/Selection
+        public async Task<IActionResult> Selection()
         {
             return View(await _context.Trainings.ToListAsync());
+        }
+
+        // Training/Train
+        public async Task<IActionResult> Train(string searchQuery)
+        {
+            // Start by including the Category to filter by Category.Name
+            var trainingQuery = _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
+
+            // Get the list of filtered Testings asynchronously
+            var training = await trainingQuery.ToListAsync();
+
+            return View(training);  // Return the filtered Testings to the View
         }
 
         // GET: Training

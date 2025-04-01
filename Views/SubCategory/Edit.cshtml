@@ -1,21 +1,12 @@
 ﻿@model PhishFood.Models.Subcategory
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Subcategory";
 }
 
 <div class="add-content">
-    <div class="wrapper edit">
+    <div class="wrapper">
         <h1>@ViewData["Title"] <i class="fa fa-file-text-o"></i></h1>
-        <div class="items">
-            <button class="btn btn-outline-success" disabled>1. Category</button>
-            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
-            <button class="btn btn-outline-success active">2. Subcategory</button>
-            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
-            <button class="btn btn-outline-success" disabled>3. Training</button>
-            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
-            <button class="btn btn-outline-success" disabled>4. Testing</button>
-        </div>
         <hr />
         <div class="row">
             <div class="offset-lg-3 col-lg-6">
@@ -33,8 +24,9 @@
                         <span asp-validation-for="CategoryID" class="text-danger"></span>
                     </div>
                     <div class="form-group btns">
-                        <input type="submit" value="Save" class="btn btn-outline-danger" />
-                        <a asp-action="CategoryView" asp-controller="Subcategory" class="btn btn-outline-secondary">Cancel</a>
+                        <input type="submit" value="Save" class="btn btn-outline-primary" />
+                        <a asp-action="Delete" asp-route-id="@Model?.ID" class="btn btn-outline-danger">Delete</a>
+                        <a asp-action="CategoryView" class="btn btn-outline-secondary">Cancel</a>
                     </div>
                 </form>
             </div>

@@ -65,7 +65,8 @@ namespace PhishFood.Controllers
 
                 _context.Add(category);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "Subcategory", category);
+                return RedirectToAction("CategoryView", "Subcategory");
+                // return RedirectToAction("Create", "Subcategory", category);
             }
             return View(category);
         }
@@ -151,7 +152,7 @@ namespace PhishFood.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("CategoryView", "Subcategory");
         }
 
         private bool CategoryExists(int id)

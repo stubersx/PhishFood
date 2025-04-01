@@ -1,64 +1,111 @@
 ﻿@model IEnumerable<PhishFood.Models.Training>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Training Content List";
 }
 
-<h1 style="text-align: center;">Training Content</h1>
-<hr />
-<p class="center">
-    <button class="create-button"><a asp-action="Create" style="text-decoration: none; color: white; font-size: 18px;">Create New</a></button>
-</p>
-<div class="center">
-    <!-- Search Form -->
-    <form method="get">
-        <button type="submit" class="submit-button">Search</button>
-        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
-    </form>
+<div class="add-content">
+    <div class="wrapper p-5">
+        <h1 class="text-center mb-5">@ViewData["Title"]</h1>
+
+            <!-- Search Form -->
+            <!-- 
+            <form method="get">
+                <button type="submit" class="btn btn-outline-success">Search</button>
+                <input type="text" name="searchQuery" value="ViewData["searchQuery"]" placeholder="Search..." />
+            </form>
+             -->
+        <div class="center">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Category)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Subcategory)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Content)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.Raw(item.ID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Category.Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Subcategory.Type)
+                                </td>
+                                <td>
+                                    @Html.Raw(item.Content)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No Results found</p>
+            }
+        </div>
+        <p class="text-end">
+            <a class="btn btn-outline-danger" asp-action="Create">Create New</a>
+        </p>
+    </div>
 </div>
-<div class="center">
-    @if (Model != null && Model.Any())
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ID)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Category)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Subcategory)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.Raw(item.ID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Category.Type)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Subcategory.Type)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No Results found</p>
-    }
-</div>
+
+<!--
+    header idea
+        <div class="items">
+            <button class="btn btn-outline-success" disabled>1. Category</button>
+            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
+            <button class="btn btn-outline-success active">2. Subcategory</button>
+            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
+            <button class="btn btn-outline-success" disabled>3. Training</button>
+            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
+            <button class="btn btn-outline-success" disabled>4. Testing</button>
+        </div>
+
+        .items {
+            margin-top: 5%;
+            text-align: center;
+
+        }
+        .items button {
+            display: block;
+            justify-self: center;
+            margin: 3% 0;
+        }
+        .icon {
+            display: none;
+        }
+
+        media only screen and (min-width: 992px) {
+            .items button {
+                display: inline;
+                margin: 0 3%;
+            }
+            .icon {
+                display: inline;
+            }
+        }
+-->

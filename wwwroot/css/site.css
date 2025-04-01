@@ -96,20 +96,26 @@ ul {
     height: 100%;
     width: 100%;
 }
-
-/* category, subcategory - create */
-.items {
+.wrapper h1 {
     margin-top: 5%;
     text-align: center;
 }
-.items button {
-    display: block;
-    justify-self: center;
-    margin: 3% 0;
-}
-.icon {
+.wrapper hr {
     display: none;
 }
+.wrapper table a {
+    color: black;
+}
+.wrapper table a:hover {
+    color: red;
+}
+@media only screen and (min-width: 992px) {
+    .wrapper hr {
+        display: block;
+    }
+}
+
+/* category, subcategory, training pages - create & edit */
 .create {
     margin: 5% 0;
 }
@@ -121,32 +127,11 @@ ul {
     text-align: center;
 }
 
-@media only screen and (min-width: 992px) {
-    .items button {
-        display: inline;
-        margin: 0 3%;
-    }
-    .icon {
-        display: inline;
-    }
-}
-
-/* category, subcategory - edit */
-.edit h1 {
-    margin-top: 5%;
-    text-align: center;
-}
-.edit .items, .edit hr {
-    display: none;
-}
-
-@media only screen and (min-width: 992px) {
-    .edit h1 {
-        text-align: start;
-    }
-    .edit .items, .edit hr {
-        display: block;
-    }
+/* content pages */
+.content {
+    border: 3px solid black;
+    margin: 5%;
+    padding: 5%;
 }
 
 /* testing, result, student pages */
