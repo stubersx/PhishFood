@@ -1,0 +1,40 @@
+﻿@model IEnumerable<PhishFood.Models.Testing>
+
+@{
+    ViewData["Title"] = "Taketest";
+    var tests = ViewData["Tests"] as List<Testing>;
+    var categories = ViewData["Categories"] as List<string>;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select a Test</title>
+
+</head>
+<body>
+    <h2 class="center">Graded Unit Tests</h2>
+    <br />
+    <div class="grid-container center">
+        @foreach (var cat in categories)
+        {
+            <div class="test-card">
+                <h3>@cat</h3>
+                <a href="@Url.Action("GradedTestWarning", "Testing", new { category = cat })">Start Test</a>
+            </div>
+        }
+    </div>
+    <hr />
+    <h2 class="center">Practice Tests</h2>
+    <br />
+    <div class="grid-container">
+        @foreach (var subcategory in ViewData["Subcategories"] as List<string>)
+        {
+            <div class="test-card">
+                <h3>@subcategory</h3>
+                <a href="@Url.Action("StartTest", "Testing", new { subcategory = subcategory })">Start Test</a>
+            </div>
+        }
+    </div>
+</body>
+</html>

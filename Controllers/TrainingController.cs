@@ -18,6 +18,12 @@ namespace PhishFood.Controllers
             _context = context;
         }
 
+        // Training/Train
+        public async Task<IActionResult> Train()
+        {
+            return View(await _context.Trainings.ToListAsync());
+        }
+
         // GET: Training
         public async Task<IActionResult> Index(string searchQuery)
         {

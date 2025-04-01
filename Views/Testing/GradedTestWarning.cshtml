@@ -1,0 +1,12 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "Graded Test Warning";
+}
+
+<h2>Warning</h2>
+<p>You are about to start a graded test for the <strong>@Model</strong> category. Your score will be recorded.</p>
+<p>Are you sure you want to continue?</p>
+
+<a href="@Url.Action("StartTest", "Testing", new { category = Model })" class="btn btn-primary">Proceed</a>
+<a href="@Url.Action("TakeTest", "Testing")" class="btn btn-secondary">Cancel</a>

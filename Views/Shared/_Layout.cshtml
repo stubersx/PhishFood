@@ -29,10 +29,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Training" asp-action="Index">Training</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Training" asp-action="Train">Training</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Testing" asp-action="Index">Testing</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Testing" asp-action="TakeTest">Testing</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Result" asp-action="Index">Result</a>
@@ -41,10 +41,15 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Student" asp-action="Index">Student</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Subcategory" asp-action="CategoryView">Add New Content</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-white dropbtn" onmouseover="Dropdown()" href="#">Add New Content</a>
+                            <div id="dropdown-content" class="dropdown-content">
+                                <a asp-area="" asp-controller="Subcategory" asp-action="CategoryView">Category & Subcategory</a>
+                                <a asp-area="" asp-controller="Training" asp-action="Index">Training</a>
+                                <a asp-area="" asp-controller="Testing" asp-action="Index" style="border-bottom: 5px solid #008165;">Testing</a>
+                            </div>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
