@@ -22,6 +22,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAuthentication()
+.AddCookie(options =>
+{
+    options.LoginPath = "/Account/Login"; // Where users are directed to log in
+})
 .AddGoogle(options =>
 {
     IConfigurationSection googleAuthNSection =
