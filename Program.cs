@@ -4,6 +4,7 @@ using PhishFood.Data;
 using PhishFood.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -17,7 +18,22 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddDbContext<PhishFoodContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication()
+.AddCookie(options =>
+{
+    options.LoginPath = "/Account/Login"; // Where users are directed to log in
+})
+.AddGoogle(options =>
+{
+    IConfigurationSection googleAuthNSection =
+        config.GetSection("Authentication:Google");
+    options.ClientId = googleAuthNSection["ClientId"];
+    options.ClientSecret = googleAuthNSection["ClientSecret"];
+    options.CallbackPath = "/signin-google";
+});
 
 var app = builder.Build();
 
@@ -38,6 +54,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthorization();
 app.UseAuthorization();
 
 app.MapControllerRoute(

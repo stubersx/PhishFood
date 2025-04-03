@@ -52,7 +52,14 @@
                             </div>
                         </li>
                     </ul>
-                    <partial name="_LoginPartial" />
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("Login", "Account")">Login with Google</a>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("Logout", "Account")">Logout</a>
+                    }
                 </div>
             </div>
         </nav>
