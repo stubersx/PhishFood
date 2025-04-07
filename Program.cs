@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using PhishFood.Data;
 using PhishFood.Models;
 
@@ -10,30 +12,26 @@ var config = builder.Configuration;
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddDbContext<PhishFoodContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddAuthentication()
-.AddCookie(options =>
+builder.Services.AddAuthentication(options =>
 {
-    options.LoginPath = "/Account/Login"; // Where users are directed to log in
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
 })
-.AddGoogle(options =>
+.AddCookie()
+.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
 {
-    IConfigurationSection googleAuthNSection =
-        config.GetSection("Authentication:Google");
-    options.ClientId = googleAuthNSection["ClientId"];
-    options.ClientSecret = googleAuthNSection["ClientSecret"];
+    options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
+    options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
     options.CallbackPath = "/signin-google";
 });
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 

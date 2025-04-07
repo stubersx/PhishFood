@@ -3,12 +3,12 @@
 }
 
 <div class="text-center home">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (Context.User.Identity.IsAuthenticated)
+    {
+        <br />
+        <h3>Welcome @User.Identity.Name</h3>
 
-    <p style="color: red;">
-        Links for development (will be removed before deployment):
-        <a class="btn btn-outline-primary" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
-        <a class="btn btn-outline-primary" asp-area="" asp-controller="Subcategory" asp-action="Index">Subcategory</a>
-    </p>
+        <br />
+
+    }
 </div>
