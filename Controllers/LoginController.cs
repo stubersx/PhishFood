@@ -36,7 +36,7 @@ namespace YourProject.Controllers
                 claim.Type,
                 claim.Value
             });
-
+            //return Json(claims);
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
