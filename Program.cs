@@ -19,7 +19,7 @@ public class Program
         builder.Services.AddDbContext<PhishFoodContext>(options =>
             options.UseSqlServer(connectionString));
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+        builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -78,7 +78,7 @@ public class Program
         // Seeding admins on startup
         using (var scope = app.Services.CreateScope()) //defualt admin
         {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string email = "admin@admin.com";
             string password = "YesIDigress12!";
@@ -96,7 +96,7 @@ public class Program
         }
         using (var scope = app.Services.CreateScope()) //Alison
         {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string email = "athornton@nmc.edu";
             string password = "Phish.Food.For.Thought88";
