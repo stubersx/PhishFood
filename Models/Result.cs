@@ -21,6 +21,5 @@ namespace PhishFood.Models
         [Display(Name = "NMC ID")]
         public string StudentID { get; set; } = string.Empty;
         public Student? Student { get; set; }
-        public int? Attempts { get; set; }
     }
 }
