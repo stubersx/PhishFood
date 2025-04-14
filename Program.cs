@@ -19,7 +19,7 @@ public class Program
         builder.Services.AddDbContext<PhishFoodContext>(options =>
             options.UseSqlServer(connectionString));
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+        builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -78,16 +78,20 @@ public class Program
         // Seeding admins on startup
         using (var scope = app.Services.CreateScope()) //defualt admin
         {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string email = "admin@admin.com";
             string password = "YesIDigress12!";
 
             if (await userManager.FindByEmailAsync(email) == null)
             {
-                var user = new IdentityUser();
-                user.UserName = email;
-                user.Email = email;
+                var user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    FirstName = "Default",
+                    LastName = "Admin"
+                };
 
                 await userManager.CreateAsync(user, password);
 
@@ -96,16 +100,20 @@ public class Program
         }
         using (var scope = app.Services.CreateScope()) //Alison
         {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string email = "athornton@nmc.edu";
             string password = "Phish.Food.For.Thought88";
 
             if (await userManager.FindByEmailAsync(email) == null)
             {
-                var user = new IdentityUser();
-                user.UserName = email;
-                user.Email = email;
+                var user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    FirstName = "Alison",
+                    LastName = "Thornton"
+                };
 
                 await userManager.CreateAsync(user, password);
 
