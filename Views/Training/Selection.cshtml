@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<PhishFood.Models.Training>
 
 @{
-    ViewData["Title"] = "Selection";
+    ViewData["Title"] = "Training";
 }
 
 @section style {
@@ -11,21 +11,43 @@
             background-size: cover;
             background-position: center;
         }
+        .row div {
+            width: 200px;
+            height: 200px;
+            margin-top: 10%;
+        }
+        .row div a {
+            display: block;
+            width: 200px;
+            height: 200px;
+            text-align: center;
+            align-content: center;
+            color: black;
+            border: 3px solid black;
+            font-weight: bold;
+            background-color: rgba(255,255,255,0.7);
+        }
     </style>
  }
 
-@section script {
-    <script>
-        var element = document.getElementById("wrapper");
-        element.classList.remove("container");
-        element.classList.add("container-fluid");
-    </script>
- }
+<h1 class="text-center mt-5">@ViewData["Title"]</h1>
 
-<h1>@ViewData["Title"] - View</h1>
-
-<a asp-action="Train">
-    <div>
-        Phishing
+<div class="row justify-content-between">
+    <div class="col-4">
+        <a asp-action="Train">Email Phishing</a>
     </div>
-</a>
+    <div class="col-4">
+        <a asp-action="Train">SMS Phishing</a>
+    </div>
+    <div class="col-4">
+        <a asp-action="Train">Voice Phishing</a>
+    </div>
+</div>
+<div class="row justify-content-around">
+    <div class="col-4">
+        <a asp-action="Train">Spear Phishing</a>
+    </div>
+    <div class="col-4">
+        <a asp-action="Train">Whale Phishing</a>
+    </div>
+</div>

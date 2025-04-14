@@ -33,6 +33,8 @@ namespace PhishFood.Controllers
             // Get the list of filtered Testings asynchronously
             var training = await trainingQuery.ToListAsync();
 
+            ViewData["Count"] = training.Count();
+
             return View(training);  // Return the filtered Testings to the View
         }
 
@@ -93,7 +95,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Content,CategoryID,SubcategoryID")] Training training)
+        public async Task<IActionResult> Create([Bind("ID,Name,Content,Notes,CategoryID,SubcategoryID")] Training training)
         {
             if (ModelState.IsValid)
             {
@@ -129,7 +131,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Content,CategoryID,SubcategoryID")] Training training)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Content,Notes,CategoryID,SubcategoryID")] Training training)
         {
             if (id != training.ID)
             {

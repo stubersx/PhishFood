@@ -117,7 +117,7 @@ namespace PhishFood.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("CategoryView","Subcategory");
+                return RedirectToAction("CategoryView", "Subcategory");
             }
             return View(category);
         }

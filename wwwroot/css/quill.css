@@ -42,9 +42,5 @@
 }
 
 /* image */
-p > img {
-    max-width: 200px; /* let users change image size? */
-}
-
 /* indent */
 /* bulleted list */

@@ -4,17 +4,25 @@
     ViewData["Title"] = "Training Content List";
 }
 
+@section script {
+    <script>
+        var element = document.getElementById("wrapper");
+        element.classList.remove("container");
+        element.classList.add("container-fluid");
+    </script>
+ }
+
 <div class="add-content">
     <div class="wrapper p-5">
         <h1 class="text-center mb-5">@ViewData["Title"]</h1>
 
-            <!-- Search Form -->
-            <!-- 
-            <form method="get">
-                <button type="submit" class="btn btn-outline-success">Search</button>
-                <input type="text" name="searchQuery" value="ViewData["searchQuery"]" placeholder="Search..." />
-            </form>
-             -->
+        <!-- Search Form -->
+        <!--
+        <form method="get">
+            <button type="submit" class="btn btn-outline-success">Search</button>
+            <input type="text" name="searchQuery" value="ViewData["searchQuery"]" placeholder="Search..." />
+        </form>
+         -->
         <div class="center">
             @if (Model != null && Model.Any())
             {
@@ -31,7 +39,13 @@
                                 @Html.DisplayNameFor(model => model.Subcategory)
                             </th>
                             <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.Content)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Notes)
                             </th>
                             <th></th>
                         </tr>
@@ -49,9 +63,15 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Subcategory.Type)
                                 </td>
+                                <th>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </th>
                                 <td>
                                     @Html.Raw(item.Content)
                                 </td>
+                                <th>
+                                    @Html.DisplayFor(modelItem => item.Notes)
+                                </th>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                                     <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
@@ -72,40 +92,3 @@
         </p>
     </div>
 </div>
-
-<!--
-    header idea
-        <div class="items">
-            <button class="btn btn-outline-success" disabled>1. Category</button>
-            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
-            <button class="btn btn-outline-success active">2. Subcategory</button>
-            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
-            <button class="btn btn-outline-success" disabled>3. Training</button>
-            <span class="text-secondary icon"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></span>
-            <button class="btn btn-outline-success" disabled>4. Testing</button>
-        </div>
-
-        .items {
-            margin-top: 5%;
-            text-align: center;
-
-        }
-        .items button {
-            display: block;
-            justify-self: center;
-            margin: 3% 0;
-        }
-        .icon {
-            display: none;
-        }
-
-        media only screen and (min-width: 992px) {
-            .items button {
-                display: inline;
-                margin: 0 3%;
-            }
-            .icon {
-                display: inline;
-            }
-        }
--->
