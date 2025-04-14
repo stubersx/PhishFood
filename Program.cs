@@ -86,7 +86,7 @@ public class Program
             if (await userManager.FindByEmailAsync(email) == null)
             {
                 var user = new IdentityUser();
-                user.UserName = email;
+                user.UserName = user.UserName = email.Split('@')[0];
                 user.Email = email;
 
                 await userManager.CreateAsync(user, password);
@@ -104,7 +104,7 @@ public class Program
             if (await userManager.FindByEmailAsync(email) == null)
             {
                 var user = new IdentityUser();
-                user.UserName = email;
+                user.UserName = user.UserName = email.Split('@')[0];
                 user.Email = email;
 
                 await userManager.CreateAsync(user, password);
