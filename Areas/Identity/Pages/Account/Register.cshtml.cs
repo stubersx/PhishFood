@@ -121,7 +121,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser
+              var user = new ApplicationUser
                 {
                     UserName = Input.Email.Split('@')[0],
                     Email = Input.Email,
@@ -129,8 +129,6 @@ namespace PhishFood.Areas.Identity.Pages.Account
                     LastName = Input.LastName
                 };
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
