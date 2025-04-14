@@ -4,9 +4,108 @@
     ViewData["Title"] = "Training Content";
 }
 
-@foreach (var item in Model)
-{
-    <div class="content">
-        @Html.Raw(item.Content)
-    </div>  
+@section style {
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            color: white;
+            background: url('/images/cyber.jpg') no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+        nav, .footer div {
+            background: black;
+        }
+        .bottom-line {
+            border-bottom: 5px solid black;
+        }
+        .content {
+            background-color: rgba(0, 0, 0, .7);
+        }
+        video {
+            margin-top: 3%;
+            border: 5px solid white;
+            outline: 10px solid black;
+        }
+    </style>
 }
+
+<div class="page mb-5">
+    <a class="prev" onclick="plusSlides(-1)">❮</a>
+    <a class="next" onclick="plusSlides(1)">❯</a>
+</div>
+
+<aside class="section">
+    <p>1. Look at the box and think why this email is suspicious.</p>
+    <p>2. Click on the box to check the answer!</p>
+</aside>
+
+
+<div class="slideshow-container">
+    <div class="slides fade-in text-center">
+        <h1 class="display-2 mb-5" style="text-shadow: 2px 2px maroon;">Welcome to the Training Session</h1>
+        <p><button class="btn btn-dark active">1. Find the problem with the message.</button></p>
+        <p><button class="btn btn-dark active">2. Click on the box to see the explanation.</button></p>
+        <p><button class="btn btn-dark active">3. Test your knowledge</button></p>
+        <a href="~/images/sample.mp4" target="_blank">
+            <video width="400" autoplay muted loop>
+                <source src="~/images/sample.mp4" type="video/mp4" />
+                Your browser does not support HTML5 video.
+            </video>
+        </a>
+        <p>&#8679; Click on the video above to expand it.</p>
+        <div>
+        </div>
+    </div>
+    @{
+        var i = 0;
+    }
+    @foreach (var item in Model)
+    {
+        i+=1;
+        <div class="slides fade-in">
+            <div class="num">@i / @ViewBag.Count</div>
+            <div class="content" onclick="showModal()">
+                <p class="text-center">@Html.DisplayFor(modelItem => item.Name)</p>
+                <br />
+                @Html.Raw(item.Content)
+                <div class="design"></div>
+            </div>
+            @*<span class="dot" onclick="currentSlide(@ViewBag.Count + 2)">End</span>*@
+        </div>
+
+        <div class="modal">
+            <div class="modal-content">
+                <img id="owl" src="~/images/owl_black.png" />
+                <div class="modal-header">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2>Modal Header</h2>
+                </div>
+                <div class="modal-body">
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </div>
+                <div class="modal-footer">
+                    <h3>Modal Footer</h3>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="slides fade-in">
+        <div class="content text-center">
+            <p>Now you're ready to take the test!</p>
+            <p>Click the button below to continue.</p>
+            <p><a class="btn btn-outline-light fw-bold" asp-action="TakeTest" asp-controller="Testing">Begin Test</a></p>
+            <div class="mt-5">
+                <p>You can review the training pages from links below.</p>
+                <span class="dot" onclick="currentSlide(1)">Start</span>
+                @for (int j = 1; j <= ViewBag.Count; j++)
+                {
+                    <span class="dot" onclick="currentSlide(@j+1)">Page @j</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,18 +14,28 @@
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group create">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group create">
                         <label asp-for="Content" class="control-label"></label>
                         <div id="editor" style="font-size: 1rem; height: 20vh;"></div>
                         <input asp-for="Content" class="form-control" hidden />
                         <span asp-validation-for="Content" class="text-danger"></span>
                     </div>
                     <div class="form-group create">
+                        <label asp-for="Notes" class="control-label"></label>
+                        <textarea asp-for="Notes" class="form-control"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                    <div class="form-group create">
                         <label asp-for="CategoryID" class="control-label"></label>
-                        <select asp-for="CategoryID" class ="form-control" asp-items="ViewBag.CategoryID"></select>
+                        <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
                     </div>
                     <div class="form-group create">
                         <label asp-for="SubcategoryID" class="control-label"></label>
-                        <select asp-for="SubcategoryID" class ="form-control" asp-items="ViewBag.SubcategoryID"></select>
+                        <select asp-for="SubcategoryID" class="form-control" asp-items="ViewBag.SubcategoryID"></select>
                     </div>
                     <div class="form-group btns">
                         <input type="submit" value="Create" class="btn btn-outline-danger" />
@@ -68,5 +78,7 @@
 }
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
