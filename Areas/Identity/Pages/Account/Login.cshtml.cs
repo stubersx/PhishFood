@@ -127,43 +127,43 @@ namespace PhishFood.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/");
+          returnUrl ??= Url.Content("~/");
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+          ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
-            {
-                ApplicationUser user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User logged in.");
+          if (ModelState.IsValid)
+          {
+              ApplicationUser user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+              // This doesn't count login failures towards account lockout
+              // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+              var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+              if (result.Succeeded)
+              {
+                  _logger.LogInformation("User logged in.");
 
-                    await EnsureStudentExists(user);
+                  await EnsureStudentExists(user);
 
-                    return LocalRedirect(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
-                }
-            }
+                  return LocalRedirect(returnUrl);
+              }
+              if (result.RequiresTwoFactor)
+              {
+                  return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+              }
+              if (result.IsLockedOut)
+              {
+                  _logger.LogWarning("User account locked out.");
+                  return RedirectToPage("./Lockout");
+              }
+              else
+              {
+                  ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                  return Page();
+              }
+          }
 
 
-            // If we got this far, something failed, redisplay form
-            return Page();
+          // If we got this far, something failed, redisplay form
+          return Page();
         }
     }
 }
