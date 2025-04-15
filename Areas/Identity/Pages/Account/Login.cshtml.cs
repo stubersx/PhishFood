@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using PhishFood.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace PhishFood.Areas.Identity.Pages.Account
 {
@@ -22,11 +23,13 @@ namespace PhishFood.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly PhishFoodContext _context;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, PhishFoodContext context)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
         /// <summary>
@@ -66,7 +69,6 @@ namespace PhishFood.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [EmailAddress]
             public string Email { get; set; }
 
             /// <summary>
@@ -101,6 +103,27 @@ namespace PhishFood.Areas.Identity.Pages.Account
 
             ReturnUrl = returnUrl;
         }
+        private async Task EnsureStudentExists(ApplicationUser user)
+        {
+            // Skip admins
+            var isAdmin = await _signInManager.UserManager.IsInRoleAsync(user, "Admin");
+            if (isAdmin) return;
+
+            // Check if the student already exists
+            var exists = await _context.Students.AnyAsync(s => s.ID == user.UserName);
+            if (exists) return;
+
+            // Create new student record
+            var student = new Student
+            {
+                ID = user.UserName,
+                FirstName = user.FirstName ?? "Unknown",
+                LastName = user.LastName ?? "Unknown"
+            };
+
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
@@ -110,12 +133,16 @@ namespace PhishFood.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                ApplicationUser user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    await EnsureStudentExists(user);
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -133,6 +160,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
                     return Page();
                 }
             }
+
 
             // If we got this far, something failed, redisplay form
             return Page();

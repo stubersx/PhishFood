@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using PhishFood.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace PhishFood.Areas.Identity.Pages.Account
 {
@@ -28,6 +29,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
+        private readonly PhishFoodContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
 
@@ -36,12 +38,14 @@ namespace PhishFood.Areas.Identity.Pages.Account
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             ILogger<ExternalLoginModel> logger,
+            PhishFoodContext context,
             IEmailSender emailSender)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
+            _context = context;
             _logger = logger;
             _emailSender = emailSender;
         }
@@ -93,7 +97,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
             [Display(Name = "NMC Email")]
             public string Email { get; set; }
         }
-        
+
         public IActionResult OnGet() => RedirectToPage("./Login");
 
         public IActionResult OnPost(string provider, string returnUrl = null)
@@ -124,6 +128,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+
                 return LocalRedirect(returnUrl);
             }
             if (result.IsLockedOut)
@@ -144,6 +149,24 @@ namespace PhishFood.Areas.Identity.Pages.Account
                 }
                 return Page();
             }
+        }
+        private async Task EnsureStudentExists(ApplicationUser user)
+        {
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (isAdmin) return;
+
+            var exists = await _context.Students.AnyAsync(s => s.ID == user.UserName);
+            if (exists) return;
+
+            var student = new Student
+            {
+                ID = user.UserName,
+                FirstName = user.FirstName ?? "Unknown",
+                LastName = user.LastName ?? "Unknown"
+            };
+
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
@@ -176,6 +199,8 @@ namespace PhishFood.Areas.Identity.Pages.Account
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                        await EnsureStudentExists(user);
 
                         var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
