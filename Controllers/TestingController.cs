@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhishFood.Models;
+using PhishFood;
 
 namespace PhishFood.Controllers
 {
@@ -18,6 +19,146 @@ namespace PhishFood.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> TestSelection()
+        {
+            var testings = await _context.Testings
+                .Include(t => t.Category)
+                .Include(t => t.Subcategory)
+                .ToListAsync();
+
+            // Unique categories
+            var categories = testings
+                .GroupBy(t => new { t.CategoryID, Category = t.Category.Type })
+                .Select(g => new
+                {
+                    CategoryID = g.Key.CategoryID,
+                    Category = g.Key.Category
+                })
+                .Distinct()
+                .ToList();
+
+            // Unique (Category, Subcategory) pairs
+            var subcategories = testings
+                .Where(t => t.SubcategoryID != null)
+                .GroupBy(t => new { t.CategoryID, t.SubcategoryID, Category = t.Category.Type, Subcategory = t.Subcategory.Type })
+                .Select(g => new
+                {
+                    CategoryID = g.Key.CategoryID,
+                    SubcategoryID = g.Key.SubcategoryID,
+                    Category = g.Key.Category,
+                    Subcategory = g.Key.Subcategory
+                })
+                .Distinct()
+                .ToList();
+
+            ViewBag.Categories = categories;
+            ViewBag.Subcategories = subcategories;
+
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> StartTest(int? categoryId, int? subcategoryId)
+        {
+            var query = _context.Testings
+                .Include(t => t.Category)
+                .Include(t => t.Subcategory)
+                .AsQueryable();
+
+            if (subcategoryId.HasValue)
+                query = query.Where(t => t.SubcategoryID == subcategoryId);
+            else if (categoryId.HasValue)
+                query = query.Where(t => t.CategoryID == categoryId);
+
+            var questions = await query.ToListAsync();
+            var selectedQuestions = questions
+                .OrderBy(q => Guid.NewGuid())
+                .Take(10)
+                .Select(q => new QuestionDTO
+                {
+                    ID = q.ID,
+                    Question = q.Question,
+                    Key = q.Key,
+                    Option1 = q.Option1,
+                    Option2 = q.Option2,
+                    Option3 = q.Option3,
+                    Explanation = q.Explanation
+                }).ToList();
+
+            var viewModel = new TestSessionViewModel
+            {
+                Questions = selectedQuestions, // Or adjust view model to accept DTO
+                CurrentIndex = 0
+            };
+
+
+            TempData.Put("TestSession", viewModel);
+            return RedirectToAction("Question");
+        }
+        [HttpGet]
+        public IActionResult Question()
+        {
+            var session = TempData.Get<TestSessionViewModel>("TestSession");
+
+            if (session == null)
+                return RedirectToAction("StartTest");
+
+            // Edge case: all questions answered, redirect to final score
+            if (session.CurrentIndex >= session.Questions.Count)
+                return RedirectToAction("FinalScore");
+
+            var current = session.Questions[session.CurrentIndex];
+
+            // Shuffle the options
+            var options = new List<string> { current.Key, current.Option1, current.Option2, current.Option3 };
+            var rng = new Random();
+            current.ShuffledOptions = options.OrderBy(x => rng.Next()).ToList();
+
+            TempData.Put("TestSession", session);
+            return View(session);
+        }
+
+        [HttpPost]
+        public IActionResult SubmitAnswer(string selectedAnswer)
+        {
+            var session = TempData.Get<TestSessionViewModel>("TestSession");
+            if (session == null)
+                return RedirectToAction("StartTest");
+
+            var current = session.Questions[session.CurrentIndex];
+            session.SelectedAnswer = selectedAnswer;
+            session.IsCorrect = selectedAnswer == current.Key;
+
+            if (session.IsCorrect)
+                session.Score++;
+
+            session.ShowExplanation = true;
+
+            TempData.Put("TestSession", session);
+            return RedirectToAction("Question");
+        }
+        [HttpPost]
+        public IActionResult NextQuestion()
+        {
+            var session = TempData.Get<TestSessionViewModel>("TestSession");
+            if (session == null)
+                return RedirectToAction("StartTest");
+
+            session.CurrentIndex++;
+            session.ShowExplanation = false;
+            session.IsCorrect = false;
+
+            TempData.Put("TestSession", session);
+
+            return RedirectToAction("Question");
+        }
+        public IActionResult FinalScore()
+        {
+            var session = TempData.Get<TestSessionViewModel>("TestSession");
+            if (session == null)
+                return RedirectToAction("StartTest");
+
+            return View(session);
+        }
         // GET: Testing
         public async Task<IActionResult> Index(string searchQuery)
         {
