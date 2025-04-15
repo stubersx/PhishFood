@@ -1,0 +1,33 @@
+﻿@model TestSessionViewModel
+@{
+    ViewData["Title"] = "Final Score";
+}
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4">Test Complete</h1>
+        <p class="lead">Well done! Here's how you did:</p>
+
+        <div class="card shadow-sm mx-auto" style="max-width: 400px;">
+            <div class="card-body">
+                <h3 class="card-title">Your Score:</h3>
+                <p class="card-text display-6">@Model.Score / @Model.Questions.Count</p>
+
+                @if (Model.Score == Model.Questions.Count)
+                {
+                    <div class="alert alert-success">Perfect score! You nailed it.</div>
+                }
+                else if (Model.Score >= Model.Questions.Count * 0.7)
+                {
+                    <div class="alert alert-info">Nice job! You passed the test.</div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">Keep practicing to improve your score.</div>
+                }
+
+                <a href="@Url.Action("TestSelection", "Testing")" class="btn btn-primary mt-3">Back to Tests</a>
+            </div>
+        </div>
+    </div>
+</div>
