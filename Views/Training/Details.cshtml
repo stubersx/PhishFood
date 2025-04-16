@@ -4,31 +4,41 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="add-content">
-    <div class="wrapper p-5">
         <h1 style="text-align: center;">Content Details</h1>
         <hr />
-        <div class="center">
-            <dl class="row">
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Content)
-                </dt>
-                <dd class="col-sm-10">
+        <div class="row center">
+            <div class="col-md-4" style="width: 60%">
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.Name)</strong>
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.Name)
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.Content)</strong>
+                </div>
+                <div>
                     @Html.Raw(Model.Content)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Category)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.Notes)</strong>
+                </div>
+                <div>
+                    @Html.DisplayFor(model => model.Notes)
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.Category)</strong>
+                </div>
+                <div>
                     @Html.DisplayFor(model => model.Category.Type)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Subcategory)
-                </dt>
-                <dd class="col-sm-10">
+                </div>
+                <div>
+                    <strong>@Html.DisplayNameFor(model => model.Subcategory)</strong>
+                </div>
+                <div>
                     @Html.DisplayFor(model => model.Subcategory.Type)
-                </dd>
-            </dl>
+                </div>
+            </div>
         </div>
         <div class="center">
             <div>
@@ -36,5 +46,3 @@
                 <a asp-action="Index">Back to List</a>
             </div>
         </div>
-    </div>
-</div>
