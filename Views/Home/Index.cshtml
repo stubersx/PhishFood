@@ -1,26 +1,39 @@
 ﻿@using Microsoft.AspNetCore.Identity;
-
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-
 
 @{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
-<p>Logged in: @User.Identity.IsAuthenticated</p>
-<p>User: @User.Identity.Name</p>
-<p>Is Admin: @User.IsInRole("Admin")</p>
 @if (User.IsInRole("Admin"))
 {
-    <h1>Hello Admin</h1>
+    <h1 class="center">Welcome, @User.Identity.Name!</h1>
 }
 else
 {
+    <div class="container text-center mt-5">
+        <h1 class="display-4 mb-4">Welcome to the Phishing Awareness Portal</h1>
 
+        <p class="lead">
+            Phishing is a form of cyberattack where attackers disguise themselves as trustworthy entities to steal sensitive information like passwords, credit card numbers, and personal data.
+            It’s commonly used in emails, text messages, and fake websites to trick users into giving up their details.
+        </p>
+
+        <p class="lead">
+            Understanding phishing is crucial because it’s one of the most widespread and effective tactics used against individuals and organizations today.
+            This portal is designed to help you learn how phishing works, how to spot it, and test your knowledge in realistic scenarios.
+        </p>
+
+        <div class="mt-5">
+            <a asp-controller="Test" asp-action="Index" class="btn btn-primary btn-lg me-3">Take a Test</a>
+            <a asp-controller="Learn" asp-action="Index" class="btn btn-secondary btn-lg">Learn About Phishing</a>
+        </div>
+
+        <div class="mt-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Brook_trout_fish.jpg/320px-Brook_trout_fish.jpg"
+                 alt="Fish image"
+                 class="img-fluid rounded shadow-sm"
+                 style="max-width: 200px;" />
+        </div>
+    </div>
 }
