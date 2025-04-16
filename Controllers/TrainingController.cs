@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ namespace PhishFood.Controllers
 
             return View(training);  // Return the filtered Testings to the View
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Training
         public async Task<IActionResult> Index(string searchQuery)
         {
@@ -61,7 +62,7 @@ namespace PhishFood.Controllers
 
             return View(training);  // Return the filtered Testings to the View
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Training/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -81,7 +82,7 @@ namespace PhishFood.Controllers
 
             return View(training);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Training/Create
         public IActionResult Create()
         {
@@ -109,6 +110,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Training/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -131,6 +133,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Content,Notes,CategoryID,SubcategoryID")] Training training)
         {
             if (id != training.ID)
@@ -164,6 +167,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Training/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -186,6 +190,7 @@ namespace PhishFood.Controllers
         // POST: Training/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var training = await _context.Trainings.FindAsync(id);

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PhishFood.Models;
 using PhishFood;
 using static System.Formats.Asn1.AsnWriter;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PhishFood.Controllers
 {
@@ -188,7 +189,7 @@ namespace PhishFood.Controllers
 
             return View(session);
         }
-
+        [Authorize(Roles ="Admin")]
         // GET: Testing
         public async Task<IActionResult> Index(string searchQuery)
         {
@@ -212,7 +213,7 @@ namespace PhishFood.Controllers
 
             return View(testings);  // Return the filtered Testings to the View
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Testing/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -232,7 +233,7 @@ namespace PhishFood.Controllers
 
             return View(testing);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Testing/Create
         public IActionResult Create()
         {
@@ -246,6 +247,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID")] Testing testing)
         {
             if (ModelState.IsValid)
@@ -267,6 +269,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Testing/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -289,6 +292,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID")] Testing testing)
         {
             if (id != testing.ID)
@@ -322,6 +326,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Testing/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -344,6 +349,7 @@ namespace PhishFood.Controllers
         // POST: Testing/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var testing = await _context.Testings.FindAsync(id);
