@@ -93,8 +93,6 @@ public class Program
                     LastName = "User"
                 };
 
-                var result = await userManager.CreateAsync(user, password);
-
                 await userManager.CreateAsync(user, password);
 
                 await userManager.AddToRoleAsync(user, "Admin");
