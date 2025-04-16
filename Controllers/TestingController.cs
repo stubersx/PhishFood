@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhishFood.Models;
 using PhishFood;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace PhishFood.Controllers
 {
@@ -86,10 +87,11 @@ namespace PhishFood.Controllers
 
             var viewModel = new TestSessionViewModel
             {
-                Questions = selectedQuestions, // Or adjust view model to accept DTO
-                CurrentIndex = 0
+                Questions = selectedQuestions,
+                CurrentIndex = 0,
+                CategoryID = categoryId ?? 0,
+                SubcategoryID = subcategoryId
             };
-
 
             TempData.Put("TestSession", viewModel);
             return RedirectToAction("Question");
@@ -151,14 +153,42 @@ namespace PhishFood.Controllers
 
             return RedirectToAction("Question");
         }
-        public IActionResult FinalScore()
+        public async Task<IActionResult> FinalScore()
         {
             var session = TempData.Get<TestSessionViewModel>("TestSession");
             if (session == null)
                 return RedirectToAction("StartTest");
 
+            // Capture the username (assumed to match StudentID)
+            var studentId = User.Identity?.Name;
+            if (string.IsNullOrEmpty(studentId))
+            {
+                // Redirect or handle case where user is not authenticated
+                return Redirect("/Identity/Account/Login");
+            }
+
+            // Don't save subcategory-level results
+            if (session.SubcategoryID == null)
+            {
+                var category = await _context.Categories.FindAsync(session.CategoryID);
+                if (category != null)
+                {
+                    var result = new Result
+                    {
+                        Date = DateTime.Now,
+                        Score = session.Score,
+                        CategoryID = category.ID,
+                        StudentID = studentId
+                    };
+
+                    _context.Results.Add(result);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
             return View(session);
         }
+
         // GET: Testing
         public async Task<IActionResult> Index(string searchQuery)
         {

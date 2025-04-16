@@ -7,4 +7,6 @@
     public bool IsFinished { get; set; }
     public string? SelectedAnswer { get; set; }
     public bool IsCorrect { get; set; }
+    public int CategoryID { get; set; }
+    public int? SubcategoryID { get; set; }
 }

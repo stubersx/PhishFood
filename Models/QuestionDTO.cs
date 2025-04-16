@@ -8,4 +8,5 @@
     public string Option3 { get; set; } = string.Empty;
     public string Explanation { get; set; } = string.Empty;
     public List<string> ShuffledOptions { get; set; } = new();
+    public int CategoryID { get; set; }
 }
