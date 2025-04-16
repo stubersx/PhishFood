@@ -80,8 +80,8 @@ public class Program
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            string email = "athornton@nmc.edu";
-            string password = "Phish.Food.For.Thought88";
+            string email = "admin@admin.com";
+            string password = "YetIDigress12!";
 
             if (await userManager.FindByEmailAsync(email) == null)
             {
