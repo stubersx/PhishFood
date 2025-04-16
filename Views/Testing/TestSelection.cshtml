@@ -4,7 +4,8 @@
     var subcategories = ViewBag.Subcategories as IEnumerable<dynamic>;
 }
 
-<h2>Unit Tests</h2>
+<h2 class="center">Graded Unit Tests</h2>
+<br />
 <div class="tile-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
     @foreach (var cat in categories)
     {
@@ -18,7 +19,8 @@
 
 <hr />
 
-<h2>Practice Tests</h2>
+<h2 class="center">Practice Tests</h2>
+<br />
 <div class="tile-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
     @foreach (var sub in subcategories)
     {
