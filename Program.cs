@@ -80,20 +80,16 @@ public class Program
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            string email = "admin@admin.com";
-            string password = "YetIDigress12!";
+            string email = "athornton@nmc.edu";
+            string password = "Phish.Food.For.Thought88";
 
             if (await userManager.FindByEmailAsync(email) == null)
             {
-                var user = new ApplicationUser
-                {
-                    UserName = email.Split('@')[0],
-                    Email = email,
-                    FirstName = "Admin",
-                    LastName = "User"
-                };
-
-                var result = await userManager.CreateAsync(user, password);
+                var user = new ApplicationUser();
+                user.UserName = email.Split('@')[0];
+                user.Email = email;
+                user.FirstName = "Admin";
+                user.LastName = "User";
 
                 await userManager.CreateAsync(user, password);
 
