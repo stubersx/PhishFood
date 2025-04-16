@@ -4,25 +4,20 @@
     ViewData["Title"] = "Training Content List";
 }
 
-@section script {
-    <script>
-        var element = document.getElementById("wrapper");
-        element.classList.remove("container");
-        element.classList.add("container-fluid");
-    </script>
- }
+        <h1 class="center">@ViewData["Title"]</h1>
+        <hr />
 
-<div class="add-content">
-    <div class="wrapper p-5">
-        <h1 class="text-center mb-5">@ViewData["Title"]</h1>
+<p class="center">
+    <button class="create-button"><a asp-action="Create" style="text-decoration: none; color: white; font-size: 18px;">Create New</a></button>
+</p>
+<div class="center">
+    <!-- Search Form -->
+    <form method="get">
+        <button type="submit" class="submit-button">Search</button>
+        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
+    </form>
+</div>
 
-        <!-- Search Form -->
-        <!--
-        <form method="get">
-            <button type="submit" class="btn btn-outline-success">Search</button>
-            <input type="text" name="searchQuery" value="ViewData["searchQuery"]" placeholder="Search..." />
-        </form>
-         -->
         <div class="center">
             @if (Model != null && Model.Any())
             {
@@ -41,12 +36,6 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Name)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Content)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Notes)
-                            </th>
                             <th></th>
                         </tr>
                     </thead>
@@ -63,15 +52,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Subcategory.Type)
                                 </td>
-                                <th>
-                                    @Html.DisplayFor(modelItem => item.Name)
-                                </th>
                                 <td>
-                                    @Html.Raw(item.Content)
+                                    @Html.DisplayFor(modelItem => item.Name)
                                 </td>
-                                <th>
-                                    @Html.DisplayFor(modelItem => item.Notes)
-                                </th>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                                     <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
@@ -87,8 +70,3 @@
                 <p>No Results found</p>
             }
         </div>
-        <p class="text-end">
-            <a class="btn btn-outline-danger" asp-action="Create">Create New</a>
-        </p>
-    </div>
-</div>
