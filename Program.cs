@@ -85,13 +85,11 @@ public class Program
 
             if (await userManager.FindByEmailAsync(email) == null)
             {
-                var user = new ApplicationUser
-                {
-                    UserName = email.Split('@')[0],
-                    Email = email,
-                    FirstName = "Admin",
-                    LastName = "User"
-                };
+                var user = new ApplicationUser();
+                user.UserName = email.Split('@')[0];
+                user.Email = email;
+                user.FirstName = "Admin";
+                user.LastName = "User";
 
                 await userManager.CreateAsync(user, password);
 
