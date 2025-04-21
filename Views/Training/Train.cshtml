@@ -51,7 +51,7 @@
 <div class="slideshow-container">
     <div class="slides fade-in text-center">
         <h1 class="display-2 mb-5" style="text-shadow: 2px 2px maroon;">Welcome to the Training Session</h1>
-        <form asp-action="Train" method="get">
+        <form asp-action="Train" method="get" class="text-end">
             <select name="Subcategory" id="Subcategory">
                 @foreach (var item in Model)
                 {
@@ -60,8 +60,7 @@
                     </option>
                 }
             </select>
-            <button type="submit" class="btn btn-outline-success">Search</button>
-            <button class="btn btn-outline-secondary" asp-action="Index">Clear</button>
+            <button type="submit" class="btn btn-outline-light">Filter</button>
         </form>
         <p><button class="btn btn-dark active">1. Find the problem with the message.</button></p>
         <p><button class="btn btn-dark active">2. Click on the box to see the explanation.</button></p>
