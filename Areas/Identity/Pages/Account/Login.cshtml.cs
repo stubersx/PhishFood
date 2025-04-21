@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using PhishFood.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace PhishFood.Areas.Identity.Pages.Account
 {
@@ -22,69 +18,44 @@ namespace PhishFood.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly PhishFoodContext _context;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, PhishFoodContext context)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // Bind the input model to capture form inputs
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // List of external login schemes
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // Return URL
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // Temp data for error messages
         [TempData]
         public string ErrorMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // Input model for login data
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
-            [EmailAddress]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
 
+        // Get method for the login page
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
@@ -98,10 +69,33 @@ namespace PhishFood.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
             ReturnUrl = returnUrl;
         }
 
+        // Ensure student exists or create a new student if not
+        private async Task EnsureStudentExists(ApplicationUser user)
+        {
+            // Skip if the user is an admin
+            var isAdmin = await _signInManager.UserManager.IsInRoleAsync(user, "Admin");
+            if (isAdmin) return;
+
+            // Check if the student already exists
+            var exists = await _context.Students.AnyAsync(s => s.ID == user.UserName);
+            if (exists) return;
+
+            // Create new student record
+            var student = new Student
+            {
+                ID = user.UserName,
+                FirstName = "Unknown",
+                LastName = "Unknown"
+            };
+
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
+        }
+
+        // Post method for handling login submission
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -110,31 +104,50 @@ namespace PhishFood.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                ApplicationUser user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+
+                // If no user found by email, try finding by username
+                if (user == null)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    user = await _signInManager.UserManager.FindByNameAsync(Input.Email);
                 }
-                if (result.RequiresTwoFactor)
+
+                // If user is found, attempt to sign them in
+                if (user != null)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
+                    var result = await _signInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User logged in.");
+
+                        await EnsureStudentExists(user);
+
+                        return LocalRedirect(returnUrl);
+                    }
+
+                    if (result.RequiresTwoFactor)
+                    {
+                        return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    }
+
+                    if (result.IsLockedOut)
+                    {
+                        _logger.LogWarning("User account locked out.");
+                        return RedirectToPage("./Lockout");
+                    }
+
+                    // If login failed
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 }
                 else
                 {
+                    // If no user is found with the given email/username
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
                 }
             }
 
-            // If we got this far, something failed, redisplay form
+            // If we got here, something failed, redisplay form
             return Page();
         }
     }

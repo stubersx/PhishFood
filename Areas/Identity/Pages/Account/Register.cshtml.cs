@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PhishFood.Models;
 
@@ -29,6 +30,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly PhishFoodContext _context;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
@@ -36,6 +38,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
+            PhishFoodContext context,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -43,6 +46,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
             _emailSender = emailSender;
         }
 
@@ -134,6 +138,7 @@ namespace PhishFood.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    await EnsureStudentExists(user);
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -166,17 +171,35 @@ namespace PhishFood.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+        private async Task EnsureStudentExists(ApplicationUser user)
+        {
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (isAdmin) return;
 
-        private IdentityUser CreateUser()
+            var exists = await _context.Students.AnyAsync(s => s.ID == user.UserName);
+            if (exists) return;
+
+            var student = new Student
+            {
+                ID = user.UserName,
+                FirstName = user.FirstName ?? "Unknown",
+                LastName = user.LastName ?? "Unknown"
+            };
+
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
+        }
+
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }

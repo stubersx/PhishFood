@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Select a Test";
+    var categories = ViewBag.Categories as IEnumerable<dynamic>;
+    var subcategories = ViewBag.Subcategories as IEnumerable<dynamic>;
+}
+
+<h2 class="center">Graded Unit Tests</h2>
+<br />
+<div class="tile-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+    @foreach (var cat in categories)
+    {
+        <div class="test-tile" style="width: 250px; height: 150px; border: 1px solid #ccc; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
+            <h4>@cat.Category</h4>
+            <p>All topics in this category</p>
+            <a asp-controller="Testing" asp-action="StartTest" asp-route-categoryId="@cat.CategoryID" class="btn btn-primary">Start Unit Test</a>
+        </div>
+    }
+</div>
+
+<hr />
+
+<h2 class="center">Practice Tests</h2>
+<br />
+<div class="tile-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+    @foreach (var sub in subcategories)
+    {
+        <div class="test-tile" style="width: 250px; height: 150px; border: 1px solid #ccc; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
+            <h4>@sub.Category</h4>
+            <p>@sub.Subcategory</p>
+            <a asp-controller="Testing" asp-action="StartTest" asp-route-categoryId="@sub.CategoryID" asp-route-subcategoryId="@sub.SubcategoryID" class="btn btn-secondary">Start Test</a>
+        </div>
+    }
+</div>

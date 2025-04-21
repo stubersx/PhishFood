@@ -81,7 +81,7 @@ public class Program
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string email = "admin@admin.com";
-            string password = "YesIDigress12!";
+            string password = "YetIDigress12!";
 
             if (await userManager.FindByEmailAsync(email) == null)
             {

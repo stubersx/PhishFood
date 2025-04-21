@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PhishFood.Models;
+using PhishFood;
+using static System.Formats.Asn1.AsnWriter;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PhishFood.Controllers
 {
@@ -18,146 +21,175 @@ namespace PhishFood.Controllers
             _context = context;
         }
 
-        // Testing/TakeTest
-        public async Task<IActionResult> TakeTest()
+        public async Task<IActionResult> TestSelection()
         {
-            var tests = await _context.Testings
+            var testings = await _context.Testings
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
                 .ToListAsync();
 
-            var categories = tests.Select(t => t.Category.Type).Distinct().ToList();
-            var subcategories = tests
-                .Where(t => t.Subcategory != null)
-                .Select(t => t.Subcategory.Type)
+            // Unique categories
+            var categories = testings
+                .GroupBy(t => new { t.CategoryID, Category = t.Category.Type })
+                .Select(g => new
+                {
+                    CategoryID = g.Key.CategoryID,
+                    Category = g.Key.Category
+                })
                 .Distinct()
                 .ToList();
 
-            ViewData["Tests"] = tests;
-            ViewData["Categories"] = categories;
-            ViewData["Subcategories"] = subcategories;
+            // Unique (Category, Subcategory) pairs
+            var subcategories = testings
+                .Where(t => t.SubcategoryID != null)
+                .GroupBy(t => new { t.CategoryID, t.SubcategoryID, Category = t.Category.Type, Subcategory = t.Subcategory.Type })
+                .Select(g => new
+                {
+                    CategoryID = g.Key.CategoryID,
+                    SubcategoryID = g.Key.SubcategoryID,
+                    Category = g.Key.Category,
+                    Subcategory = g.Key.Subcategory
+                })
+                .Distinct()
+                .ToList();
+
+            ViewBag.Categories = categories;
+            ViewBag.Subcategories = subcategories;
 
             return View();
         }
-
-        public async Task<IActionResult> StartTest(string category, string subcategory = null)
+        [HttpGet]
+        public async Task<IActionResult> StartTest(int? categoryId, int? subcategoryId)
         {
-            var query = _context.Testings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
-
-            if (!string.IsNullOrEmpty(category))
-            {
-                query = query.Where(t => t.Category.Type == category);
-            }
-
-            if (!string.IsNullOrEmpty(subcategory))
-            {
-                query = query.Where(t => t.Subcategory.Type == subcategory);
-            }
-
-            var randomQuestions = await query.OrderBy(r => Guid.NewGuid()).Take(10).ToListAsync();
-
-            if (randomQuestions.Count == 0)
-            {
-                return NotFound("No test questions found for the selected category.");
-            }
-
-            // Shuffle the options for each question
-            foreach (var question in randomQuestions)
-            {
-                var options = new List<string> { question.Key, question.Option1, question.Option2, question.Option3 };
-                options = options.OrderBy(o => Guid.NewGuid()).ToList();
-
-                question.Key = options[0];
-                question.Option1 = options[1];
-                question.Option2 = options[2];
-                question.Option3 = options[3];
-            }
-
-            // Randomize the order of questions
-            randomQuestions = randomQuestions.OrderBy(q => Guid.NewGuid()).ToList();
-
-            ViewBag.Category = category;
-            ViewBag.Subcategory = subcategory;
-
-            return View("TestView", randomQuestions);
-        }
-
-        public async Task<IActionResult> TestView(int? categoryId, int? subcategoryId)
-        {
-            var tests = await _context.Testings
-                .Where(t => (categoryId == null || t.CategoryID == categoryId) && (subcategoryId == null || t.SubcategoryID == subcategoryId))
+            var query = _context.Testings
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
-                .OrderBy(t => Guid.NewGuid()) // Randomize question order
-                .Take(10) // Take 10 random questions
-                .ToListAsync();
+                .AsQueryable();
 
-            ViewData["Category"] = tests.FirstOrDefault()?.Category?.Type;
-            ViewData["Subcategory"] = tests.FirstOrDefault()?.Subcategory?.Type;
+            if (subcategoryId.HasValue)
+                query = query.Where(t => t.SubcategoryID == subcategoryId);
+            else if (categoryId.HasValue)
+                query = query.Where(t => t.CategoryID == categoryId);
 
-            return View(tests);
+            var questions = await query.ToListAsync();
+            var selectedQuestions = questions
+                .OrderBy(q => Guid.NewGuid())
+                .Take(10)
+                .Select(q => new QuestionDTO
+                {
+                    ID = q.ID,
+                    Question = q.Question,
+                    Key = q.Key,
+                    Option1 = q.Option1,
+                    Option2 = q.Option2,
+                    Option3 = q.Option3,
+                    Explanation = q.Explanation
+                }).ToList();
+
+            var viewModel = new TestSessionViewModel
+            {
+                Questions = selectedQuestions,
+                CurrentIndex = 0,
+                CategoryID = categoryId ?? 0,
+                SubcategoryID = subcategoryId
+            };
+
+            TempData.Put("TestSession", viewModel);
+            return RedirectToAction("Question");
+        }
+        [HttpGet]
+        public IActionResult Question()
+        {
+            var session = TempData.Get<TestSessionViewModel>("TestSession");
+
+            if (session == null)
+                return RedirectToAction("StartTest");
+
+            // Edge case: all questions answered, redirect to final score
+            if (session.CurrentIndex >= session.Questions.Count)
+                return RedirectToAction("FinalScore");
+
+            var current = session.Questions[session.CurrentIndex];
+
+            // Shuffle the options
+            var options = new List<string> { current.Key, current.Option1, current.Option2, current.Option3 };
+            var rng = new Random();
+            current.ShuffledOptions = options.OrderBy(x => rng.Next()).ToList();
+
+            TempData.Put("TestSession", session);
+            return View(session);
         }
 
-        // Action to handle test submission and calculate score
         [HttpPost]
-        public async Task<IActionResult> SubmitTest(List<TestAnswer> Answers)
+        public IActionResult SubmitAnswer(string selectedAnswer)
         {
-            if (Answers == null || Answers.Count == 0)
+            var session = TempData.Get<TestSessionViewModel>("TestSession");
+            if (session == null)
+                return RedirectToAction("StartTest");
+
+            var current = session.Questions[session.CurrentIndex];
+            session.SelectedAnswer = selectedAnswer;
+            session.IsCorrect = selectedAnswer == current.Key;
+
+            if (session.IsCorrect)
+                session.Score++;
+
+            session.ShowExplanation = true;
+
+            TempData.Put("TestSession", session);
+            return RedirectToAction("Question");
+        }
+        [HttpPost]
+        public IActionResult NextQuestion()
+        {
+            var session = TempData.Get<TestSessionViewModel>("TestSession");
+            if (session == null)
+                return RedirectToAction("StartTest");
+
+            session.CurrentIndex++;
+            session.ShowExplanation = false;
+            session.IsCorrect = false;
+
+            TempData.Put("TestSession", session);
+
+            return RedirectToAction("Question");
+        }
+        public async Task<IActionResult> FinalScore()
+        {
+            var session = TempData.Get<TestSessionViewModel>("TestSession");
+            if (session == null)
+                return RedirectToAction("StartTest");
+
+            // Capture the username (assumed to match StudentID)
+            var studentId = User.Identity?.Name;
+            if (string.IsNullOrEmpty(studentId))
             {
-                return BadRequest("No answers provided.");
+                // Redirect or handle case where user is not authenticated
+                return Redirect("/Identity/Account/Login");
             }
 
-            // Assume student is logged in and their ID is available
-            string studentId = User.Identity.Name; // Adjust this based on your authentication setup. Use student login information to identify 
-
-            int correctCount = 0;
-            int categoryId = 0; // Default value; will be updated below
-
-            foreach (var answer in Answers)
+            // Don't save subcategory-level results
+            if (session.SubcategoryID == null)
             {
-                var question = await _context.Testings.Include(q => q.Category).FirstOrDefaultAsync(q => q.ID == answer.QuestionId);
-                if (question != null)
+                var category = await _context.Categories.FindAsync(session.CategoryID);
+                if (category != null)
                 {
-                    if (categoryId == 0) categoryId = question.Category.ID; // Store the category
-                    if (question.Key == answer.SelectedOption)
+                    var result = new Result
                     {
-                        correctCount++;
-                    }
+                        Date = DateTime.Now,
+                        Score = session.Score,
+                        CategoryID = category.ID,
+                        StudentID = studentId
+                    };
+
+                    _context.Results.Add(result);
+                    await _context.SaveChangesAsync();
                 }
             }
 
-            // Save the test result
-            var testResult = new Result
-            {
-                Date = DateTime.Now,
-                Score = correctCount,
-                CategoryID = categoryId,
-                StudentID = studentId
-            };
-
-            _context.Results.Add(testResult);
-            await _context.SaveChangesAsync();
-
-            ViewBag.Score = $"{correctCount} / {Answers.Count}";
-            return View("TestResults");
+            return View(session);
         }
-
-        // Action to display the final score
-        public IActionResult TestResults(int score)
-        {
-            return View(score);
-        }
-
-        public IActionResult GradedTestWarning(string category)
-        {
-            if (string.IsNullOrEmpty(category))
-            {
-                return RedirectToAction("TakeTest");
-            }
-
-            return View("GradedTestWarning", category);
-        }
-
+        [Authorize(Roles ="Admin")]
         // GET: Testing
         public async Task<IActionResult> Index(string searchQuery)
         {
@@ -181,7 +213,7 @@ namespace PhishFood.Controllers
 
             return View(testings);  // Return the filtered Testings to the View
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Testing/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -201,7 +233,7 @@ namespace PhishFood.Controllers
 
             return View(testing);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Testing/Create
         public IActionResult Create()
         {
@@ -215,6 +247,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID")] Testing testing)
         {
             if (ModelState.IsValid)
@@ -236,6 +269,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Testing/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -258,6 +292,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID")] Testing testing)
         {
             if (id != testing.ID)
@@ -291,6 +326,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Testing/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -313,6 +349,7 @@ namespace PhishFood.Controllers
         // POST: Testing/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var testing = await _context.Testings.FindAsync(id);

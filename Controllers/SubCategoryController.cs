@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Subcategory
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var phishFoodContext = _context.Subcategories.Include(s => s.Category);
@@ -39,6 +41,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Subcategory/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -58,6 +61,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Subcategory/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["CategoryID"] = new SelectList(_context.Categories, "ID", "Type");
@@ -70,6 +74,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ID,Type,CategoryID")] Subcategory subcategory)
         {
             if (ModelState.IsValid)
@@ -89,6 +94,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Subcategory/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -110,6 +116,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Type,CategoryID")] Subcategory subcategory)
         {
             if (id != subcategory.ID)
@@ -142,6 +149,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Subcategory/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -163,6 +171,7 @@ namespace PhishFood.Controllers
         // POST: Subcategory/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subcategory = await _context.Subcategories.FindAsync(id);
