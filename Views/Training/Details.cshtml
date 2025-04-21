@@ -4,45 +4,45 @@
     ViewData["Title"] = "Details";
 }
 
-        <h1 style="text-align: center;">Content Details</h1>
-        <hr />
-        <div class="row center">
-            <div class="col-md-4" style="width: 60%">
-                <div>
-                    <strong>@Html.DisplayNameFor(model => model.Name)</strong>
-                </div>
-                <div>
-                    @Html.DisplayFor(model => model.Name)
-                </div>
-                <div>
-                    <strong>@Html.DisplayNameFor(model => model.Content)</strong>
-                </div>
-                <div>
-                    @Html.Raw(Model.Content)
-                </div>
-                <div>
-                    <strong>@Html.DisplayNameFor(model => model.Notes)</strong>
-                </div>
-                <div>
-                    @Html.DisplayFor(model => model.Notes)
-                </div>
-                <div>
-                    <strong>@Html.DisplayNameFor(model => model.Category)</strong>
-                </div>
-                <div>
-                    @Html.DisplayFor(model => model.Category.Type)
-                </div>
-                <div>
-                    <strong>@Html.DisplayNameFor(model => model.Subcategory)</strong>
-                </div>
-                <div>
-                    @Html.DisplayFor(model => model.Subcategory.Type)
-                </div>
-            </div>
+<h1 style="text-align: center;">Content Details</h1>
+<hr />
+<div class="row center">
+    <div class="col-md-4" style="width: 60%">
+        <div>
+            <strong>@Html.DisplayNameFor(model => model.Name)</strong>
         </div>
-        <div class="center">
-            <div>
-                <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-                <a asp-action="Index">Back to List</a>
-            </div>
+        <div>
+            @Html.DisplayFor(model => model.Name)
         </div>
+        <div>
+            <strong>@Html.DisplayNameFor(model => model.Content)</strong>
+        </div>
+        <div>
+            @Html.Raw(Model.Content)
+        </div>
+        <div>
+            <strong>@Html.DisplayNameFor(model => model.Notes)</strong>
+        </div>
+        <div>
+            @Html.DisplayFor(model => model.Notes)
+        </div>
+        <div>
+            <strong>@Html.DisplayNameFor(model => model.Category)</strong>
+        </div>
+        <div>
+            @Html.DisplayFor(model => model.Category.Type)
+        </div>
+        <div>
+            <strong>@Html.DisplayNameFor(model => model.Subcategory)</strong>
+        </div>
+        <div>
+            @Html.DisplayFor(model => model.Subcategory.Type)
+        </div>
+    </div>
+</div>
+<div class="center">
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>

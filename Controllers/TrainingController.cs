@@ -19,12 +19,6 @@ namespace PhishFood.Controllers
             _context = context;
         }
 
-        // Training/Selection
-        public async Task<IActionResult> Selection()
-        {
-            return View(await _context.Trainings.ToListAsync());
-        }
-
         // Training/Train
         public async Task<IActionResult> Train(string searchQuery)
         {
@@ -38,31 +32,42 @@ namespace PhishFood.Controllers
 
             return View(training);  // Return the filtered Testings to the View
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         // GET: Training
-        public async Task<IActionResult> Index(string searchQuery)
+        public async Task<IActionResult> Index(string sort, string searchQuery)
         {
-            // Start by including the Category to filter by Category.Name
-            var trainingQuery = _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
+            ViewData["Category"] = String.IsNullOrEmpty(sort) ? "cat_desc" : "";
+            ViewData["Subcategory"] = sort == "sub" ? "sub_desc" : "sub";
 
-            // If searchQuery is provided, filter Testings by Question text and Category name
+            var training = from t in _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory)
+                           select t;
+
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
-
-                trainingQuery = trainingQuery.Where(t =>
-                    t.Content.ToLower().Contains(normalizedSearchQuery) ||  // Search in Question Text
-                    t.Category.Type.ToLower().Contains(normalizedSearchQuery) ||
-                    t.Subcategory.Type.ToLower().Contains(normalizedSearchQuery)// Search in Category Name
-                );
+                training = training.Where(t => t.Content.ToLower().Contains(searchQuery)
+                                                || t.Category.Type.ToLower().Contains(searchQuery)
+                                                || t.Subcategory.Type.ToLower().Contains(searchQuery));
             }
 
-            // Get the list of filtered Testings asynchronously
-            var training = await trainingQuery.ToListAsync();
+            switch (sort)
+            {
+                case "cat_desc":
+                    training = training.OrderByDescending(t => t.Category.Type);
+                    break;
+                case "sub":
+                    training = training.OrderBy(t => t.Subcategory.Type);
+                    break;
+                case "sub_desc":
+                    training = training.OrderByDescending(t => t.Subcategory.Type);
+                    break;
+                default:
+                    training = training.OrderBy(t => t.Category.Type);
+                    break;
+            }
 
-            return View(training);  // Return the filtered Testings to the View
+            return View(await training.ToListAsync());
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         // GET: Training/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -82,7 +87,7 @@ namespace PhishFood.Controllers
 
             return View(training);
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         // GET: Training/Create
         public IActionResult Create()
         {
@@ -110,7 +115,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Training/Edit/5
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -133,7 +138,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Content,Notes,CategoryID,SubcategoryID")] Training training)
         {
             if (id != training.ID)
@@ -167,7 +172,7 @@ namespace PhishFood.Controllers
         }
 
         // GET: Training/Delete/5
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -190,7 +195,7 @@ namespace PhishFood.Controllers
         // POST: Training/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var training = await _context.Trainings.FindAsync(id);

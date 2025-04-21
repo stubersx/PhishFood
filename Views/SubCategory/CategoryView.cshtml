@@ -4,44 +4,50 @@
 @model CategoryViewModel
 
 @{
-    ViewData["Title"] = "Add New Content";
+    ViewData["Title"] = "Category & Subcategory List";
 }
 
-        <div class="dropdown">
-            <p class="text-start mb-3">
-                <a class="btn btn-outline-danger" asp-action="Create" asp-controller="Category">+ Category</a>
-                <a class="btn btn-outline-danger" asp-action="Create" asp-controller="Subcategory">+ Subcategory</a>
-            </p>
-            <p class="text-start">
-            </p>
-        </div>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
 
-        <table class="table table-bordered">
-            <thead>
-                <tr class="table-success text-center">
-                    <th>Category</th>
-                    <th>Subcategory</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (Category category in Model.Categories)
-                {
-                    <tr>
-                        <td>
-                            <a asp-action="Edit" asp-controller="Category" asp-route-id="@category.ID">@Html.DisplayFor(modelItem => category.Type)</a>
-                        </td>
-                        <td>
-                            @foreach (Subcategory subcategory in Model.Subcategories)
-                            {
-                                if (subcategory.CategoryID == category.ID)
-                                {
-                                    <ul>
-                                        <li><a asp-action="Edit" asp-route-id="@subcategory.ID">@Html.DisplayFor(modelItem => subcategory.Type)</a></li>
-                                    </ul>
-                                }
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<p class="text-start mt-5">
+    <a class="btn btn-outline-danger" asp-action="Create" asp-controller="Category">+ Category</a>
+    <a class="btn btn-outline-danger" asp-action="Create" asp-controller="Subcategory">+ Subcategory</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr class="table-success text-center">
+            <th>Category</th>
+            <th>Subcategory</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Category category in Model.Categories)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Edit" asp-controller="Category" asp-route-id="@category.ID">@Html.DisplayFor(modelItem => category.Type)</a>
+                </td>
+                <td>
+                    @foreach (Subcategory subcategory in Model.Subcategories)
+                    {
+                        if (subcategory.CategoryID == category.ID)
+                        {
+                            <ul>
+                                <li><a asp-action="Edit" asp-route-id="@subcategory.ID">@Html.DisplayFor(modelItem => subcategory.Type)</a></li>
+                            </ul>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

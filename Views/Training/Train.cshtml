@@ -9,6 +9,7 @@
         * {
             box-sizing: border-box;
         }
+
         body {
             margin: 0;
             color: white;
@@ -16,15 +17,19 @@
             background-size: cover;
             background-position: center;
         }
+
         nav, .footer div {
             background: black;
         }
+
         .bottom-line {
             border-bottom: 5px solid black;
         }
+
         .content {
             background-color: rgba(0, 0, 0, .7);
         }
+
         video {
             margin-top: 3%;
             border: 5px solid white;
@@ -43,10 +48,21 @@
     <p>2. Click on the box to check the answer!</p>
 </aside>
 
-
 <div class="slideshow-container">
     <div class="slides fade-in text-center">
         <h1 class="display-2 mb-5" style="text-shadow: 2px 2px maroon;">Welcome to the Training Session</h1>
+        <form asp-action="Train" method="get">
+            <select name="Subcategory" id="Subcategory">
+                @foreach (var item in Model)
+                {
+                    <option value="@Html.DisplayFor(modelItem => item.Category.Type)">
+                        @Html.DisplayFor(modelItem => item.Category.Type)
+                    </option>
+                }
+            </select>
+            <button type="submit" class="btn btn-outline-success">Search</button>
+            <button class="btn btn-outline-secondary" asp-action="Index">Clear</button>
+        </form>
         <p><button class="btn btn-dark active">1. Find the problem with the message.</button></p>
         <p><button class="btn btn-dark active">2. Click on the box to see the explanation.</button></p>
         <p><button class="btn btn-dark active">3. Test your knowledge</button></p>
@@ -74,22 +90,17 @@
                 @Html.Raw(item.Content)
                 <div class="design"></div>
             </div>
-            @*<span class="dot" onclick="currentSlide(@ViewBag.Count + 2)">End</span>*@
         </div>
 
         <div class="modal">
             <div class="modal-content">
-                <img id="owl" src="~/images/owl_black.png" />
                 <div class="modal-header">
                     <span class="close" onclick="closeModal()">&times;</span>
-                    <h2>Modal Header</h2>
                 </div>
                 <div class="modal-body">
                     @Html.DisplayFor(modelItem => item.Notes)
                 </div>
-                <div class="modal-footer">
-                    <h3>Modal Footer</h3>
-                </div>
+                <div class="modal-footer"></div>
             </div>
         </div>
     }
@@ -97,7 +108,7 @@
         <div class="content text-center">
             <p>Now you're ready to take the test!</p>
             <p>Click the button below to continue.</p>
-            <p><a class="btn btn-outline-light fw-bold" asp-action="TakeTest" asp-controller="Testing">Begin Test</a></p>
+            <p><a class="btn btn-outline-light fw-bold" asp-action="TestSelection" asp-controller="Testing">Begin Test</a></p>
             <div class="mt-5">
                 <p>You can review the training pages from links below.</p>
                 <span class="dot" onclick="currentSlide(1)">Start</span>
