@@ -2,17 +2,35 @@
     ViewData["Title"] = "Select a Test";
     var categories = ViewBag.Categories as IEnumerable<dynamic>;
     var subcategories = ViewBag.Subcategories as IEnumerable<dynamic>;
+    var completedUnitTests = ViewBag.CompletedUnitTests as List<int> ?? new List<int>();
+    var errorMessage = ViewBag.ErrorMessage as string;
 }
 
 <h2 class="center">Graded Unit Tests</h2>
 <br />
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
 <div class="tile-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
     @foreach (var cat in categories)
     {
-        <div class="test-tile" style="width: 250px; height: 150px; border: 1px solid #ccc; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
+        bool isCompleted = completedUnitTests.Contains((int)cat.CategoryID);
+
+        <div class="test-tile @(isCompleted ? "completed" : "")" style="width: 250px; height: 150px; border: 1px solid #ccc; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); opacity: @(isCompleted ? "0.5" : "1"); pointer-events: @(isCompleted ? "none" : "auto");">
             <h4>@cat.Category</h4>
             <p>All topics in this category</p>
-            <a asp-controller="Testing" asp-action="StartTest" asp-route-categoryId="@cat.CategoryID" class="btn btn-primary">Start Unit Test</a>
+
+            @if (isCompleted)
+            {
+                <p class="text-success">Completed</p>
+            }
+            else
+            {
+                <a asp-controller="Testing" asp-action="StartTest" asp-route-categoryId="@cat.CategoryID" class="btn btn-primary">Start Unit Test</a>
+            }
         </div>
     }
 </div>

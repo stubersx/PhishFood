@@ -93,6 +93,7 @@ nav {
     position: absolute;
     bottom: 0;
     left: 0;
+    width: 100%;
 }
 
     .footer div {
@@ -451,5 +452,5 @@ aside {
     }
 
 ol li[data-list="bullet"] {
-    list-style-type: disc;
+    list-style-type: disc 
 }
