@@ -449,3 +449,7 @@ aside {
         font-weight: bold;
         color: #007bff;
     }
+
+ol li[data-list="bullet"] {
+    list-style-type: disc;
+}
