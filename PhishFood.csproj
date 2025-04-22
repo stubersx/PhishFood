@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <ServerGarbageCollection>false</ServerGarbageCollection>
     <UserSecretsId>aspnet-PhishFood-fa7e3a25-a715-445f-b6ad-2f252d9e3376</UserSecretsId>
   </PropertyGroup>
 

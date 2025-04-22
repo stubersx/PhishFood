@@ -1,39 +1,53 @@
 ﻿@using Microsoft.AspNetCore.Identity;
+
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Home Page";
 }
-@if (User.IsInRole("Admin"))
-{
-    <h1 class="center">Welcome, @User.Identity.Name!</h1>
+
+@section style {
+    <style>
+        #wrapper {
+            padding: 0;
+        }
+    </style>
 }
-else
-{
-    <div class="container text-center mt-5">
-        <h1 class="display-4 mb-4">Welcome to the Phishing Awareness Portal</h1>
 
-        <p class="lead">
-            Phishing is a form of cyberattack where attackers disguise themselves as trustworthy entities to steal sensitive information like passwords, credit card numbers, and personal data.
-            It’s commonly used in emails, text messages, and fake websites to trick users into giving up their details.
-        </p>
+@section script {
+    <script>
+        var element = document.getElementById("wrapper");
+        element.classList.remove("container");
+        element.classList.add("container-fluid");
 
-        <p class="lead">
-            Understanding phishing is crucial because it’s one of the most widespread and effective tactics used against individuals and organizations today.
-            This portal is designed to help you learn how phishing works, how to spot it, and test your knowledge in realistic scenarios.
-        </p>
+        var menu = document.getElementsByClassName("navbar")[0];
+        menu.classList.remove("mb-3");
+    </script>
+}
 
-        <div class="mt-5">
-            <a asp-controller="Test" asp-action="Index" class="btn btn-primary btn-lg me-3">Take a Test</a>
-            <a asp-controller="Learn" asp-action="Index" class="btn btn-secondary btn-lg">Learn About Phishing</a>
-        </div>
+<div class="row home">
+    @if (User.IsInRole("Admin"))
+    {
+        <h1 class="mt-5 mt-sm-0">Welcome, @User.Identity.Name!</h1>
+    }
+    else
+    {
+        <h1 class="mt-5 mt-sm-0">Welcome to the Phishing Awareness Portal</h1>
+    }
+</div>
 
-        <div class="mt-4">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Brook_trout_fish.jpg/320px-Brook_trout_fish.jpg"
-                 alt="Fish image"
-                 class="img-fluid rounded shadow-sm"
-                 style="max-width: 200px;" />
-        </div>
+<div class="row m-5 mb-0 p-5">
+    <p>
+        <span style="font-size: 2rem; font-weight: bold;">P</span>hishing is a form of cyberattack where attackers disguise themselves as trustworthy entities to steal sensitive information like passwords, credit card numbers, and personal data.
+        It’s commonly used in emails, text messages, and fake websites to trick users into giving up their details.
+    </p>
+    <p>
+        Understanding phishing is crucial because it’s one of the most widespread and effective tactics used against individuals and organizations today.
+        This portal is designed to help you learn how phishing works, how to spot it, and test your knowledge in realistic scenarios.
+    </p>
+    <div class="text-center mt-5">
+        <a asp-controller="Training" asp-action="Train" class="btn btn-outline-primary fw-bold mb-3 mb-sm-0 me-sm-3">Learn About Phishing</a>
+        <a asp-controller="Testing" asp-action="TestSelection" class="btn btn-outline-danger fw-bold">Take a Test</a>
     </div>
-}
+</div>

@@ -4,47 +4,47 @@
     ViewData["Title"] = "Edit Training Insert";
 }
 
-        <h1 class="center">@ViewData["Title"]</h1>
+<h1 class="center">@ViewData["Title"]</h1>
 
-        <hr />
-        <div class="row">
-            <div class="offset-lg-3 col-lg-6">
-                <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="ID" />
-                    <div class="form-group create">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="Content" class="control-label"></label>
-                        <div id="editor" style="font-size: 1rem; height: 20vh;">@Html.Raw(Model.Content)</div>
-                        <input asp-for="Content" class="form-control" hidden />
-                        <span asp-validation-for="Content" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="Notes" class="control-label"></label>
-                        <textarea asp-for="Notes" class="form-control"></textarea>
-                        <span asp-validation-for="Notes" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="CategoryID" class="control-label"></label>
-                        <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
-                        <span asp-validation-for="CategoryID" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="SubcategoryID" class="control-label"></label>
-                        <select asp-for="SubcategoryID" class="form-control" asp-items="ViewBag.SubcategoryID"></select>
-                        <span asp-validation-for="SubcategoryID" class="text-danger"></span>
-                    </div>
-                    <div class="form-group btns">
-                        <input type="submit" value="Save" class="btn btn-outline-danger" />
-                        <a asp-action="Index" class="btn btn-outline-secondary me-5">Cancel</a>
-                    </div>
-                </form>
+<hr />
+<div class="row">
+    <div class="offset-lg-3 col-lg-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group create">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-        </div>
+            <div class="form-group create">
+                <label asp-for="Content" class="control-label"></label>
+                <div id="editor" style="font-size: 1rem; height: 20vh;">@Html.Raw(Model.Content)</div>
+                <input asp-for="Content" class="form-control" hidden />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group create">
+                <label asp-for="Notes" class="control-label"></label>
+                <textarea asp-for="Notes" class="form-control"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group create">
+                <label asp-for="CategoryID" class="control-label"></label>
+                <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
+                <span asp-validation-for="CategoryID" class="text-danger"></span>
+            </div>
+            <div class="form-group create">
+                <label asp-for="SubcategoryID" class="control-label"></label>
+                <select asp-for="SubcategoryID" class="form-control" asp-items="ViewBag.SubcategoryID"></select>
+                <span asp-validation-for="SubcategoryID" class="text-danger"></span>
+            </div>
+            <div class="form-group btns">
+                <input type="submit" value="Save" class="btn btn-outline-danger" />
+                <a asp-action="Index" class="btn btn-outline-secondary me-5">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
 
 @section script {
     <script>
