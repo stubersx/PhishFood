@@ -9,20 +9,44 @@ using PhishFood.Models;
 using PhishFood;
 using static System.Formats.Asn1.AsnWriter;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace PhishFood.Controllers
 {
     public class TestingController : Controller
     {
         private readonly PhishFoodContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TestingController(PhishFoodContext context)
+        public TestingController(PhishFoodContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> TestSelection()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                // Set an error message and redirect to the login page
+                TempData["ErrorMessage"] = "You must log in to take a test.";
+                return Redirect("/Identity/Account/Login");
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.ID == user.UserName);
+            if (student == null)
+            {
+                // Handle case where student data is not found
+                TempData["ErrorMessage"] = "Student record not found.";
+                return Redirect("/Identity/Account/Login");
+            }
+            var completedCategoryIds = await _context.Results
+                .Where(r => r.StudentID == student.ID)
+                .Select(r => r.CategoryID)
+                .Distinct()
+                .ToListAsync();
+
             var testings = await _context.Testings
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
@@ -55,12 +79,14 @@ namespace PhishFood.Controllers
 
             ViewBag.Categories = categories;
             ViewBag.Subcategories = subcategories;
+            ViewBag.CompletedUnitTests = completedCategoryIds;
 
             return View();
         }
         [HttpGet]
         public async Task<IActionResult> StartTest(int? categoryId, int? subcategoryId)
         {
+
             var query = _context.Testings
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
