@@ -19,32 +19,6 @@ namespace PhishFood.Controllers
             _context = context;
         }
 
-        // GET: Category
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Categories.ToListAsync());
-        }
-
-        // GET: Category/Details/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
         // GET: Category/Create
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
@@ -144,6 +118,8 @@ namespace PhishFood.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["Sub"] = _context.Subcategories.Include(t => t.Category).AsQueryable();
 
             return View(category);
         }

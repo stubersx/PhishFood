@@ -4,34 +4,41 @@
     ViewData["Title"] = "Edit Subcategory";
 }
 
-<div class="add-content">
-    <div class="wrapper">
-        <h1>@ViewData["Title"] <i class="fa fa-file-text-o"></i></h1>
-        <hr />
-        <div class="row">
-            <div class="offset-lg-3 col-lg-6">
-                <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="ID" />
-                    <div class="form-group create">
-                        <label asp-for="Type" class="control-label"></label>
-                        <input asp-for="Type" class="form-control" />
-                        <span asp-validation-for="Type" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="CategoryID" class="control-label"></label>
-                        <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
-                        <span asp-validation-for="CategoryID" class="text-danger"></span>
-                    </div>
-                    <div class="form-group btns">
-                        <input type="submit" value="Save" class="btn btn-outline-primary" />
-                        <a asp-action="Delete" asp-route-id="@Model?.ID" class="btn btn-outline-danger">Delete</a>
-                        <a asp-action="CategoryView" class="btn btn-outline-secondary">Cancel</a>
-                    </div>
-                </form>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
+
+<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-file-text-o"></i></h1>
+
+<hr />
+<div class="row">
+    <div class="offset-lg-3 col-lg-6">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group create">
+                <label asp-for="Type" class="control-label"></label>
+                <input asp-for="Type" class="form-control" />
+                <span asp-validation-for="Type" class="text-danger"></span>
             </div>
-        </div>
+            <div class="form-group create">
+                <label asp-for="CategoryID" class="control-label"></label>
+                <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
+                <span asp-validation-for="CategoryID" class="text-danger"></span>
+            </div>
+            <div class="form-group btns">
+                <input type="submit" value="Save" class="btn btn-outline-danger" />
+                <a asp-action="CategoryView" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
     </div>
+    <p class="text-end"><a asp-action="Delete" asp-route-id="@Model?.ID" class="btn btn-dark">Delete</a></p>
 </div>
 
 @section Scripts {

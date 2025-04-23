@@ -1,70 +1,59 @@
 ﻿@model PhishFood.Models.Testing
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Question";
 }
 
-<h1 style="text-align: center;">Delete Question</h1>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
 
-<h3 style="text-align: center;">Are you sure you want to delete this question?</h3>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Question)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.Raw(Model.Question)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Key)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Key)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Option1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Option1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Option2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Option2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Option3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Option3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Explanation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.Raw(Model.Explanation)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Subcategory)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Subcategory.Type)
-        </dd>
-    </dl>
-    
-    <div class="center">
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="ID" />
-            <input type="submit" value="Delete" class="btn btn-danger" /> |
-            <a asp-action="Index">Back to List</a>
-        </form>
+<h1 class="text-center mt-5 mb-4">@ViewData["Title"] <i class="fa fa-trash"></i></h1>
+
+<h3 class="text-center">Are you sure you want to delete <span style="color: red;">this question</span>?</h3>
+<hr />
+<div class="row">
+    <div class="offset-lg-2 col-lg-8">
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Question)</p>
+            <p>@Html.Raw(Model.Question)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Key)</p>
+            <p>@Html.DisplayFor(model => model.Key)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Option1)</p>
+            <p>@Html.DisplayFor(model => model.Option1)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Option2)</p>
+            <p>@Html.DisplayFor(model => model.Option2)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Option3)</p>
+            <p>@Html.DisplayFor(model => model.Option3)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Explanation)</p>
+            <p>@Html.Raw(Model.Explanation)</p>
+        </div>
+        <div class="create row">
+            <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Category): </span>@Html.DisplayFor(model => model.Category.Type)</p>
+            <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Subcategory): </span>@Html.DisplayFor(model => model.Subcategory.Type)</p>
+        </div>
     </div>
+</div>
+<div class="form-group btns mb-5">
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </form>
 </div>

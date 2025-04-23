@@ -4,67 +4,80 @@
     ViewData["Title"] = "Create Question";
 }
 
-        <h1 class="text-center">@ViewData["Title"]</h1>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
 
-        <hr />
-        <div class="row">
-            <div class="offset-lg-3 col-lg-6">
-                <form asp-action="Create" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group create">
-                        <label asp-for="Question" class="control-label"></label>
-                        <div id="editor"></div>
-                        <input asp-for="Question" class="form-control" id="Question" name="Question" hidden />
-                        <span asp-validation-for="Question" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="Key" class="control-label"></label>
-                        <input asp-for="Key" class="form-control" />
-                        <span asp-validation-for="Key" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="Option1" class="control-label"></label>
-                        <input asp-for="Option1" class="form-control" />
-                        <span asp-validation-for="Option1" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="Option2" class="control-label"></label>
-                        <input asp-for="Option2" class="form-control" />
-                        <span asp-validation-for="Option2" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="Option3" class="control-label"></label>
-                        <input asp-for="Option3" class="form-control" />
-                        <span asp-validation-for="Option3" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="Explanation" class="control-label"></label>
-                        <div id="editor2"></div>
-                        <input asp-for="Explanation" class="form-control" id="Explanation" name="Explanation" hidden />
-                        <span asp-validation-for="Explanation" class="text-danger"></span>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="CategoryID" class="control-label"></label>
-                        <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
-                    </div>
-                    <div class="form-group create">
-                        <label asp-for="SubcategoryID" class="control-label"></label>
-                        <select asp-for="SubcategoryID" class="form-control" asp-items="ViewBag.SubcategoryID"></select>
-                    </div>
-                    <div class="form-group btns">
-                        <input type="submit" value="Create" class="btn btn-outline-danger" />
-                        <a asp-action="CategoryView" asp-controller="Subcategory" class="btn btn-outline-secondary me-5">Cancel</a>
-                        <a asp-action="Index" class="btn btn-outline-dark">Testing List</a>
-                    </div>
-                </form>
+<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-file-o"></i></h1>
+
+<hr />
+<div class="row">
+    <div class="offset-lg-3 col-lg-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group create">
+                <label asp-for="Question" class="control-label"></label>
+                <div id="editor"></div>
+                <input asp-for="Question" class="form-control" hidden />
+                <span asp-validation-for="Question" class="text-danger"></span>
             </div>
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <div class="alert alert-danger">
-                    @error.ErrorMessage
-                </div>
-            }
+            <div class="form-group create">
+                <label asp-for="Key" class="control-label"></label>
+                <input asp-for="Key" class="form-control" />
+                <span asp-validation-for="Key" class="text-danger"></span>
+            </div>
+            <div class="form-group create">
+                <label asp-for="Option1" class="control-label"></label>
+                <input asp-for="Option1" class="form-control" />
+                <span asp-validation-for="Option1" class="text-danger"></span>
+            </div>
+            <div class="form-group create">
+                <label asp-for="Option2" class="control-label"></label>
+                <input asp-for="Option2" class="form-control" />
+                <span asp-validation-for="Option2" class="text-danger"></span>
+            </div>
+            <div class="form-group create">
+                <label asp-for="Option3" class="control-label"></label>
+                <input asp-for="Option3" class="form-control" />
+                <span asp-validation-for="Option3" class="text-danger"></span>
+            </div>
+            <div class="form-group create">
+                <label asp-for="Explanation" class="control-label"></label>
+                <div id="editor2" style="font-size: 1rem; height: 15vh;"></div>
+                <input asp-for="Explanation" class="form-control" id="Explanation" name="Explanation" hidden />
+                <span asp-validation-for="Explanation" class="text-danger"></span>
+            </div>
+            <div class="form-group create">
+                <label asp-for="CategoryID" class="control-label"></label>
+                <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID">
+                    <option value="">Select Category &#11206;</option>
+                </select>
+            </div>
+            <div class="form-group create">
+                <label asp-for="SubcategoryID" class="control-label"></label>
+                <select asp-for="SubcategoryID" class="form-control" asp-items="ViewBag.SubcategoryID">
+                    <option value="">Select Subcategory &#11206;</option>
+                </select>
+            </div>
+            <div class="form-group btns mb-5">
+                <input type="submit" value="Create" class="btn btn-outline-danger" />
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+    {
+        <div class="alert alert-danger">
+            @error.ErrorMessage
         </div>
+    }
+</div>
 
 @section script {
     <script>

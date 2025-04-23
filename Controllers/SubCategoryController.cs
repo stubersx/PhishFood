@@ -32,34 +32,6 @@ namespace PhishFood.Controllers
             return View(data);
         }
 
-        // GET: Subcategory
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index()
-        {
-            var phishFoodContext = _context.Subcategories.Include(s => s.Category);
-            return View(await phishFoodContext.ToListAsync());
-        }
-
-        // GET: Subcategory/Details/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subcategory = await _context.Subcategories
-                .Include(s => s.Category)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (subcategory == null)
-            {
-                return NotFound();
-            }
-
-            return View(subcategory);
-        }
-
         // GET: Subcategory/Create
         [Authorize(Roles = "Admin")]
         public IActionResult Create()

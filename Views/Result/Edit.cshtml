@@ -1,46 +1,53 @@
 ﻿@model PhishFood.Models.Result
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Results";
 }
 
-<h1 style="text-align: center;">Edit Results</h1>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
+
+<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-file-text-o"></i></h1>
 
 <hr />
-<div class="row center">
-    <div class="col-md-4" style="width: 60%;">
-        <form asp-action="Edit">
+<div class="row">
+    <div class="offset-lg-3 col-lg-6">
+        <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
-            <div class="form-group">
+            <div class="form-group create">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group create">
                 <label asp-for="Score" class="control-label"></label>
                 <input asp-for="Score" class="form-control" />
                 <span asp-validation-for="Score" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group create">
                 <label asp-for="CategoryID" class="control-label"></label>
                 <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryID"></select>
                 <span asp-validation-for="CategoryID" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group create">
                 <label asp-for="StudentID" class="control-label"></label>
                 <select asp-for="StudentID" class="form-control" asp-items="ViewBag.StudentID"></select>
                 <span asp-validation-for="StudentID" class="text-danger"></span>
             </div>
-            <div class="form-group center">
-                <input type="submit" value="Save" class="btn btn-primary save-button" />
+            <div class="form-group btns mb-5">
+                <input type="submit" value="Save" class="btn btn-outline-danger" />
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div class="center">
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

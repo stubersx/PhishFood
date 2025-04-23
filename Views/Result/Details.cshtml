@@ -1,44 +1,53 @@
 ﻿@model PhishFood.Models.Result
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Result Details";
 }
 
-<h1 style="text-align: center;">Result Details</h1>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
 
-<div>
-    <hr />
-    <dl class="row" style="width: 60%;">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Score)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Score)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Student)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Student.ID)
-        </dd>
-    </dl>
-</div>
-<div class="center">
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
-</div>
+        dl {
+            font-size: 1.1rem;
+        }
+    </style>
+}
 
+<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-floppy-o"></i></h1>
+
+<hr />
+<dl class="row my-5">
+    <dt class="offset-md-4 col-md-2">
+        @Html.DisplayNameFor(model => model.Date):
+    </dt>
+    <dd class="col-md-6">
+        @Html.DisplayFor(model => model.Date)
+    </dd>
+    <dt class="offset-md-4 col-md-2">
+        @Html.DisplayNameFor(model => model.Score):
+    </dt>
+    <dd class="col-md-6">
+        @Html.DisplayFor(model => model.Score)
+    </dd>
+    <dt class="offset-md-4 col-md-2">
+        @Html.DisplayNameFor(model => model.Category):
+    </dt>
+    <dd class="col-md-6">
+        @Html.DisplayFor(model => model.Category.Type)
+    </dd>
+    <dt class="offset-md-4 col-md-2">
+        @Html.DisplayNameFor(model => model.Student.ID):
+    </dt>
+    <dd class="col-md-6">
+        @Html.DisplayFor(model => model.Student.ID)
+    </dd>
+</dl>
+<div class="form-group btns mb-5">
+    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-outline-danger">Edit</a>
+    <a asp-action="Index" class="btn btn-outline-dark">Back to List</a>
+</div>
