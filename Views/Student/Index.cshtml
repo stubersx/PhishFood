@@ -1,21 +1,27 @@
 ﻿@model IEnumerable<PhishFood.Models.Student>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Students";
 }
 
-<h1 style="text-align: center;">Students</h1>
-<hr />
-<p class="center">
-    <button class="create-button"><a asp-action="Create" style="text-decoration: none; color: white; font-size: 18px;">Create New</a></button>
-</p>
-<div class="center">
-    <!-- Search Form -->
-    <form method="get">
-        <button type="submit" class="submit-button">Search</button>
-        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
-    </form>
-</div>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
+
+<h1 class="text-center my-5">@ViewData["Title"]</h1>
+<!-- Search Form -->
+<form asp-action="Index" method="get" class="text-center mb-3">
+    <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
+    <button type="submit" class="btn btn-outline-success">Search</button>
+    <button class="btn btn-outline-secondary" asp-action="Index">Clear</button>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -32,23 +38,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+        }
     </tbody>
 </table>
+
+<p class="text-end">
+    <a class="btn btn-outline-danger" asp-action="Create">+ New</a>
+</p>

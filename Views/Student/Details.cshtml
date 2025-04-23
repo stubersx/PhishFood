@@ -1,37 +1,46 @@
 ﻿@model PhishFood.Models.Student
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Student Details";
 }
 
-<h1 style="text-align: center;">Student Details</h1>
-<div>
-    <hr />
-    <dl class="row center" style="width: 60%;">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ID)
-        </dd>
-    </dl>
-</div>
-<div class="center">
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
-</div>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+        dl {
+            font-size: 1.1rem;
+        }
+    </style>
+}
 
+<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-floppy-o"></i></h1>
+
+<hr />
+<dl class="row my-5">
+    <dt class="offset-md-4 col-md-2">
+        @Html.DisplayNameFor(model => model.FirstName):
+    </dt>
+    <dd class="col-md-6">
+        @Html.DisplayFor(model => model.FirstName)
+    </dd>
+    <dt class="offset-md-4 col-md-2">
+        @Html.DisplayNameFor(model => model.LastName):
+    </dt>
+    <dd class="col-md-6">
+        @Html.DisplayFor(model => model.LastName)
+    </dd>
+    <dt class="offset-md-4 col-md-2">
+        @Html.DisplayNameFor(model => model.ID):
+    </dt>
+    <dd class="col-md-6">
+        @Html.DisplayFor(model => model.ID)
+    </dd>
+</dl>
+<div class="form-group btns mb-5">
+    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-outline-danger">Edit</a>
+    <a asp-action="Index" class="btn btn-outline-dark">Back to List</a>
+</div>

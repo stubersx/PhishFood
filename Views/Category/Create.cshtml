@@ -4,26 +4,33 @@
     ViewData["Title"] = "Create Category";
 }
 
-<div class="add-content">
-    <div class="wrapper">
-        <h1>@ViewData["Title"] <i class="fa fa-file-o"></i></h1>
-        <hr />
-        <div class="row">
-            <div class="offset-lg-3 col-lg-6">
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group create">
-                        <label asp-for="Type" class="control-label"></label>
-                        <input asp-for="Type" class="form-control" />
-                        <span asp-validation-for="Type" class="text-danger"></span>
-                    </div>
-                    <div class="form-group btns">
-                        <input type="submit" value="Create" class="btn btn-outline-danger" />
-                        <a asp-action="CategoryView" asp-controller="Subcategory" class="btn btn-outline-secondary">Cancel</a>
-                    </div>
-                </form>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
+
+<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-file-o"></i></h1>
+
+<hr />
+<div class="row">
+    <div class="offset-lg-3 col-lg-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group create">
+                <label asp-for="Type" class="control-label"></label>
+                <input asp-for="Type" class="form-control" />
+                <span asp-validation-for="Type" class="text-danger"></span>
             </div>
-        </div>
+            <div class="form-group btns mb-5">
+                <input type="submit" value="Create" class="btn btn-outline-danger" />
+                <a asp-action="CategoryView" asp-controller="Subcategory" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
     </div>
 </div>
 

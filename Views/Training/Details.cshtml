@@ -1,48 +1,43 @@
 ﻿@model PhishFood.Models.Training
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Content Details";
 }
 
-<h1 style="text-align: center;">Content Details</h1>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
+
+<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-floppy-o"></i></h1>
+
 <hr />
-<div class="row center">
-    <div class="col-md-4" style="width: 60%">
-        <div>
-            <strong>@Html.DisplayNameFor(model => model.Name)</strong>
+<div class="row">
+    <div class="offset-lg-2 col-lg-8">
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Name)</p>
+            <p>@Html.DisplayFor(model => model.Name)</p>
         </div>
-        <div>
-            @Html.DisplayFor(model => model.Name)
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Content)</p>
+            <p>@Html.Raw(Model.Content)</p>
         </div>
-        <div>
-            <strong>@Html.DisplayNameFor(model => model.Content)</strong>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Notes)</p>
+            <p>@Html.DisplayFor(model => model.Notes)</p>
         </div>
-        <div>
-            @Html.Raw(Model.Content)
-        </div>
-        <div>
-            <strong>@Html.DisplayNameFor(model => model.Notes)</strong>
-        </div>
-        <div>
-            @Html.DisplayFor(model => model.Notes)
-        </div>
-        <div>
-            <strong>@Html.DisplayNameFor(model => model.Category)</strong>
-        </div>
-        <div>
-            @Html.DisplayFor(model => model.Category.Type)
-        </div>
-        <div>
-            <strong>@Html.DisplayNameFor(model => model.Subcategory)</strong>
-        </div>
-        <div>
-            @Html.DisplayFor(model => model.Subcategory.Type)
+        <div class="create row">
+            <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Category): </span>@Html.DisplayFor(model => model.Category.Type)</p>
+            <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Subcategory): </span>@Html.DisplayFor(model => model.Subcategory.Type)</p>
         </div>
     </div>
 </div>
-<div class="center">
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
+<div class="form-group btns mb-5">
+    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-outline-danger">Edit</a>
+    <a asp-action="Index" class="btn btn-outline-dark">Back to List</a>
 </div>

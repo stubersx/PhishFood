@@ -1,72 +1,55 @@
 ﻿@model PhishFood.Models.Testing
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Question Details";
 }
-<head>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-</head>
-<body>
-    <h1 style="text-align: center;">Question Details</h1>
 
-    <div class="row center">
-        <div class="col-md-4" style="width: 60%">
-        <hr />
-            <div>
-                <strong>@Html.DisplayNameFor(model => model.Question) </strong>
-            </div>
-            <div>
-                @Html.Raw(Model.Question)
-            </div>
-            <div>
-                <strong>@Html.DisplayNameFor(model => model.Key)</strong>
-            </div>
-            <div>
-                @Html.DisplayFor(model => model.Key)
-            </div>
-            <div>
-                <strong>@Html.DisplayNameFor(model => model.Option1)</strong>
-            </div>
-            <div>
-                @Html.DisplayFor(model => model.Option1)
-            </div>
-            <div>
-                <strong>@Html.DisplayNameFor(model => model.Option2)</strong>
-            </div>
-            <div>
-                @Html.DisplayFor(model => model.Option2)
-            </div>
-            <div>
-                <strong>@Html.DisplayNameFor(model => model.Option3)</strong>
-            </div>
-            <div>
-                @Html.DisplayFor(model => model.Option3)
-            </div>
-            <br />
-            <div>
-                <strong>@Html.DisplayNameFor(model => model.Explanation)</strong>
-            </div>
-            <div>
-                @Html.Raw(Model.Explanation)
-            </div>
-            <div>
-                <strong>@Html.DisplayNameFor(model => model.Category)</strong>
-            </div>
-            <div>
-                @Html.DisplayFor(model => model.Category.Type)
-            </div>
-            <div>
-                <strong>@Html.DisplayNameFor(model => model.Subcategory)</strong>
-            </div>
-            <div>
-                @Html.DisplayFor(model => model.Subcategory.Type)
-            </div>
-    </div>
-    </div>
-    <div class="center" style="margin: 10px;">
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
-            <a asp-action="Index">Back to List</a>
+@section style {
+    <style>
+        body {
+            background: url('/images/hawkowl.png') no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+}
+
+<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-floppy-o"></i></h1>
+
+<hr />
+<div class="row">
+    <div class="offset-lg-2 col-lg-8">
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Question)</p>
+            <p>@Html.Raw(Model.Question)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Key)</p>
+            <p>@Html.DisplayFor(model => model.Key)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Option1)</p>
+            <p>@Html.DisplayFor(model => model.Option1)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Option2)</p>
+            <p>@Html.DisplayFor(model => model.Option2)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Option3)</p>
+            <p>@Html.DisplayFor(model => model.Option3)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Explanation)</p>
+            <p>@Html.Raw(Model.Explanation)</p>
+        </div>
+        <div class="create row">
+            <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Category): </span>@Html.DisplayFor(model => model.Category.Type)</p>
+            <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Subcategory): </span>@Html.DisplayFor(model => model.Subcategory.Type)</p>
         </div>
     </div>
-</body>
+</div>
+<div class="form-group btns mb-5">
+    <a asp-action="Edit" asp-route-id="@Model?.ID" class="btn btn-outline-danger">Edit</a>
+    <a asp-action="Index" class="btn btn-outline-dark">Back to List</a>
+</div>
