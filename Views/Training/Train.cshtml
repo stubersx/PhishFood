@@ -40,9 +40,9 @@
             color: white;
         }
 
-        .slides a:hover {
-            color: red;
-        }
+            .slides a:hover {
+                color: red;
+            }
     </style>
 }
 
@@ -107,7 +107,7 @@
                     <span class="close" onclick="closeModal()">&times;</span>
                 </div>
                 <div class="modal-body">
-                    @Html.DisplayFor(modelItem => item.Notes)
+                    @Html.Raw(item.Notes)
                 </div>
                 <div class="modal-footer"></div>
             </div>

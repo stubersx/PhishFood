@@ -32,10 +32,10 @@ body {
     background-position: center;
 }
 
-.home h1 {
-    font-size: 4rem;
-    text-shadow: 3px 3px black, -1px -1px black;
-}
+    .home h1 {
+        font-size: 4rem;
+        text-shadow: 3px 3px black, -1px -1px black;
+    }
 
 .logo {
     max-height: 60px;
@@ -82,11 +82,11 @@ nav {
     z-index: 1;
 }
 
-.dropdown-content a {
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
+    .dropdown-content a {
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
 
 .bottom-line {
     border-bottom: 5px solid #008165;
@@ -103,14 +103,14 @@ nav {
     width: 100%;
 }
 
-.footer div {
-    min-width: 100%;
-    display: flex;
-    flex-wrap: wrap-reverse;
-    align-items: center;
-    justify-content: center;
-    background-color: #008165;
-}
+    .footer div {
+        min-width: 100%;
+        display: flex;
+        flex-wrap: wrap-reverse;
+        align-items: center;
+        justify-content: center;
+        background-color: #008165;
+    }
 
 ul {
     list-style: none;
@@ -120,19 +120,19 @@ a {
     color: black;
 }
 
-a:hover {
-    color: red;
-}
+    a:hover {
+        color: red;
+    }
 
 /* category, subcategory, training pages - create & edit */
 .create {
     margin: 5% 0;
 }
 
-.create label, .create .label {
-    font-weight: bold;
-    font-size: 1.2rem;
-}
+    .create label, .create .label {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
 
 .btns {
     text-align: center;
@@ -187,18 +187,18 @@ aside {
     float: right;
 }
 
-.prev:hover, .next:hover {
-    color: red;
-    text-shadow: 2px 2px white;
-}
+    .prev:hover, .next:hover {
+        color: red;
+        text-shadow: 2px 2px white;
+    }
 
 .slides {
     display: none
 }
 
-.slides p button {
-    cursor: default;
-}
+    .slides p button {
+        cursor: default;
+    }
 
 .num {
     color: white;
@@ -213,9 +213,9 @@ aside {
     color: darkgrey;
 }
 
-.active, .dot:hover {
-    color: white;
-}
+    .active, .dot:hover {
+        color: white;
+    }
 
 .fade-in {
     animation-name: fade;
@@ -272,9 +272,9 @@ aside {
     font-weight: bold;
 }
 
-.close:hover, .close:focus {
-    color: black;
-}
+    .close:hover, .close:focus {
+        color: black;
+    }
 
 .modal-header {
     padding: 2px 16px;
@@ -285,6 +285,7 @@ aside {
     padding: 2px 16px;
     color: black;
     height: 15vh;
+    overflow-y: auto;
 }
 
 .modal-footer {
@@ -302,29 +303,29 @@ aside {
         animation-name: slideIn;
     }
 
-@-webkit-keyframes slideIn {
-    from {
-        bottom: -300px;
-        opacity: 0
+    @-webkit-keyframes slideIn {
+        from {
+            bottom: -300px;
+            opacity: 0
+        }
+
+        to {
+            bottom: 20%;
+            opacity: 1
+        }
     }
 
-    to {
-        bottom: 20%;
-        opacity: 1
-    }
-}
+    @keyframes slideIn {
+        from {
+            bottom: -300px;
+            opacity: 0
+        }
 
-@keyframes slideIn {
-    from {
-        bottom: -300px;
-        opacity: 0
+        to {
+            bottom: 20%;
+            opacity: 1
+        }
     }
-
-    to {
-        bottom: 20%;
-        opacity: 1
-    }
-}
 }
 
 @-webkit-keyframes slideIn {
@@ -422,12 +423,12 @@ aside {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.test-card a {
-    text-decoration: none;
-    font-weight: bold;
-    color: #007bff;
-}
+    .test-card a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #007bff;
+    }
 
 ol li[data-list="bullet"] {
-    list-style-type: disc 
+    list-style-type: disc
 }
