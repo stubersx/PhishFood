@@ -121,7 +121,7 @@ public class Program
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string email = "harwoo27@mail.nmc.edu";
-            string password = "YetIDigress12!";
+            //string password = "YetIDigress12!";
 
             if (await userManager.FindByEmailAsync(email) == null)
             {
@@ -131,7 +131,7 @@ public class Program
                 user.FirstName = "Cayce";
                 user.LastName = "Harwood";
 
-                await userManager.CreateAsync(user, password);
+                await userManager.CreateAsync(user);
 
                 await userManager.AddToRoleAsync(user, "Admin");
             }
