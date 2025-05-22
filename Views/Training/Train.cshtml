@@ -188,6 +188,14 @@
                 text-align: center;
             }
         }
+
+        .slides a {
+            color: white;
+        }
+
+            .slides a:hover {
+                color: red;
+            }
     </style>
 }
 
@@ -202,11 +210,13 @@
 </aside>
 
 <div class="slideshow-container">
+
     <div class="slides fade-in active text-center">
         <h1 class="display-4 mb-4">Study Training Content</h1>
         <hr />
         <form asp-action="Train" method="get" class="d-flex justify-content-center mb-4 gap-2">
             <select name="Subcategory" id="Subcategory" class="form-select w-auto">
+
                 @foreach (var item in Model)
                 {
                     <option value="@Html.DisplayFor(modelItem => item.Category.Type)">
@@ -221,6 +231,7 @@
             <p>1. Select which subject you'd like to study from above.</p>
             <p>2. Navigate subject content with the buttons.</p>
             <p>3. Take the corresponding test.</p>
+
         </div>
     </div>
 
@@ -246,8 +257,10 @@
                     <button class="close" onclick="closeModal()">&times;</button>
                 </div>
                 <div class="modal-body">
+
                     <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explaination</h4>
                     <div>@Html.DisplayFor(modelItem => item.Notes)</div>
+
                 </div>
             </div>
         </div>

@@ -26,7 +26,7 @@
         </div>
         <div class="create">
             <p class="label">@Html.DisplayNameFor(model => model.Notes)</p>
-            <p>@Html.DisplayFor(model => model.Notes)</p>
+            <p>@Html.Raw(Model.Notes)</p>
         </div>
         <div class="create row">
             <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Category): </span>@Html.DisplayFor(model => model.Category.Type)</p>
