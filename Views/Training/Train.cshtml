@@ -260,7 +260,7 @@
                 <div class="modal-body">
 
                     <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explaination</h4>
-                    <div>@Html.DisplayFor(modelItem => item.Notes)</div>
+                    <div>@Html.Raw(item.Notes)</div>
 
                 </div>
             </div>
