@@ -52,13 +52,26 @@ function showSlides(n) {
 /* modal */
 let modal;
 
-function showModal() {
-    modal = document.getElementsByClassName("modal");
-    modal[index - 2].style.display = "block";
+function showModal(i) {
+    closeModal();  // Hide all modals before opening a new one
+    let modal = document.getElementById(`modal-${i}`);
+    if (modal) {
+        modal.style.display = "flex";
+    }
 }
 
 function closeModal() {
-    for (i = 0; i < modal.length; i++) {
-        modal[i].style.display = "none";
+    let modals = document.getElementsByClassName("modal");
+    for (let i = 0; i < modals.length; i++) {
+        modals[i].style.display = "none";
     }
 }
+
+document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', function (event) {
+        // If the click target is the modal itself (background), close it
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
