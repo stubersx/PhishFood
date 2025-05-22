@@ -6,53 +6,207 @@
 
 @section style {
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            margin: 0;
-            color: white;
-            background: url('/images/cyber.jpg') no-repeat;
-            background-size: cover;
-            background-position: center;
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        nav, .footer div {
-            background: black;
+        .slideshow-container {
+            position: relative;
+            max-width: 70%;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
+            padding: 30px 40px;
+            user-select: none;
+            border: 1px solid #dee2e6;
         }
 
-        .bottom-line {
-            border-bottom: 5px solid black;
+        .slides {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slides.active {
+            display: block;
+        }
+
+        .slides h1, .slides h3 {
+            color: #343a40;
+            margin-bottom: 15px;
+        }
+
+        .num {
+            font-weight: bold;
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
         }
 
         .content {
-            background-color: rgba(0, 0, 0, .7);
+            background: #f1f1f1;
+            border-radius: 10px;
+            padding: 25px 30px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ccc;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
         }
 
-        video {
-            margin-top: 3%;
-            border: 5px solid white;
-            outline: 10px solid black;
+        .content:hover {
+            background-color: #e9ecef;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+            animation: fadeInModal 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            color: #212529;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 720px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-top: 0px;
+            padding-right: 20px;
+            padding-bottom: 30px;
+            padding-left: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background-color: #6c757d;
+            color: #fff;
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1100;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .prev:hover, .next:hover {
+            background-color: #495057;
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        aside.section {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px 25px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            color: #212529;
+        }
+
+        aside.section button {
+            background-color: #f8f9fa;
+            border: 2px solid #0d6efd;
+            color: #0d6efd;
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        aside.section button:hover {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .dot {
+            height: 15px;
+            width: 15px;
+            margin: 0 6px;
+            background-color: #adb5bd;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .dot:hover, .dot.active {
+            background-color: #0d6efd;
+            box-shadow: 0 0 6px #0d6efd;
+        }
+
+        .btn-outline-light {
+            border: 2px solid #0d6efd;
+            color: #0d6efd;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            font-weight: bold;
+            padding: 10px 25px;
+        }
+
+        .btn-outline-light:hover {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        @@media (max-width: 600px) {
+            .slideshow-container {
+                padding: 20px;
+                max-width: 95%;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            .prev, .next {
+                position: static;
+                width: auto;
+                display: block;
+                margin: 10px auto;
+                text-align: center;
+            }
         }
     </style>
 }
 
-<div class="page mb-5">
-    <a class="prev" onclick="plusSlides(-1)">❮</a>
-    <a class="next" onclick="plusSlides(1)">❯</a>
+<div class="page mb-5 text-center">
+    <a class="prev" onclick="plusSlides(-1)">❮ Previous</a>
+    <a class="next" onclick="plusSlides(1)">Next ❯</a>
 </div>
 
-<aside class="section">
+<aside class="section text-center mb-4">
     <p>1. Look at the box and think why this email is suspicious.</p>
     <p>2. Click on the box to check the answer!</p>
 </aside>
 
 <div class="slideshow-container">
-    <div class="slides fade-in text-center">
-        <h1 class="display-2 mb-5" style="text-shadow: 2px 2px maroon;">Welcome to the Training Session</h1>
-        <form asp-action="Train" method="get" class="text-end">
-            <select name="Subcategory" id="Subcategory">
+    <div class="slides fade-in active text-center">
+        <h1 class="display-4 mb-4">Study Training Content</h1>
+        <hr />
+        <form asp-action="Train" method="get" class="d-flex justify-content-center mb-4 gap-2">
+            <select name="Subcategory" id="Subcategory" class="form-select w-auto">
                 @foreach (var item in Model)
                 {
                     <option value="@Html.DisplayFor(modelItem => item.Category.Type)">
@@ -60,60 +214,56 @@
                     </option>
                 }
             </select>
-            <button type="submit" class="btn btn-outline-light">Filter</button>
+            <button type="submit" class="btn btn-outline-dark">Filter</button>
         </form>
-        <p><button class="btn btn-dark active">1. Find the problem with the message.</button></p>
-        <p><button class="btn btn-dark active">2. Click on the box to see the explanation.</button></p>
-        <p><button class="btn btn-dark active">3. Test your knowledge</button></p>
-        <a href="~/images/sample.mp4" target="_blank">
-            <video width="400" autoplay muted loop>
-                <source src="~/images/sample.mp4" type="video/mp4" />
-                Your browser does not support HTML5 video.
-            </video>
-        </a>
-        <p>&#8679; Click on the video above to expand it.</p>
-        <div>
+
+        <div class="mb-3" style="color: black;">
+            <p>1. Select which subject you'd like to study from above.</p>
+            <p>2. Navigate subject content with the buttons.</p>
+            <p>3. Take the corresponding test.</p>
         </div>
     </div>
+
     @{
         var i = 0;
     }
+
     @foreach (var item in Model)
     {
-        i+=1;
+        i++;
         <div class="slides fade-in">
-            <div class="num">@i / @ViewBag.Count</div>
-            <div class="content" onclick="showModal()">
-                <p class="text-center">@Html.DisplayFor(modelItem => item.Name)</p>
-                <br />
+            <div class="num text-center">@i / @ViewBag.Count</div>
+            <div class="content" onclick="showModal(@i)">
+                <h3 class="text-center">@Html.DisplayFor(modelItem => item.Name)</h3>
+                <hr />
                 @Html.Raw(item.Content)
-                <div class="design"></div>
             </div>
         </div>
 
-        <div class="modal">
+        <div class="modal" id="modal-@i">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="close" onclick="closeModal()">&times;</span>
+                    <button class="close" onclick="closeModal()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    @Html.DisplayFor(modelItem => item.Notes)
+                    <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explaination</h4>
+                    <div>@Html.DisplayFor(modelItem => item.Notes)</div>
                 </div>
-                <div class="modal-footer"></div>
             </div>
         </div>
     }
-    <div class="slides fade-in">
-        <div class="content text-center">
-            <p>Now you're ready to take the test!</p>
+
+    <div class="slides fade-in text-center">
+        <div class="content">
+            <h3>Now you're ready to take the test!</h3>
             <p>Click the button below to continue.</p>
-            <p><a class="btn btn-outline-light fw-bold" asp-action="TestSelection" asp-controller="Testing">Begin Test</a></p>
-            <div class="mt-5">
-                <p>You can review the training pages from links below.</p>
-                <span class="dot" onclick="currentSlide(1)">Start</span>
+            <p><a class="btn btn-outline-light" asp-action="TestSelection" asp-controller="Testing">Begin Test</a></p>
+            <div class="mt-4">
+                <p>You can review the training pages from links below:</p>
+                <span class="dot" onclick="currentSlide(1)"></span>
                 @for (int j = 1; j <= ViewBag.Count; j++)
                 {
-                    <span class="dot" onclick="currentSlide(@j+1)">Page @j</span>
+                    <span class="dot" onclick="currentSlide(@j + 1)"></span>
                 }
             </div>
         </div>
