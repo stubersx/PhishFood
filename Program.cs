@@ -80,58 +80,18 @@ public class Program
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            string email = "cayceharwood@gmail.com";
-            string password = "YetIDigress12!";
+            string email = "Yut24PoSqa";
+            string password = "@N0rthw35TErnM1CH1G4n";
 
             if (await userManager.FindByEmailAsync(email) == null)
             {
                 var user = new ApplicationUser();
                 user.UserName = email.Split('@')[0];
                 user.Email = email;
-                user.FirstName = "Cayce";
-                user.LastName = "Harwood";
+                user.FirstName = "Admin";
+                user.LastName = "Admin";
 
                 await userManager.CreateAsync(user, password);
-
-                await userManager.AddToRoleAsync(user, "Admin");
-            }
-        }
-        using (var scope = app.Services.CreateScope()) //Alison
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-            string email = "athornton@nmc.edu";
-            string password = "Phish.Food.For.Thought88";
-
-            if (await userManager.FindByEmailAsync(email) == null)
-            {
-                var user = new ApplicationUser();
-                user.UserName = email.Split('@')[0];
-                user.Email = email;
-                user.FirstName = "Alison";
-                user.LastName = "Thornton";
-
-                await userManager.CreateAsync(user, password);
-
-                await userManager.AddToRoleAsync(user, "Admin");
-            }
-        }
-        using (var scope = app.Services.CreateScope()) //Other Cayce
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-            string email = "harwoo27@mail.nmc.edu";
-            //string password = "YetIDigress12!";
-
-            if (await userManager.FindByEmailAsync(email) == null)
-            {
-                var user = new ApplicationUser();
-                user.UserName = email.Split('@')[0];
-                user.Email = email;
-                user.FirstName = "Cayce";
-                user.LastName = "Harwood";
-
-                await userManager.CreateAsync(user);
 
                 await userManager.AddToRoleAsync(user, "Admin");
             }
