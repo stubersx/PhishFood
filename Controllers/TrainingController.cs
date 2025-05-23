@@ -20,17 +20,26 @@ namespace PhishFood.Controllers
         }
 
         // Training/Train
-        public async Task<IActionResult> Train(string searchQuery)
+        public async Task<IActionResult> Train(int? categoryId, int? subcategoryId)
         {
             // Start by including the Category to filter by Category.Name
-            var trainingQuery = _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
+            var trainings = _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
 
-            // Get the list of filtered Testings asynchronously
-            var training = await trainingQuery.ToListAsync();
+            if (categoryId.HasValue)
+            {
+                trainings = trainings.Where(t => t.CategoryID == categoryId.Value);
+            }
 
-            ViewData["Count"] = training.Count();
+            if (subcategoryId.HasValue)
+            {
+                trainings = trainings.Where(t => t.SubcategoryID == subcategoryId.Value);
+            }
 
-            return View(training);  // Return the filtered Testings to the View
+            ViewBag.Categories = new SelectList(_context.Categories.OrderBy(c => c.Type), "ID", "Type");
+            ViewBag.Subcategories = new SelectList(_context.Subcategories.OrderBy(s => s.Type), "ID", "Type");
+            ViewBag.Count = trainings.Count();
+
+            return View(trainings.ToList());  // Return the filtered Testings to the View
         }
         [Authorize(Roles = "Admin")]
         // GET: Training

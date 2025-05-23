@@ -189,10 +189,6 @@
                 text-align: center;
             }
         }
-
-        .slides a {
-            color: white;
-        }
     </style>
 }
 
@@ -212,22 +208,31 @@
         <h1 class="display-4 mb-4">Study Training Content</h1>
         <hr />
         <form asp-action="Train" method="get" class="d-flex justify-content-center mb-4 gap-2">
-            <select name="Subcategory" id="Subcategory" class="form-select w-auto">
-
-                @foreach (var item in Model)
+            <select name="categoryId" class="form-select w-auto" onchange="this.form.submit()">
+                <option value="">-- Select Category --</option>
+                @foreach (var category in (SelectList)ViewBag.Categories)
                 {
-                    <option value="@Html.DisplayFor(modelItem => item.Category.Type)">
-                        @Html.DisplayFor(modelItem => item.Category.Type)
-                    </option>
+                    var selected = Context.Request.Query["categoryId"] == category.Value ? "selected" : "";
+                    @:<option value="@category.Value" @selected>@category.Text</option>
                 }
             </select>
+
+            <select name="subcategoryId" class="form-select w-auto" onchange="this.form.submit()">
+                <option value="">-- Select Subcategory --</option>
+                @foreach (var sub in (SelectList)ViewBag.Subcategories)
+                {
+                    var selected = Context.Request.Query["subcategoryId"] == sub.Value ? "selected" : "";
+                    @:<option value="@sub.Value" @selected>@sub.Text</option>
+                }
+            </select>
+
             <button type="submit" class="btn btn-outline-dark">Filter</button>
         </form>
 
         <div class="mb-3" style="color: black;">
             <p>1. Select which subject you'd like to study from above.</p>
-            <p>2. Navigate subject content with the buttons.</p>
-            <p>4. Take the corresponding test.</p>
+            <p>2. Navigate subject content with the directional buttons.</p>
+            <p>3. Take the corresponding unit test.</p>
 
         </div>
     </div>
@@ -248,7 +253,7 @@
             </div>
             <br />
             <div class="center">
-                <button onclick="showModal(@i)" class="btn-outline-light btn">See an Explaination</button>
+                <button onclick="showModal(@i)" class="btn-outline-light btn">See Explanation</button>
             </div>
         </div>
 
@@ -259,7 +264,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explaination</h4>
+                    <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explanation</h4>
                     <div>@Html.Raw(item.Notes)</div>
 
                 </div>
