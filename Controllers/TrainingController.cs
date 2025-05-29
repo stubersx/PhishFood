@@ -22,25 +22,45 @@ namespace PhishFood.Controllers
         // Training/Train
         public async Task<IActionResult> Train(int? categoryId, int? subcategoryId)
         {
-            // Start by including the Category to filter by Category.Name
-            var trainings = _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
+            IQueryable<Training> trainings = _context.Trainings
+                .Include(t => t.Category)
+                .Include(t => t.Subcategory)
+                .Where(t => false);
+            int count = 0;
+
+            if (categoryId.HasValue && subcategoryId.HasValue)
+            {
+                trainings = _context.Trainings
+                    .Include(t => t.Category)
+                    .Include(t => t.Subcategory)
+                    .Where(t => t.CategoryID == categoryId.Value && t.SubcategoryID == subcategoryId.Value);
+
+                count = await trainings.CountAsync();
+            }
+
+            var trainingsList = await trainings.ToListAsync();
+            ViewBag.Count = count;
+
+            ViewBag.Categories = new SelectList(_context.Categories.OrderBy(c => c.Type), "ID", "Type", categoryId);
 
             if (categoryId.HasValue)
             {
-                trainings = trainings.Where(t => t.CategoryID == categoryId.Value);
+                ViewBag.Subcategories = new SelectList(
+                    _context.Subcategories
+                        .Where(s => s.CategoryID == categoryId.Value)
+                        .OrderBy(s => s.Type),
+                    "ID",
+                    "Type",
+                    subcategoryId);
             }
-
-            if (subcategoryId.HasValue)
+            else
             {
-                trainings = trainings.Where(t => t.SubcategoryID == subcategoryId.Value);
+                ViewBag.Subcategories = new SelectList(Enumerable.Empty<SelectListItem>());
             }
 
-            ViewBag.Categories = new SelectList(_context.Categories.OrderBy(c => c.Type), "ID", "Type");
-            ViewBag.Subcategories = new SelectList(_context.Subcategories.OrderBy(s => s.Type), "ID", "Type");
-            ViewBag.Count = trainings.Count();
-
-            return View(trainings.ToList());  // Return the filtered Testings to the View
+            return View(trainingsList);
         }
+
         [Authorize(Roles = "Admin")]
         // GET: Training
         public async Task<IActionResult> Index(string sort, string searchQuery)
