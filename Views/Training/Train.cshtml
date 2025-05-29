@@ -11,7 +11,6 @@
 @section style {
     <style>
         body {
-            background: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -96,19 +95,27 @@
         .prev, .next {
             cursor: pointer;
             font-size: 1.2rem;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 18px;
+            border-radius: 8px;
             background-color: #6c757d;
             color: #fff;
             position: fixed;
             top: 50%;
-            transform: translateY(-50%);
             z-index: 1100;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            text-decoration: none;
+            user-select: none;
         }
 
         .prev:hover, .next:hover {
-            background-color: #495057;
+            color: white;
+            background-color: #008365;
+            transform: translateY(-3%) scale(1.01);
+            box-shadow: 0 4px 8px rgba(0, 131, 101, 0.5);
+        }
+
+        .prev:active, .next:active {
+            transform: translateY(-3%) scale(0.99);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         .prev {
@@ -160,20 +167,27 @@
             box-shadow: 0 0 6px #0d6efd;
         }
 
-        .btn-outline-light {
-            font-size: 1.1rem;
-            border-radius: 10px;
-            padding: 10px 25px;
+        .btn-begin-test {
             background-color: #008365;
-            border: none;
             color: white;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* raised look */
         }
 
-        .btn-outline-light:hover {
-            background-color: #388e3c;
+        .btn-begin-test:hover {
+            background-color: white;
+            transform: translateY(-3%) scale(1.01);
+            box-shadow: 0 4px 8px rgba(0, 131, 101, 0.5);
         }
+
+        .btn-begin-test:active {
+            transform: translateY(-3%) scale(0.99);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
         .content img,
         .modal-body img {
             max-width: 100%;
@@ -227,11 +241,6 @@
     <a class="next" onclick="plusSlides(1)">Next ❯</a>
 </div>
 
-<aside class="section text-center mb-4">
-    <p>1. Look at the box and think why this email is suspicious.</p>
-    <p>2. Click on the box to check the answer!</p>
-</aside>
-
 <div class="slideshow-container">
 
     <div class="slides fade-in active text-center">
@@ -265,7 +274,6 @@
                 }
             </select>
         </div>
-            <button type="submit" class="btn btn-outline-dark">Filter</button>
         </form>
     </div>
 
@@ -305,7 +313,7 @@
             <div class="content">
                 <h3>Now you're ready to take the test!</h3>
                 <p>Click the button below to continue.</p>
-                <p><a class="btn btn-outline-light" asp-action="TestSelection" asp-controller="Testing">Begin Test</a></p>
+                <p><a class="btn btn-begin-test" asp-action="TestSelection" asp-controller="Testing">Begin Test</a></p>
                 <div class="mt-4">
                     <p>You can review the training pages from links below:</p>
                     <span class="dot" onclick="currentSlide(1)"></span>
