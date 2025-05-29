@@ -2,6 +2,10 @@
 
 @{
     ViewData["Title"] = "Training Content";
+    var showTraining = Context.Request.Query.ContainsKey("categoryId") &&
+                       !string.IsNullOrEmpty(Context.Request.Query["categoryId"]) &&
+                       Context.Request.Query.ContainsKey("subcategoryId") &&
+                       !string.IsNullOrEmpty(Context.Request.Query["subcategoryId"]);
 }
 
 @section style {
@@ -244,75 +248,83 @@
                     }
                 </select>
             </div>
-            <div class="filter-group">
-                <select name="subcategoryId" class="form-select w-auto" onchange="this.form.submit()">
-                    <option value="">-- Select Subcategory --</option>
-                    @foreach (var sub in (SelectList)ViewBag.Subcategories)
+           <div class="filter-group">
+            @{
+                var hasCategory = !string.IsNullOrEmpty(Context.Request.Query["categoryId"]);
+            }
+
+            <select name="subcategoryId" class="form-select w-auto" onchange="this.form.submit()" @(hasCategory ? "" : "disabled")>
+                <option value="">-- Select Subcategory --</option>
+                @if (hasCategory)
+                {
+                    foreach (var sub in (SelectList)ViewBag.Subcategories)
                     {
                         var selected = Context.Request.Query["subcategoryId"] == sub.Value ? "selected" : "";
                         @:<option value="@sub.Value" @selected>@sub.Text</option>
                     }
-                </select>
-            </div>
+                }
+            </select>
+        </div>
             <button type="submit" class="btn btn-outline-dark">Filter</button>
         </form>
-
-        <div class="mb-3" style="color: black;">
-            <p>1. Select which subject you'd like to study from above.</p>
-            <p>2. Navigate subject content with the directional buttons.</p>
-            <p>3. Take the corresponding unit test.</p>
-
-        </div>
     </div>
 
-    @{
-        var i = 0;
-    }
-
-    @foreach (var item in Model)
+    @if (showTraining)
     {
-        i++;
-        <div class="slides fade-in">
-            <div class="num text-center">@i / @ViewBag.Count</div>
-            <div class="content" onclick="showModal(@i)">
-                <h3 class="text-center">@Html.DisplayFor(modelItem => item.Name)</h3>
-                <hr />
-                @Html.Raw(item.Content)
+        var i = 0;
+        foreach (var item in Model)
+        {
+            i++;
+            <div class="slides fade-in">
+                <div class="num text-center">@i / @ViewBag.Count</div>
+                <div class="content" onclick="showModal(@i)">
+                    <h3 class="text-center">@Html.DisplayFor(modelItem => item.Name)</h3>
+                    <hr />
+                    @Html.Raw(item.Content)
+                </div>
+                <br />
+                <div class="center">
+                    <button onclick="showModal(@i)" class="btn-outline-light btn">See Explanation</button>
+                </div>
             </div>
-            <br />
-            <div class="center">
-                <button onclick="showModal(@i)" class="btn-outline-light btn">See Explanation</button>
+
+            <div class="modal" id="modal-@i">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button class="close" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explanation</h4>
+                        <div>@Html.Raw(item.Notes)</div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="slides fade-in text-center">
+            <div class="content">
+                <h3>Now you're ready to take the test!</h3>
+                <p>Click the button below to continue.</p>
+                <p><a class="btn btn-outline-light" asp-action="TestSelection" asp-controller="Testing">Begin Test</a></p>
+                <div class="mt-4">
+                    <p>You can review the training pages from links below:</p>
+                    <span class="dot" onclick="currentSlide(1)"></span>
+                    @for (int j = 1; j <= ViewBag.Count; j++)
+                    {
+                        <span class="dot" onclick="currentSlide(@j + 1)"></span>
+                    }
+                </div>
             </div>
         </div>
-
-        <div class="modal" id="modal-@i">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" onclick="closeModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-
-                    <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explanation</h4>
-                    <div>@Html.Raw(item.Notes)</div>
-
-                </div>
-            </div>
+        <div class="text-center mt-4">
+            <p class="text-muted">Use "previous" and "next" buttons to move between slides.</p>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-4">
+            <p class="text-muted">Please select both a category and subcategory to view training content.</p>
         </div>
     }
 
-    <div class="slides fade-in text-center">
-        <div class="content">
-            <h3>Now you're ready to take the test!</h3>
-            <p>Click the button below to continue.</p>
-            <p><a class="btn btn-outline-light" asp-action="TestSelection" asp-controller="Testing">Begin Test</a></p>
-            <div class="mt-4">
-                <p>You can review the training pages from links below:</p>
-                <span class="dot" onclick="currentSlide(1)"></span>
-                @for (int j = 1; j <= ViewBag.Count; j++)
-                {
-                    <span class="dot" onclick="currentSlide(@j + 1)"></span>
-                }
-            </div>
-        </div>
-    </div>
 </div>

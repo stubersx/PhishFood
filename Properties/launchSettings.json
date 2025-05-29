@@ -15,7 +15,7 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5216",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Poduction"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
     "https": {

@@ -58,6 +58,7 @@ function showModal(i) {
     if (modal) {
         modal.style.display = "flex";
     }
+    toggleNavButtons(false);
 }
 
 function closeModal() {
@@ -65,6 +66,16 @@ function closeModal() {
     for (let i = 0; i < modals.length; i++) {
         modals[i].style.display = "none";
     }
+    toggleNavButtons(true);
+}
+
+function toggleNavButtons(show) {
+    const display = show ? "block" : "none";
+    const prev = document.querySelector(".prev");
+    const next = document.querySelector(".next");
+
+    if (prev) prev.style.display = display;
+    if (next) next.style.display = display;
 }
 
 document.querySelectorAll('.modal').forEach(modal => {
