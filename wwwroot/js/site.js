@@ -84,5 +84,6 @@ document.querySelectorAll('.modal').forEach(modal => {
         if (event.target === modal) {
             modal.style.display = 'none';
         }
+        toggleNavButtons(true);
     });
 });
