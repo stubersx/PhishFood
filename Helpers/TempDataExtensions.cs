@@ -1,17 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
+using PhishFood.Models;
 
-public static class TempDataExtensions
+namespace PhishFood.Helpers
 {
-    public static void Put<T>(this ITempDataDictionary tempData, string key, T value)
+    public static class TempDataExtensions
     {
-        tempData[key] = JsonConvert.SerializeObject(value);
-    }
+        public static void Put<T>(this ITempDataDictionary tempData, string key, T value)
+        {
+            tempData[key] = JsonConvert.SerializeObject(value);
+        }
 
-    public static T? Get<T>(this ITempDataDictionary tempData, string key)
-    {
-        object? o;
-        tempData.TryGetValue(key, out o);
-        return o == null ? default : JsonConvert.DeserializeObject<T>((string)o);
+        public static T? Get<T>(this ITempDataDictionary tempData, string key)
+        {
+            object? o;
+            tempData.TryGetValue(key, out o);
+            return o == null ? default : JsonConvert.DeserializeObject<T>((string)o);
+        }
     }
 }

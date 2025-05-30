@@ -10,6 +10,7 @@ using PhishFood;
 using static System.Formats.Asn1.AsnWriter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using PhishFood.Helpers;
 
 namespace PhishFood.Controllers
 {
@@ -132,7 +133,7 @@ namespace PhishFood.Controllers
             };
 
             TempData.Put("TestSession", viewModel);
-            return RedirectToAction("Question");
+            return RedirectToAction("Question", "Testing");
         }
         [HttpGet]
         public IActionResult Question()
