@@ -245,7 +245,8 @@
 
     <div class="slides fade-in active text-center">
         <h1 class="display-4 mb-4">Study Training Content</h1>
-        <hr />
+        <hr style="border-top: 1px solid #ccc;"/>
+        <p style="color: black;">Select the subject you'd like to study below.</p>
         <form asp-action="Train" method="get" class="filter-form d-flex justify-content-center mb-4 gap-2">
             <div class="filter-group">
                 <select name="categoryId" class="form-select w-auto" onchange="this.form.submit()">
