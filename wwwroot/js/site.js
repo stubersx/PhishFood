@@ -83,7 +83,7 @@ document.querySelectorAll('.modal').forEach(modal => {
         // If the click target is the modal itself (background), close it
         if (event.target === modal) {
             modal.style.display = 'none';
+            toggleNavButtons(true);
         }
-        toggleNavButtons(true);
     });
 });
