@@ -33,9 +33,10 @@ public class Program
                 options.CallbackPath = "/signin-google";
             });
 
-        builder.Services.AddControllersWithViews();
-        builder.Services.AddRazorPages();
         builder.Services.AddSession();
+        builder.Services.AddControllersWithViews()
+            .AddSessionStateTempDataProvider();
+        builder.Services.AddRazorPages();
 
         var app = builder.Build();
 
