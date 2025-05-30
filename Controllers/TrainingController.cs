@@ -200,6 +200,18 @@ namespace PhishFood.Controllers
             return View(training);
         }
 
+        [HttpGet]
+        public JsonResult GetSubcategories(int categoryId)
+        {
+            var subcategories = _context.Subcategories
+                .Where(s => s.CategoryID == categoryId)
+                .OrderBy(s => s.Type)
+                .Select(s => new { s.ID, s.Type })
+                .ToList();
+
+            return Json(subcategories);
+        }
+
         // GET: Training/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)

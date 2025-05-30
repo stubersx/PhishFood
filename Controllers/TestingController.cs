@@ -84,6 +84,17 @@ namespace PhishFood.Controllers
             return View();
         }
         [HttpGet]
+        public JsonResult GetSubcategories(int categoryId)
+        {
+            var subcategories = _context.Subcategories
+                .Where(s => s.CategoryID == categoryId)
+                .OrderBy(s => s.Type)
+                .Select(s => new { s.ID, s.Type })
+                .ToList();
+
+            return Json(subcategories);
+        }
+        [HttpGet]
         public async Task<IActionResult> StartTest(int? categoryId, int? subcategoryId)
         {
 
