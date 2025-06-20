@@ -309,6 +309,10 @@ aside {
     justify-content: center;
 }
 
+.margin5 {
+    margin: 5%;
+}
+
 .save-button {
     margin: 10px;
     width: 50%;
@@ -333,6 +337,11 @@ aside {
     border-radius: 5px;
     color: white;
     padding: 5px 10px;
+}
+
+.max100 > p > img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* take test page */

@@ -4,15 +4,11 @@
     ViewData["Title"] = "Student Results";
 }
 
-@section style {
-    <style>
-        body {
-            background: url('/images/hawkowl.png') no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
-    </style>
-}
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
 
 <h1 class="text-center my-5">@ViewData["Title"]</h1>
 <!-- Search Form -->
@@ -26,30 +22,56 @@
     <thead>
         <tr>
             <th>
-                <a href="@Url.Action("Index", new { searchQuery = ViewData["SearchQuery"], sortOrder = GetNextSortOrder() })">
+                <a href="@Url.Action("Index", new { sortOrder = ViewData["DateSortParm"], searchQuery = ViewData["SearchQuery"] })">
                     Date
                     @if (ViewData["SortOrder"]?.ToString() == "date_asc")
                     {
-                        <span>&#8593;</span> <!-- Upward arrow for Ascending -->
+                        <span>▲</span>
                     }
                     else if (ViewData["SortOrder"]?.ToString() == "date_desc")
                     {
-                        <span>&#8595;</span> <!-- Downward arrow for Descending -->
-                    }
-                    else
-                    {
-                        <span>&#9650;</span> <!-- Default arrow (unsorted) -->
+                        <span>▼</span>
                     }
                 </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Score)
+                <a href="@Url.Action("Index", new { sortOrder = ViewData["ScoreSortParm"], searchQuery = ViewData["SearchQuery"] })">
+                    Score
+                    @if (ViewData["SortOrder"]?.ToString() == "score_asc")
+                    {
+                        <span>▲</span>
+                    }
+                    else if (ViewData["SortOrder"]?.ToString() == "score_desc")
+                    {
+                        <span>▼</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                <a href="@Url.Action("Index", new { sortOrder = ViewData["CategorySortParm"], searchQuery = ViewData["SearchQuery"] })">
+                    Category
+                    @if (ViewData["SortOrder"]?.ToString() == "category_asc")
+                    {
+                        <span>▲</span>
+                    }
+                    else if (ViewData["SortOrder"]?.ToString() == "category_desc")
+                    {
+                        <span>▼</span>
+                    }
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student)
+                <a href="@Url.Action("Index", new { sortOrder = ViewData["StudentSortParm"], searchQuery = ViewData["SearchQuery"] })">
+                    Student
+                    @if (ViewData["SortOrder"]?.ToString() == "student_asc")
+                    {
+                        <span>▲</span>
+                    }
+                    else if (ViewData["SortOrder"]?.ToString() == "student_desc")
+                    {
+                        <span>▼</span>
+                    }
+                </a>
             </th>
             <th></th>
         </tr>
@@ -99,6 +121,6 @@
     }
 }
 
-<p class="text-end">
+<p class="center">
     <a class="btn btn-outline-danger" asp-action="Create">+ New</a>
 </p>

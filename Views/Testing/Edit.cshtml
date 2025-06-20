@@ -4,17 +4,7 @@
     ViewData["Title"] = "Edit Question";
 }
 
-@section style {
-    <style>
-        body {
-            background: url('/images/hawkowl.png') no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
-    </style>
-}
-
-<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-file-text-o"></i></h1>
+<h1 class="text-center mt-5">@ViewData["Title"]</h1>
 
 <hr />
 <div class="row">
@@ -64,7 +54,12 @@
                 <select asp-for="SubcategoryID" class="form-control" asp-items="ViewBag.SubcategoryID"></select>
                 <span asp-validation-for="SubcategoryID" class="text-danger"></span>
             </div>
-            <div class="form-group btns mb-5">
+            <div class="form-group form-check center">
+                <input asp-for="IsActive" class="form-check-input" />
+                <label asp-for="IsActive" class="form-check-label"></label>
+            </div>
+            <br />
+            <div class="form-group btns mb-5" style="margin-top: 5%;">
                 <input type="submit" value="Save" class="btn btn-outline-danger" />
                 <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
             </div>

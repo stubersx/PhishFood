@@ -49,6 +49,7 @@ namespace PhishFood.Controllers
                 .ToListAsync();
 
             var testings = await _context.Testings
+                .Where(t => t.IsActive)
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
                 .ToListAsync();
@@ -100,6 +101,7 @@ namespace PhishFood.Controllers
         {
 
             var query = _context.Testings
+                .Where(t => t.IsActive)
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
                 .AsQueryable();
@@ -227,12 +229,18 @@ namespace PhishFood.Controllers
 
             return View(session);
         }
+
         [Authorize(Roles ="Admin")]
         // GET: Testing
-        public async Task<IActionResult> Index(string searchQuery)
+        public async Task<IActionResult> Index(string sortOrder, string searchQuery, bool? showInactive = false)
         {
             // Start by including the Category to filter by Category.Name
             var testingsQuery = _context.Testings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
+
+            if (showInactive != true)
+            {
+                testingsQuery = testingsQuery.Where(t => t.IsActive);
+            }
 
             // If searchQuery is provided, filter Testings by Question text and Category name
             if (!string.IsNullOrEmpty(searchQuery))
@@ -246,9 +254,30 @@ namespace PhishFood.Controllers
                 );
             }
 
-            // Get the list of filtered Testings asynchronously
-            var testings = await testingsQuery.ToListAsync();
+            testingsQuery = sortOrder switch
+            {
+                "category_asc" => testingsQuery.OrderBy(t => t.Category.Type),
+                "category_desc" => testingsQuery.OrderByDescending(t => t.Category.Type),
+                "subcategory_asc" => testingsQuery.OrderBy(t => t.Subcategory.Type),
+                "subcategory_desc" => testingsQuery.OrderByDescending(t => t.Subcategory.Type),
+                "isactive_asc" => testingsQuery.OrderBy(t => t.IsActive),
+                "isactive_desc" => testingsQuery.OrderByDescending(t => t.IsActive),
+                _ => testingsQuery.OrderBy(t => t.ID)
+            };
 
+            // Set sort state for toggling
+            ViewData["SortOrder"] = sortOrder;
+            ViewData["CategorySort"] = sortOrder == "category_asc" ? "category_desc" : "category_asc";
+            ViewData["SubcategorySort"] = sortOrder == "subcategory_asc" ? "subcategory_desc" : "subcategory_asc";
+            ViewData["IsActiveSort"] = sortOrder == "isactive_asc" ? "isactive_desc" : "isactive_asc";
+            ViewData["SearchQuery"] = searchQuery;
+            ViewBag.ShowInactive = showInactive;
+
+
+            // Get the list of filtered Testings asynchronously
+            ViewBag.ShowInactive = showInactive;
+
+            var testings = await testingsQuery.ToListAsync();
             return View(testings);  // Return the filtered Testings to the View
         }
         [Authorize(Roles = "Admin")]
@@ -286,7 +315,7 @@ namespace PhishFood.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID")] Testing testing)
+        public async Task<IActionResult> Create([Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID, IsActive")] Testing testing)
         {
             if (ModelState.IsValid)
             {
@@ -331,7 +360,7 @@ namespace PhishFood.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID")] Testing testing)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID, IsActive")] Testing testing)
         {
             if (id != testing.ID)
             {

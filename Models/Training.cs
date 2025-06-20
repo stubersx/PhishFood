@@ -19,5 +19,7 @@ namespace PhishFood.Models
         [Display(Name = "Subcategory")]
         public int? SubcategoryID { get; set; }
         public Subcategory? Subcategory { get; set; }
+        [Display(Name = "Include in Training:")]
+        public bool IsActive { get; set; } = true;
     }
 }

@@ -4,17 +4,7 @@
     ViewData["Title"] = "Delete Content";
 }
 
-@section style {
-    <style>
-        body {
-            background: url('/images/hawkowl.png') no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
-    </style>
-}
-
-<h1 class="text-center mt-5 mb-4">@ViewData["Title"] <i class="fa fa-trash"></i></h1>
+<h1 class="text-center mt-5 mb-4">@ViewData["Title"]</h1>
 
 <h3 class="text-center">Are you sure you want to delete <span style="color: red;">@Html.DisplayFor(model => model.Name)</span>?</h3>
 <hr />
@@ -28,9 +18,13 @@
             <p class="label">@Html.DisplayNameFor(model => model.Notes)</p>
             <p>@Html.Raw(Model.Notes)</p>
         </div>
-        <div class="create row">
-            <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Category): </span>@Html.DisplayFor(model => model.Category.Type)</p>
-            <p class="col-lg-6"><span class="fw-bold">@Html.DisplayNameFor(model => model.Subcategory): </span>@Html.DisplayFor(model => model.Subcategory.Type)</p>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Category): </p>
+            <p>@Html.DisplayFor(model => model.Category.Type)</p>
+        </div>
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Subcategory): </p>
+            <p>@Html.DisplayFor(model => model.Subcategory.Type)</p>
         </div>
     </div>
 </div>

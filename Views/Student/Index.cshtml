@@ -2,17 +2,19 @@
 
 @{
     ViewData["Title"] = "Students";
+    string currentSort = ViewData["CurrentSort"] as string;
+    Func<string, string> GetArrow = (string column) =>
+    {
+        return currentSort == column ? "▲"
+             : currentSort == column.ToLower() + "_desc" ? "▼"
+             : "";
+    };
 }
-
-@section style {
-    <style>
-        body {
-            background: url('/images/hawkowl.png') no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
-    </style>
-}
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
 
 <h1 class="text-center my-5">@ViewData["Title"]</h1>
 <!-- Search Form -->
@@ -26,13 +28,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ID)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]" asp-route-searchQuery="@ViewData["searchQuery"]">
+                    @Html.DisplayNameFor(model => model.First().ID) @GetArrow("ID")
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["FirstNameSortParm"]" asp-route-searchQuery="@ViewData["searchQuery"]">
+                    @Html.DisplayNameFor(model => model.First().FirstName) @GetArrow("FirstName")
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSortParm"]" asp-route-searchQuery="@ViewData["searchQuery"]">
+                    @Html.DisplayNameFor(model => model.First().LastName) @GetArrow("LastName")
+                </a>
             </th>
             <th></th>
         </tr>
@@ -59,6 +67,6 @@
     </tbody>
 </table>
 
-<p class="text-end">
+<p class="center">
     <a class="btn btn-outline-danger" asp-action="Create">+ New</a>
 </p>

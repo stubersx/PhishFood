@@ -26,5 +26,7 @@ namespace PhishFood.Models
         [Display(Name = "Subcategory")]
         public int? SubcategoryID { get; set; }
         public Subcategory? Subcategory { get; set; }
+        [Display(Name = "Include in Testing:")]
+        public bool IsActive { get; set; } = true;
     }
 }
