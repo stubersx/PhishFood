@@ -4,17 +4,7 @@
     ViewData["Title"] = "Edit Category";
 }
 
-@section style {
-    <style>
-        body {
-            background: url('/images/hawkowl.png') no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
-    </style>
-}
-
-<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-file-text-o"></i></h1>
+<h1 class="text-center mt-5">@ViewData["Title"]</h1>
 
 <hr />
 <div class="row">
@@ -27,13 +17,14 @@
                 <input asp-for="Type" class="form-control" />
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
-            <div class="form-group btns">
+            <div class="form-group btns margin5">
                 <input type="submit" value="Save" class="btn btn-outline-danger" />
                 <a asp-action="CategoryView" asp-controller="Subcategory" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>
+        <hr />
     </div>
-    <p class="text-end"><a asp-action="Delete" asp-route-id="@Model?.ID" class="btn btn-dark">Delete</a></p>
+    <p class="center"><a asp-action="Delete" asp-route-id="@Model?.ID" class="btn btn-dark">Delete</a></p>
 </div>
 
 @section Scripts {

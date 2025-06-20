@@ -21,12 +21,18 @@ namespace PhishFood.Controllers
 
         // GET: Student
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string searchQuery)
+        public async Task<IActionResult> Index(string sortOrder, string searchQuery)
         {
-            // Start by querying the Students table (no need to include individual properties)
+
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["IDSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewData["FirstNameSortParm"] = sortOrder == "FirstName" ? "firstname_desc" : "FirstName";
+            ViewData["LastNameSortParm"] = sortOrder == "LastName" ? "lastname_desc" : "LastName";
+            ViewData["searchQuery"] = searchQuery;
+
+
             var studentsQuery = _context.Students.AsQueryable();
 
-            // If searchQuery is provided, filter students by first name, last name, and ID
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
@@ -38,7 +44,27 @@ namespace PhishFood.Controllers
                 );
             }
 
-            // Get the list of filtered students asynchronously
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    studentsQuery = studentsQuery.OrderByDescending(s => s.ID);
+                    break;
+                case "FirstName":
+                    studentsQuery = studentsQuery.OrderBy(s => s.FirstName);
+                    break;
+                case "firstname_desc":
+                    studentsQuery = studentsQuery.OrderByDescending(s => s.FirstName);
+                    break;
+                case "LastName":
+                    studentsQuery = studentsQuery.OrderBy(s => s.LastName);
+                    break;
+                case "lastname_desc":
+                    studentsQuery = studentsQuery.OrderByDescending(s => s.LastName);
+                    break;
+                default:
+                    studentsQuery = studentsQuery.OrderBy(s => s.ID);
+                    break;
+            }
             var students = await studentsQuery.ToListAsync();
 
             return View(students);  // Return the filtered students to the View

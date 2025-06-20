@@ -23,53 +23,50 @@ namespace PhishFood.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string searchQuery, string sortOrder)
         {
+
+            ViewData["SortOrder"] = sortOrder;
+            ViewData["DateSortParm"] = sortOrder == "date_asc" ? "date_desc" : "date_asc";
+            ViewData["ScoreSortParm"] = sortOrder == "score_asc" ? "score_desc" : "score_asc";
+            ViewData["CategorySortParm"] = sortOrder == "category_asc" ? "category_desc" : "category_asc";
+            ViewData["StudentSortParm"] = sortOrder == "student_asc" ? "student_desc" : "student_asc";
+            ViewData["SearchQuery"] = searchQuery;
+
             // Initialize the base query to get the Results
             var resultsQuery = _context.Results.Include(r => r.Category).Include(r => r.Student).AsQueryable();
 
             // If searchQuery is provided, filter the results
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                // Try to parse the searchQuery as a DateTime
-                DateTime searchDate;
-                if (DateTime.TryParse(searchQuery, out searchDate))
+                if (DateTime.TryParse(searchQuery, out DateTime searchDate))
                 {
-                    // Filter results where Date matches the parsed search date (ignoring time part)
                     resultsQuery = resultsQuery.Where(r => r.Date.Date == searchDate.Date);
                 }
                 else
                 {
-                    // Perform other filters for non-date query (Score, Category, StudentID, etc.)
-                    var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
-
-                    resultsQuery = resultsQuery.Where(t =>
-                        t.Score.ToString().Contains(normalizedSearchQuery) ||
-                        t.Category.Type.ToLower().Contains(normalizedSearchQuery) ||
-                        t.StudentID.ToLower().Contains(normalizedSearchQuery)
-                    );
+                    var normalizedSearchQuery = searchQuery.Trim().ToLower();
+                    resultsQuery = resultsQuery.Where(r =>
+                        r.Score.ToString().Contains(normalizedSearchQuery) ||
+                        r.Category.Type.ToLower().Contains(normalizedSearchQuery) ||
+                        r.StudentID.ToLower().Contains(normalizedSearchQuery));
                 }
             }
 
             // Sorting logic based on the sortOrder parameter
-            switch (sortOrder)
+            resultsQuery = sortOrder switch
             {
-                case "date_asc":
-                    resultsQuery = resultsQuery.OrderBy(r => r.Date);
-                    break;
-                case "date_desc":
-                    resultsQuery = resultsQuery.OrderByDescending(r => r.Date);
-                    break;
-                default:
-                    // Unsorted or default sorting can be left as is
-                    break;
-            }
+                "date_desc" => resultsQuery.OrderByDescending(r => r.Date),
+                "date_asc" => resultsQuery.OrderBy(r => r.Date),
+                "score_desc" => resultsQuery.OrderByDescending(r => r.Score),
+                "score_asc" => resultsQuery.OrderBy(r => r.Score),
+                "category_desc" => resultsQuery.OrderByDescending(r => r.Category.Type),
+                "category_asc" => resultsQuery.OrderBy(r => r.Category.Type),
+                "student_desc" => resultsQuery.OrderByDescending(r => r.StudentID),
+                "student_asc" => resultsQuery.OrderBy(r => r.StudentID),
+                _ => resultsQuery.OrderByDescending(r => r.Date), // default sort
+            };
 
             // Get the list of filtered results asynchronously
             var results = await resultsQuery.ToListAsync();
-
-            // Store the current sort order in ViewData to persist between requests
-            ViewData["SortOrder"] = sortOrder;
-            ViewData["SearchQuery"] = searchQuery;
-
             return View(results);
         }
 

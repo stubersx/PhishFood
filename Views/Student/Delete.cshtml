@@ -4,17 +4,7 @@
     ViewData["Title"] = "Delete Student Data";
 }
 
-@section style {
-    <style>
-        body {
-            background: url('/images/hawkowl.png') no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
-    </style>
-}
-
-<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-trash"></i></h1>
+<h1 class="text-center mt-5">@ViewData["Title"]</h1>
 <h3 class="text-center my-5">Are you sure you want to delete <span style="color: red;">@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</span> from the list?</h3>
 <p class="text-center" style="font-size: 1.1rem;"><span class="fw-bold">@Html.DisplayNameFor(model => model.ID): </span>@Html.DisplayFor(model => model.ID)</p>
 <div class="form-group btns my-5">

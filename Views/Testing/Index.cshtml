@@ -2,70 +2,89 @@
 
 @{
     ViewData["Title"] = "Test Questions";
+    var showInactive = (bool?)ViewBag.ShowInactive ?? false;
 }
 
-@section style {
-    <style>
-        body {
-            background: url('/images/hawkowl.png') no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
-    </style>
-}
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>
 
 <h1 class="text-center my-5">@ViewData["Title"]</h1>
 <!-- Search Form -->
 <form asp-action="Index" method="get" class="text-center mb-3">
-    <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
-    <button type="submit" class="btn btn-outline-success">Search</button>
-    <button class="btn btn-outline-secondary" asp-action="Index">Clear</button>
+    <div>
+        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
+        <button type="submit" class="btn btn-outline-success">Search</button>
+        <button class="btn btn-outline-secondary" asp-action="Index">Clear</button>
+    </div>
+    <div>
+        <label>
+            <input type="checkbox" name="showInactive" value="true" @(showInactive ? "checked" : "") onchange="this.form.submit()" />
+            Show Inactive
+        </label>
+    </div>
 </form>
 
-@if (Model != null && Model.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Question)
-                </th>
-                <th>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Question)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySort"]" asp-route-searchQuery="@ViewData["SearchQuery"]" asp-route-showInactive="@ViewBag.ShowInactive">
                     @Html.DisplayNameFor(model => model.Category)
-                </th>
-                <th>
+                    @(ViewData["SortOrder"]?.ToString() == "category_asc" ? "▲" :
+                        ViewData["SortOrder"]?.ToString() == "category_desc" ? "▼" : "")
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["SubcategorySort"]" asp-route-searchQuery="@ViewData["SearchQuery"]" asp-route-showInactive="@ViewBag.ShowInactive">
                     @Html.DisplayNameFor(model => model.Subcategory)
-                </th>
-                <th></th>
+                    @(ViewData["SortOrder"]?.ToString() == "subcategory_asc" ? "▲" :
+                        ViewData["SortOrder"]?.ToString() == "subcategory_desc" ? "▼" : "")
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewData["IsActiveSort"]"
+                   asp-route-searchQuery="@ViewData["SearchQuery"]"
+                   asp-route-showInactive="@ViewBag.ShowInactive">
+                    @Html.DisplayNameFor(model => model.IsActive)
+                    @(ViewData["SortOrder"]?.ToString() == "isactive_asc" ? "▲" :
+                        ViewData["SortOrder"]?.ToString() == "isactive_desc" ? "▼" : "")
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subcategory.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Category.Type)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Subcategory.Type)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p class="text-center">No Results found</p>
-}
+        }
+    </tbody>
+</table>
 
 <p class="center">
     <a class="btn btn-outline-danger" asp-action="Create">+ New</a>

@@ -25,12 +25,13 @@ namespace PhishFood.Controllers
             IQueryable<Training> trainings = _context.Trainings
                 .Include(t => t.Category)
                 .Include(t => t.Subcategory)
-                .Where(t => false);
+                .Where(t => t.IsActive);
+
             int count = 0;
 
             if (categoryId.HasValue && subcategoryId.HasValue)
             {
-                trainings = _context.Trainings
+                trainings = trainings
                     .Include(t => t.Category)
                     .Include(t => t.Subcategory)
                     .Where(t => t.CategoryID == categoryId.Value && t.SubcategoryID == subcategoryId.Value);
@@ -63,36 +64,62 @@ namespace PhishFood.Controllers
 
         [Authorize(Roles = "Admin")]
         // GET: Training
-        public async Task<IActionResult> Index(string sort, string searchQuery)
+        public async Task<IActionResult> Index(string sort, string searchQuery, bool? showInactive = false)
         {
-            ViewData["Category"] = String.IsNullOrEmpty(sort) ? "cat_desc" : "";
-            ViewData["Subcategory"] = sort == "sub" ? "sub_desc" : "sub";
 
             var training = from t in _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory)
                            select t;
 
+            if (showInactive != true)
+            {
+                training = training.Where(t => t.IsActive);
+            }
+
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                training = training.Where(t => t.Content.ToLower().Contains(searchQuery)
-                                                || t.Category.Type.ToLower().Contains(searchQuery)
-                                                || t.Subcategory.Type.ToLower().Contains(searchQuery));
+                var query = searchQuery.ToLower();
+                training = training.Where(t =>
+                    t.Name.ToLower().Contains(query) ||
+                    t.Content.ToLower().Contains(query) ||
+                    t.Category.Type.ToLower().Contains(query) ||
+                    t.Subcategory.Type.ToLower().Contains(query));
             }
 
             switch (sort)
             {
+                case "cat_asc":
+                    training = training.OrderBy(t => t.Category.Type);
+                    break;
                 case "cat_desc":
                     training = training.OrderByDescending(t => t.Category.Type);
                     break;
-                case "sub":
+                case "sub_asc":
                     training = training.OrderBy(t => t.Subcategory.Type);
                     break;
                 case "sub_desc":
                     training = training.OrderByDescending(t => t.Subcategory.Type);
                     break;
+                case "name_asc":
+                    training = training.OrderBy(t => t.Name);
+                    break;
+                case "name_desc":
+                    training = training.OrderByDescending(t => t.Name);
+                    break;
+                case "active_asc":
+                    training = training.OrderBy(t => t.IsActive);
+                    break;
+                case "active_desc":
+                    training = training.OrderByDescending(t => t.IsActive);
+                    break;
                 default:
-                    training = training.OrderBy(t => t.Category.Type);
+                    training = training.OrderBy(t => t.ID);
                     break;
             }
+
+            ViewData["SortOrder"] = sort;
+            ViewData["searchQuery"] = searchQuery;
+            ViewData["IsActiveSort"] = sort == "active_asc" ? "active_desc" : "active_asc";
+            ViewBag.ShowInactive = showInactive;
 
             return View(await training.ToListAsync());
         }
@@ -130,7 +157,7 @@ namespace PhishFood.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Content,Notes,CategoryID,SubcategoryID")] Training training)
+        public async Task<IActionResult> Create([Bind("ID,Name,Content,Notes,CategoryID,SubcategoryID, IsActive")] Training training)
         {
             if (ModelState.IsValid)
             {
@@ -168,7 +195,7 @@ namespace PhishFood.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Content,Notes,CategoryID,SubcategoryID")] Training training)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Content,Notes,CategoryID,SubcategoryID, IsActive")] Training training)
         {
             if (id != training.ID)
             {

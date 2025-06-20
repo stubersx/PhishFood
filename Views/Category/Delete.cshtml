@@ -4,17 +4,7 @@
     ViewData["Title"] = "Delete Category";
 }
 
-@section style {
-    <style>
-        body {
-            background: url('/images/hawkowl.png') no-repeat;
-            background-size: contain;
-            background-position: center;
-        }
-    </style>
-}
-
-<h1 class="text-center mt-5">@ViewData["Title"] <i class="fa fa-trash"></i></h1>
+<h1 class="text-center mt-5">@ViewData["Title"]</h1>
 <h3 class="text-center my-5">Are you sure you want to delete <span style="color: red;">@Html.DisplayFor(model => model.Type)</span>?</h3>
 <div class="text-center">
     <h4 class="mb-4 text-danger">The following subcategories will be deleted as well:</h4>
