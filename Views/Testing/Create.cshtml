@@ -14,7 +14,7 @@
             <div class="form-group create">
                 <label asp-for="Question" class="control-label"></label>
                 <div id="editor"></div>
-                <input asp-for="Question" class="form-control" hidden />
+                <input asp-for="Question" class="form-control" hidden id="Question" name="Question" />
                 <span asp-validation-for="Question" class="text-danger"></span>
             </div>
             <div class="form-group create">
@@ -75,7 +75,12 @@
 
 @section script {
     <script>
-        // Initialize Quill editor
+        if (window.ImageCompress) {
+            Quill.register('modules/imageCompress', window.ImageCompress);
+        } else {
+            console.error('ImageCompress module not found.');
+        }
+
         const toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike'],
             ['blockquote'],
@@ -90,15 +95,29 @@
             ['clean']
         ];
 
+        const modulesConfig = window.ImageCompress && typeof window.ImageCompress === 'function' ? {
+            toolbar: toolbarOptions,
+            imageCompress: {
+                quality: 0.7,
+                maxWidth: 1000,
+                maxHeight: 1000,
+                imageType: 'image/jpeg',
+                debug: true
+            }
+        } : {
+            toolbar: toolbarOptions
+        };
+
+
         let quill = new Quill('#editor', {
-            modules: { toolbar: toolbarOptions },
-            theme: 'snow'
-        });
-        let quill2 = new Quill('#editor2', {
-            modules: { toolbar: toolbarOptions },
+            modules: modulesConfig,
             theme: 'snow'
         });
 
+        let quill2 = new Quill('#editor2', {
+            modules: modulesConfig,
+            theme: 'snow'
+        });
         // When the form is submitted, ensure the Quill content is placed in the hidden input
         $('form').submit(function (e) {
             // Get the Quill content (HTML) and set it to the hidden input field for Question

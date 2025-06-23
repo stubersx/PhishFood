@@ -29,7 +29,7 @@
 <div class="row home">
     @if (User.IsInRole("Admin"))
     {
-        <h1 class="mt-5 mt-sm-0">Welcome, @User.Identity.Name!</h1>
+        <h1 class="mt-5 mt-sm-0">ADMIN ACCESS</h1>
     }
     else
     {
@@ -38,16 +38,27 @@
 </div>
 
 <div class="row m-5 mb-0 p-5 cover">
-    <p>
-        <span style="font-size: 2rem; font-weight: bold;">W</span>elcome to NMC's cyber testing and learning platform. Here, students can learn more about cyber security issues in an ever-evolving malicious space, as well as test their knowledge, 
-        and share their results with instructors and staff. 
-    </p>
-    <p>
-        Understanding how criminals take advantage of users keeps students and staff at NMC safe from harmful acts of identity theft, computer destruction, stalking, and more. It's important to learn the practices of what are called 
-        "bad actors" in order to safeguard yourself and others from having your life, or your things, violated by strangers. To learn more about the various tactics used by cyber criminals, or to take a test on what you already know, follow the links at the bottom of the page. 
-    </p>
-    <div class="text-center mt-5">
-        <a asp-controller="Training" asp-action="Train" class="btn btn-outline-primary fw-bold" style="margin: 10px;">Learn more</a>
-        <a asp-controller="Testing" asp-action="TestSelection" class="btn btn-outline-danger fw-bold" style="margin: 10px;">Take a Test</a>
-    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <p>IMPORTANT: Admins, when uploading images to the "training" and "testing" pages, they must be less than 500p x 500p. Large image uploads over time 
+            will significantly slow the performance of the site.
+
+            Utilize websites to alter the size of your images, such as: https://imageresizer.com/
+        </p>
+    }
+    else
+    {
+        <p>
+            <span style="font-size: 2rem; font-weight: bold;">W</span>elcome to NMC's cyber testing and learning platform. Here, students can learn more about cyber security issues in an ever-evolving malicious space, as well as test their knowledge,
+            and share their results with instructors and staff.
+        </p>
+        <p>
+            Understanding how criminals take advantage of users keeps students and staff at NMC safe from harmful acts of identity theft, computer destruction, stalking, and more. It's important to learn the practices of what are called
+            "bad actors" in order to safeguard yourself and others from having your life, or your things, violated by strangers. To learn more about the various tactics used by cyber criminals, or to take a test on what you already know, follow the links at the bottom of the page.
+        </p>
+        <div class="text-center mt-5">
+            <a asp-controller="Training" asp-action="Train" class="btn btn-outline-primary fw-bold" style="margin: 10px;">Learn more</a>
+            <a asp-controller="Testing" asp-action="TestSelection" class="btn btn-outline-danger fw-bold" style="margin: 10px;">Take a Test</a>
+        </div>
+    }
 </div>

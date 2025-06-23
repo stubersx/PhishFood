@@ -37,6 +37,7 @@ public class Program
         builder.Services.AddControllersWithViews()
             .AddSessionStateTempDataProvider();
         builder.Services.AddRazorPages();
+        builder.Services.AddResponseCompression();
 
         var app = builder.Build();
 
@@ -54,6 +55,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        app.UseResponseCaching();
 
         app.UseRouting();
         app.UseAuthentication();

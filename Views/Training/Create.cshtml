@@ -19,13 +19,13 @@
             <div class="form-group create">
                 <label asp-for="Content" class="control-label"></label>
                 <div id="editor" style="font-size: 1rem; height: 20vh;"></div>
-                <input asp-for="Content" class="form-control" hidden />
+                <input asp-for="Content" class="form-control" hidden id="Content" name="Content"/>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group create">
                 <label asp-for="Notes" class="control-label"></label>
                 <div id="editor2" style="font-size: 1rem; height: 20vh;"></div>
-                <input asp-for="Notes" class="form-control" hidden />
+                <input asp-for="Notes" class="form-control" hidden id="Notes" name="Notes"/>
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
             <div class="form-group create">
@@ -54,29 +54,48 @@
 
 @section script {
     <script>
-        // Initialize Quill editor
+        if (window.ImageCompress) {
+            Quill.register('modules/imageCompress', window.ImageCompress);
+        } else {
+            console.error('ImageCompress module not found.');
+        }
+
         const toolbarOptions = [
-            [{font: []}, {size: []}],
             ['bold', 'italic', 'underline', 'strike'],
-            [{color: []}, {background: []}],
-            [{script: 'sub'}, {script: 'super'}],
-            [{header: []}, 'blockquote'],
-            [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
-            [{align: []}],
+            ['blockquote'],
             ['link', 'image', 'video'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'font': [] }],
+            [{ 'align': [] }],
             ['clean']
         ];
-        
+
+        const modulesConfig = window.ImageCompress && typeof window.ImageCompress === 'function' ? {
+            toolbar: toolbarOptions,
+            imageCompress: {
+                quality: 0.7,
+                maxWidth: 1000,
+                maxHeight: 1000,
+                imageType: 'image/jpeg',
+                debug: true
+            }
+        } : {
+            toolbar: toolbarOptions
+        };
+
+
         let quill = new Quill('#editor', {
-            modules: { toolbar: toolbarOptions },
-            placeholder: 'Add some content here...',
-            theme: 'snow',
+            modules: modulesConfig,
+            theme: 'snow'
         });
 
         let quill2 = new Quill('#editor2', {
-            modules: { toolbar: toolbarOptions },
-            placeholder: 'Add some notes here...',
-            theme: 'snow',
+            modules: modulesConfig,
+            theme: 'snow'
         });
 
         $(function(){

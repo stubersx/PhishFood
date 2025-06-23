@@ -7,19 +7,22 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
     <title>@ViewData["Title"]</title>
     <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PhishFood.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/quill.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Font Awesome 4 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Quill CSS (for styling the editor) -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-    <!-- Quill JS (for Quill functionality) -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <link rel="stylesheet" href="~/css/quill.snow.css" />
+    <!-- Quill JS (for Quill functionality) v1.3.7 -->
+    <script src= "~/js/quill.js"></script> 
+    <!-- Quill image compression -->
+    <script src="~/js/quill.imageCompressor.min.js"></script>
     @RenderSection("style", false)
 </head>
 <body>

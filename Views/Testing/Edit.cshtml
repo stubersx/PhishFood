@@ -15,7 +15,7 @@
             <div class="form-group create">
                 <label asp-for="Question" class="control-label"></label>
                 <div id="editor" class="quill-editor"></div>
-                <input asp-for="Question" class="form-control" hidden />
+                <input asp-for="Question" class="form-control" hidden id="Question" name="Question"/>
                 <span asp-validation-for="Question" class="text-danger"></span>
             </div>
             <div class="form-group create">
@@ -41,7 +41,7 @@
             <div class="form-group create">
                 <label asp-for="Explanation" class="control-label"></label>
                 <div id="editor2" class="quill-editor"></div>
-                <input asp-for="Explanation" class="form-control" hidden />
+                <input asp-for="Explanation" class="form-control" hidden id="Explanation" name="Explanation"/>
                 <span asp-validation-for="Explanation" class="text-danger"></span>
             </div>
             <div class="form-group create">
@@ -69,8 +69,12 @@
 
 @section script {
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Initialize Quill
+            if (window.ImageCompress) {
+                Quill.register('modules/imageCompress', window.ImageCompress);
+            } else {
+                console.error('ImageCompress module not found.');
+            }
+
             const toolbarOptions = [
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote'],
@@ -85,18 +89,33 @@
                 ['clean']
             ];
 
+            const modulesConfig = window.ImageCompress && typeof window.ImageCompress === 'function' ? {
+                toolbar: toolbarOptions,
+                imageCompress: {
+                    quality: 0.7,
+                    maxWidth: 1000,
+                    maxHeight: 1000,
+                    imageType: 'image/jpeg',
+                    debug: true
+                }
+            } : {
+                toolbar: toolbarOptions
+            };
+
+
             let quill = new Quill('#editor', {
-                modules: { toolbar: toolbarOptions },
+                modules: modulesConfig,
                 theme: 'snow'
             });
+
             let quill2 = new Quill('#editor2', {
-                modules: { toolbar: toolbarOptions },
+                modules: modulesConfig,
                 theme: 'snow'
             });
 
             // Populate the Quill editor with the existing content (raw HTML from the model)
-            var existingQuestionContent = '@Html.Raw(Model.Question)';
-            var existingExplanationContent = '@Html.Raw(Model.Explanation)';
+            var existingQuestionContent = @Html.Raw(Json.Serialize(Model.Question));
+            var existingExplanationContent = @Html.Raw(Json.Serialize(Model.Explanation));
             quill.root.innerHTML = existingQuestionContent;
             quill2.root.innerHTML = existingExplanationContent;
 
@@ -106,7 +125,6 @@
                 $('#Question').val(quill.root.innerHTML);
                 $('#Explanation').val(quill2.root.innerHTML);
             });
-        });
     </script>
 }
 
