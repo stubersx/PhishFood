@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using PhishFood.Models;
+using PhishFood.ViewModels;
 
 namespace PhishFood.Controllers
 {
@@ -63,65 +65,58 @@ namespace PhishFood.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [OutputCache(Duration = 300)]
         // GET: Training
         public async Task<IActionResult> Index(string sort, string searchQuery, bool? showInactive = false)
         {
 
-            var training = from t in _context.Trainings.Include(t => t.Category).Include(t => t.Subcategory)
-                           select t;
+            var query = _context.Trainings.AsNoTracking();
 
             if (showInactive != true)
             {
-                training = training.Where(t => t.IsActive);
+                query = query.Where(t => t.IsActive);
             }
+
+            var projected = query
+                .Select(t => new TrainingListViewModel
+                {
+                    ID = t.ID,
+                    Name = t.Name,
+                    CategoryType = t.Category != null ? t.Category.Type : "",
+                    SubcategoryType = t.Subcategory != null ? t.Subcategory.Type : "",
+                    IsActive = t.IsActive
+                });
+
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                var query = searchQuery.ToLower();
-                training = training.Where(t =>
-                    t.Name.ToLower().Contains(query) ||
-                    t.Content.ToLower().Contains(query) ||
-                    t.Category.Type.ToLower().Contains(query) ||
-                    t.Subcategory.Type.ToLower().Contains(query));
+                var lowered = searchQuery.ToLower();
+                projected = projected.Where(t =>
+                    t.Name.ToLower().Contains(lowered) ||
+                    t.CategoryType.ToLower().Contains(lowered) ||
+                    t.SubcategoryType.ToLower().Contains(lowered));
             }
 
-            switch (sort)
+            projected = sort switch
             {
-                case "cat_asc":
-                    training = training.OrderBy(t => t.Category.Type);
-                    break;
-                case "cat_desc":
-                    training = training.OrderByDescending(t => t.Category.Type);
-                    break;
-                case "sub_asc":
-                    training = training.OrderBy(t => t.Subcategory.Type);
-                    break;
-                case "sub_desc":
-                    training = training.OrderByDescending(t => t.Subcategory.Type);
-                    break;
-                case "name_asc":
-                    training = training.OrderBy(t => t.Name);
-                    break;
-                case "name_desc":
-                    training = training.OrderByDescending(t => t.Name);
-                    break;
-                case "active_asc":
-                    training = training.OrderBy(t => t.IsActive);
-                    break;
-                case "active_desc":
-                    training = training.OrderByDescending(t => t.IsActive);
-                    break;
-                default:
-                    training = training.OrderBy(t => t.ID);
-                    break;
-            }
+                "cat_asc" => projected.OrderBy(t => t.CategoryType),
+                "cat_desc" => projected.OrderByDescending(t => t.CategoryType),
+                "sub_asc" => projected.OrderBy(t => t.SubcategoryType),
+                "sub_desc" => projected.OrderByDescending(t => t.SubcategoryType),
+                "name_asc" => projected.OrderBy(t => t.Name),
+                "name_desc" => projected.OrderByDescending(t => t.Name),
+                "active_asc" => projected.OrderBy(t => t.IsActive),
+                "active_desc" => projected.OrderByDescending(t => t.IsActive),
+                _ => projected.OrderBy(t => t.ID)
+            };
 
             ViewData["SortOrder"] = sort;
             ViewData["searchQuery"] = searchQuery;
             ViewData["IsActiveSort"] = sort == "active_asc" ? "active_desc" : "active_asc";
             ViewBag.ShowInactive = showInactive;
 
-            return View(await training.ToListAsync());
+            var data = await projected.ToListAsync();
+            return View(data);
         }
         [Authorize(Roles = "Admin")]
         // GET: Training/Details/5

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PhishFood.Models.Training>
+﻿@model IEnumerable<PhishFood.ViewModels.TrainingListViewModel>
 
 @{
     ViewData["Title"] = "Training Content List";
@@ -37,7 +37,7 @@
                 </th>
                 <th>
                     <a asp-action="Index" asp-route-sort="@(ViewData["SortOrder"]?.ToString() == "cat_asc" ? "cat_desc" : "cat_asc")" asp-route-searchQuery="@ViewData["searchQuery"]" asp-route-showInactive="@ViewBag.ShowInactive">
-                        @Html.DisplayNameFor(model => model.Category)
+                        @Html.DisplayNameFor(model => model.CategoryType)
                         @if (ViewData["SortOrder"]?.ToString() == "cat_asc")
                         {
                             <span>▲</span>
@@ -50,7 +50,7 @@
                 </th>
                 <th>
                     <a asp-action="Index" asp-route-sort="@(ViewData["SortOrder"]?.ToString() == "sub_asc" ? "sub_desc" : "sub_asc")" asp-route-searchQuery="@ViewData["searchQuery"]" asp-route-showInactive="@ViewBag.ShowInactive">
-                        @Html.DisplayNameFor(model => model.Subcategory)
+                        @Html.DisplayNameFor(model => model.SubcategoryType)
                         @if (ViewData["SortOrder"]?.ToString() == "sub_asc")
                         {
                             <span>▲</span>
@@ -98,19 +98,19 @@
             {
                 <tr>
                     <td>
-                        @Html.Raw(item.ID)
+                        @item.ID
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Category.Type)
+                        @item.CategoryType  
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Subcategory.Type)
+                        @item.SubcategoryType
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @item.Name
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.IsActive)
+                        @item.IsActive
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

@@ -11,6 +11,7 @@ using static System.Formats.Asn1.AsnWriter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhishFood.Helpers;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace PhishFood.Controllers
 {
@@ -231,39 +232,51 @@ namespace PhishFood.Controllers
         }
 
         [Authorize(Roles ="Admin")]
+        [OutputCache(Duration = 300)]
         // GET: Testing
         public async Task<IActionResult> Index(string sortOrder, string searchQuery, bool? showInactive = false)
         {
             // Start by including the Category to filter by Category.Name
-            var testingsQuery = _context.Testings.Include(t => t.Category).Include(t => t.Subcategory).AsQueryable();
-
-            if (showInactive != true)
-            {
-                testingsQuery = testingsQuery.Where(t => t.IsActive);
-            }
+            var query = _context.Testings
+                .AsNoTracking()
+                .Where(t => showInactive == true || t.IsActive)
+                .Select(t => new
+                {
+                    t.ID,
+                    t.IsActive,
+                    CategoryType = t.Category != null ? t.Category.Type : null,
+                    SubcategoryType = t.Subcategory != null ? t.Subcategory.Type : null
+                });
 
             // If searchQuery is provided, filter Testings by Question text and Category name
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
-
-                testingsQuery = testingsQuery.Where(t =>
-                    t.Question.ToLower().Contains(normalizedSearchQuery) ||  // Search in Question Text
-                    t.Category.Type.ToLower().Contains(normalizedSearchQuery) ||
-                    t.Subcategory.Type.ToLower().Contains(normalizedSearchQuery)// Search in Category Name
-                );
+                var lowered = searchQuery.ToLower();
+                query = query.Where(t =>
+                    t.CategoryType.ToLower().Contains(lowered) ||
+                    t.SubcategoryType.ToLower().Contains(lowered));
             }
 
-            testingsQuery = sortOrder switch
+            query = sortOrder switch
             {
-                "category_asc" => testingsQuery.OrderBy(t => t.Category.Type),
-                "category_desc" => testingsQuery.OrderByDescending(t => t.Category.Type),
-                "subcategory_asc" => testingsQuery.OrderBy(t => t.Subcategory.Type),
-                "subcategory_desc" => testingsQuery.OrderByDescending(t => t.Subcategory.Type),
-                "isactive_asc" => testingsQuery.OrderBy(t => t.IsActive),
-                "isactive_desc" => testingsQuery.OrderByDescending(t => t.IsActive),
-                _ => testingsQuery.OrderBy(t => t.ID)
+                "category_asc" => query.OrderBy(t => t.CategoryType),
+                "category_desc" => query.OrderByDescending(t => t.CategoryType),
+                "subcategory_asc" => query.OrderBy(t => t.SubcategoryType),
+                "subcategory_desc" => query.OrderByDescending(t => t.SubcategoryType),
+                "isactive_asc" => query.OrderBy(t => t.IsActive),
+                "isactive_desc" => query.OrderByDescending(t => t.IsActive),
+                _ => query.OrderBy(t => t.ID)
             };
+
+            var data = await query.ToListAsync();
+
+            var viewModel = data.Select(t => new Testing
+            {
+                ID = t.ID,
+                IsActive = t.IsActive,
+                Category = new Category { Type = t.CategoryType },
+                Subcategory = new Subcategory { Type = t.SubcategoryType }
+            });
 
             // Set sort state for toggling
             ViewData["SortOrder"] = sortOrder;
@@ -273,12 +286,7 @@ namespace PhishFood.Controllers
             ViewData["SearchQuery"] = searchQuery;
             ViewBag.ShowInactive = showInactive;
 
-
-            // Get the list of filtered Testings asynchronously
-            ViewBag.ShowInactive = showInactive;
-
-            var testings = await testingsQuery.ToListAsync();
-            return View(testings);  // Return the filtered Testings to the View
+            return View(viewModel);  // Return the filtered Testings to the View
         }
         [Authorize(Roles = "Admin")]
         // GET: Testing/Details/5
