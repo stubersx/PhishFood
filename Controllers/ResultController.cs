@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PhishFood.Helpers;
 using PhishFood.Models;
 
 namespace PhishFood.Controllers
@@ -21,8 +22,9 @@ namespace PhishFood.Controllers
 
         // GET: Result
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string searchQuery, string sortOrder)
+        public async Task<IActionResult> Index(string searchQuery, string sortOrder, int pageNumber = 1)
         {
+            const int pageSize = 100;
 
             ViewData["SortOrder"] = sortOrder;
             ViewData["DateSortParm"] = sortOrder == "date_asc" ? "date_desc" : "date_asc";
@@ -32,7 +34,7 @@ namespace PhishFood.Controllers
             ViewData["SearchQuery"] = searchQuery;
 
             // Initialize the base query to get the Results
-            var resultsQuery = _context.Results.Include(r => r.Category).Include(r => r.Student).AsQueryable();
+            var resultsQuery = _context.Results.Include(r => r.Category).Include(r => r.Student).AsNoTracking().AsQueryable();
 
             // If searchQuery is provided, filter the results
             if (!string.IsNullOrEmpty(searchQuery))
@@ -65,9 +67,10 @@ namespace PhishFood.Controllers
                 _ => resultsQuery.OrderByDescending(r => r.Date), // default sort
             };
 
-            // Get the list of filtered results asynchronously
-            var results = await resultsQuery.ToListAsync();
-            return View(results);
+            var paginatedData = await PaginatedList<Result>.CreateAsync(resultsQuery, pageNumber, pageSize);
+            ViewBag.Pagination = paginatedData;
+
+            return View(paginatedData);
         }
 
         // GET: Result/Details/5

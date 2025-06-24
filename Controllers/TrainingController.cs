@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
+using PhishFood.Helpers;
 using PhishFood.Models;
 using PhishFood.ViewModels;
 
@@ -65,9 +66,8 @@ namespace PhishFood.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [OutputCache(Duration = 300)]
         // GET: Training
-        public async Task<IActionResult> Index(string sort, string searchQuery, bool? showInactive = false)
+        public async Task<IActionResult> Index(string sort, string searchQuery, bool? showInactive = false, int pageNumber = 1)
         {
 
             var query = _context.Trainings.AsNoTracking();
@@ -115,8 +115,12 @@ namespace PhishFood.Controllers
             ViewData["IsActiveSort"] = sort == "active_asc" ? "active_desc" : "active_asc";
             ViewBag.ShowInactive = showInactive;
 
-            var data = await projected.ToListAsync();
-            return View(data);
+            int pageSize = 100;
+            var pagedList = await PaginatedList<TrainingListViewModel>.CreateAsync(projected, pageNumber, pageSize);
+
+            ViewBag.Pagination = pagedList;
+
+            return View(pagedList);
         }
         [Authorize(Roles = "Admin")]
         // GET: Training/Details/5

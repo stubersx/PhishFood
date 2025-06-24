@@ -1,4 +1,5 @@
-﻿@model IEnumerable<PhishFood.Models.Student>
+﻿@model IEnumerable<PhishFood.ViewModels.StudentListViewModel>
+@using PhishFood.Helpers
 
 @{
     ViewData["Title"] = "Students";
@@ -9,6 +10,7 @@
              : currentSort == column.ToLower() + "_desc" ? "▼"
              : "";
     };
+    var pagination = ViewBag.Pagination as PaginatedList<PhishFood.ViewModels.StudentListViewModel>;
 }
 <style>
     a {
@@ -18,10 +20,12 @@
 
 <h1 class="text-center my-5">@ViewData["Title"]</h1>
 <!-- Search Form -->
-<form asp-action="Index" method="get" class="text-center mb-3">
-    <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
-    <button type="submit" class="btn btn-outline-success">Search</button>
-    <button class="btn btn-outline-secondary" asp-action="Index">Clear</button>
+<form asp-action="Index" method="get" class="text-center">
+    <div class="search-container">
+        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" class="search-input" placeholder="Search..." />
+        <button type="submit" class="btn btn-outline-success search-button">Search</button>
+        <a class="btn btn-outline-secondary clear-button" asp-action="Index">Clear</a>
+    </div>
 </form>
 
 <table class="table">
@@ -66,7 +70,43 @@
         }
     </tbody>
 </table>
+@if (pagination != null && pagination.TotalPages > 1)
+{
+    <nav class="pagination-nav text-center">
+        <ul class="pagination justify-content-center">
+            @if (pagination.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-pageNumber="@(pagination.PageIndex - 1)"
+                       asp-route-searchQuery="@ViewData["SearchQuery"]"
+                       asp-route-sortOrder="@ViewData["SortOrder"]">Previous</a>
+                </li>
+            }
+
+            @for (var i = 1; i <= pagination.TotalPages; i++)
+            {
+                <li class="page-item @(i == pagination.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-pageNumber="@i"
+                       asp-route-searchQuery="@ViewData["SearchQuery"]"
+                       asp-route-sortOrder="@ViewData["SortOrder"]"></a>
+                </li>
+            }
+
+            @if (pagination.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-pageNumber="@(pagination.PageIndex + 1)"
+                       asp-route-searchQuery="@ViewData["SearchQuery"]"
+                       asp-route-sortOrder="@ViewData["SortOrder"]">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
 
 <p class="center">
-    <a class="btn btn-outline-danger" asp-action="Create">+ New</a>
+    <a class="btn btn-outline-danger" asp-action="Create">Add New Student +</a>
 </p>

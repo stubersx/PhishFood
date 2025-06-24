@@ -6,6 +6,8 @@ namespace PhishFood.Models
     {
         public int ID { get; set; }
         [Required]
+        public string Name { get; set; }
+        [Required]
         public string Question { get; set; } = string.Empty;
         [Required]
         public string Key { get; set; } = string.Empty;
