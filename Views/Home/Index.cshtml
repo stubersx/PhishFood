@@ -40,10 +40,26 @@
 <div class="row m-5 mb-0 p-5 cover">
     @if (User.IsInRole("Admin"))
     {
-        <p>IMPORTANT: Admins, when uploading images to the "training" and "testing" pages, they must be less than 500p x 500p. Large image uploads over time 
+        <h2>Image Policy:</h2>
+        <p>When uploading images to the "training" and "testing" pages, they must be less than 500p x 500p. Large image uploads over time 
             will significantly slow the performance of the site.
 
             Utilize websites to alter the size of your images, such as: https://imageresizer.com/
+        </p>
+        <hr />
+        <h2>Testing Portal:</h2>
+        <p>
+            When tests are displayed to students, only 10 questions will populate out of however many have been marked
+            for inclusion. If a student takes a test with less then 10 questions, they will receive a score of less
+            than 10, even if they answered every question correctly. Therefore, before students take a test, be sure 
+            there are at least 10 questions created and marked for inclusion in an overarching category.
+        </p>
+        <hr />
+        <h2>Training Portal:</h2>
+        <p>
+            The training portal will only include marked content to display to students, although unlike the testing 
+            portal, there is no limit on the number of training entries students can view. ALL marked training data
+            within a specific subcategory will be displayed to students.
         </p>
     }
     else
