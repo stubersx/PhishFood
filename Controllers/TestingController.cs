@@ -232,10 +232,11 @@ namespace PhishFood.Controllers
         }
 
         [Authorize(Roles ="Admin")]
-        [OutputCache(Duration = 300)]
         // GET: Testing
-        public async Task<IActionResult> Index(string sortOrder, string searchQuery, bool? showInactive = false)
+        public async Task<IActionResult> Index(string sortOrder, string searchQuery, bool? showInactive = false, int pageNumber = 1)
         {
+            int pageSize = 100;
+
             // Start by including the Category to filter by Category.Name
             var query = _context.Testings
                 .AsNoTracking()
@@ -243,6 +244,7 @@ namespace PhishFood.Controllers
                 .Select(t => new
                 {
                     t.ID,
+                    t.Name,
                     t.IsActive,
                     CategoryType = t.Category != null ? t.Category.Type : null,
                     SubcategoryType = t.Subcategory != null ? t.Subcategory.Type : null
@@ -253,12 +255,15 @@ namespace PhishFood.Controllers
             {
                 var lowered = searchQuery.ToLower();
                 query = query.Where(t =>
+                    t.Name.ToLower().Contains(lowered) ||
                     t.CategoryType.ToLower().Contains(lowered) ||
                     t.SubcategoryType.ToLower().Contains(lowered));
             }
 
             query = sortOrder switch
             {
+                "name_asc" => query.OrderBy(t => t.Name),
+                "name_desc" => query.OrderByDescending(t => t.Name),
                 "category_asc" => query.OrderBy(t => t.CategoryType),
                 "category_desc" => query.OrderByDescending(t => t.CategoryType),
                 "subcategory_asc" => query.OrderBy(t => t.SubcategoryType),
@@ -268,23 +273,26 @@ namespace PhishFood.Controllers
                 _ => query.OrderBy(t => t.ID)
             };
 
-            var data = await query.ToListAsync();
+            var paginatedData = await PaginatedList<dynamic>.CreateAsync(query, pageNumber, pageSize);
 
-            var viewModel = data.Select(t => new Testing
+            var viewModel = paginatedData.Select(t => new Testing
             {
                 ID = t.ID,
+                Name = t.Name,
                 IsActive = t.IsActive,
                 Category = new Category { Type = t.CategoryType },
                 Subcategory = new Subcategory { Type = t.SubcategoryType }
-            });
+            }).ToList();
 
             // Set sort state for toggling
             ViewData["SortOrder"] = sortOrder;
+            ViewData["NameSort"] = sortOrder == "name_asc" ? "name_desc" : "name_asc";
             ViewData["CategorySort"] = sortOrder == "category_asc" ? "category_desc" : "category_asc";
             ViewData["SubcategorySort"] = sortOrder == "subcategory_asc" ? "subcategory_desc" : "subcategory_asc";
             ViewData["IsActiveSort"] = sortOrder == "isactive_asc" ? "isactive_desc" : "isactive_asc";
             ViewData["SearchQuery"] = searchQuery;
             ViewBag.ShowInactive = showInactive;
+            ViewBag.Pagination = paginatedData;
 
             return View(viewModel);  // Return the filtered Testings to the View
         }
@@ -323,7 +331,7 @@ namespace PhishFood.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID, IsActive")] Testing testing)
+        public async Task<IActionResult> Create([Bind("ID,Name,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID, IsActive")] Testing testing)
         {
             if (ModelState.IsValid)
             {
@@ -368,7 +376,7 @@ namespace PhishFood.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID, IsActive")] Testing testing)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Question,Key,Option1,Option2,Option3,Explanation,CategoryID,SubcategoryID, IsActive")] Testing testing)
         {
             if (id != testing.ID)
             {

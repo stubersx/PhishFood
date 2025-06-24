@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<PhishFood.Models.Testing>
+@using PhishFood.Helpers
 
 @{
     ViewData["Title"] = "Test Questions";
     var showInactive = (bool?)ViewBag.ShowInactive ?? false;
+    var pagination = ViewBag.Pagination as PaginatedList<dynamic>;
 }
 
 <style>
@@ -13,13 +15,13 @@
 
 <h1 class="text-center my-5">@ViewData["Title"]</h1>
 <!-- Search Form -->
-<form asp-action="Index" method="get" class="text-center mb-3">
-    <div>
-        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" placeholder="Search..." />
-        <button type="submit" class="btn btn-outline-success">Search</button>
-        <button class="btn btn-outline-secondary" asp-action="Index">Clear</button>
+<form asp-action="Index" method="get" class="text-center">
+    <div class="search-container">
+        <input type="text" name="searchQuery" value="@ViewData["searchQuery"]" class="search-input" placeholder="Search..." />
+        <button type="submit" class="btn btn-outline-success search-button">Search</button>
+        <a class="btn btn-outline-secondary clear-button" asp-action="Index">Clear</a>
     </div>
-    <div>
+    <div class="inactive-checkbox">
         <label>
             <input type="checkbox" name="showInactive" value="true" @(showInactive ? "checked" : "") onchange="this.form.submit()" />
             Show Inactive
@@ -31,7 +33,14 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Question)
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSort"]" asp-route-searchQuery="@ViewData["SearchQuery"]" asp-route-showInactive="@ViewBag.ShowInactive">
+                    @Html.DisplayNameFor(model => model.Name)
+                    @(ViewData["SortOrder"]?.ToString() == "name_asc" ? "▲" :
+                        ViewData["SortOrder"]?.ToString() == "name_desc" ? "▼" : "")
+                </a>
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySort"]" asp-route-searchQuery="@ViewData["SearchQuery"]" asp-route-showInactive="@ViewBag.ShowInactive">
@@ -68,13 +77,16 @@
                     @Html.DisplayFor(modelItem => item.ID)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Category.Type)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Subcategory.Type)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IsActive)
+                    @item.IsActive
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
@@ -85,7 +97,46 @@
         }
     </tbody>
 </table>
+@if (pagination != null && pagination.TotalPages > 1)
+{
+    <nav class="pagination-nav text-center">
+        <ul class="pagination justify-content-center">
+            @if (pagination.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-pageNumber="@(pagination.PageIndex - 1)"
+                       asp-route-searchQuery="@ViewData["SearchQuery"]"
+                       asp-route-sortOrder="@ViewData["SortOrder"]"
+                       asp-route-showInactive="@ViewBag.ShowInactive">Previous</a>
+                </li>
+            }
+
+            @for (var i = 1; i <= pagination.TotalPages; i++)
+            {
+                <li class="page-item @(i == pagination.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-pageNumber="@i"
+                       asp-route-searchQuery="@ViewData["SearchQuery"]"
+                       asp-route-sortOrder="@ViewData["SortOrder"]"
+                       asp-route-showInactive="@ViewBag.ShowInactive">@i</a>
+                </li>
+            }
+
+            @if (pagination.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-pageNumber="@(pagination.PageIndex + 1)"
+                       asp-route-searchQuery="@ViewData["SearchQuery"]"
+                       asp-route-sortOrder="@ViewData["SortOrder"]"
+                       asp-route-showInactive="@ViewBag.ShowInactive">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
 
 <p class="center">
-    <a class="btn btn-outline-danger" asp-action="Create">+ New</a>
+    <a class="btn btn-outline-danger" asp-action="Create">Add New Question +</a>
 </p>

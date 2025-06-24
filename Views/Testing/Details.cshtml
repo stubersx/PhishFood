@@ -9,6 +9,10 @@
 <hr />
 <div class="row">
     <div class="offset-lg-2 col-lg-8">
+        <div class="create">
+            <p class="label">@Html.DisplayNameFor(model => model.Name)</p>
+            <p>@Html.DisplayFor(model => model.Name)</p>
+        </div>
         <div class="create max100">
             <p class="label">@Html.DisplayNameFor(model => model.Question)</p>
             <p>@Html.Raw(Model.Question)</p>

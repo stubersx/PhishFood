@@ -166,6 +166,7 @@
             background-color: #0d6efd;
             box-shadow: 0 0 6px #0d6efd;
         }
+       
 
         .btn-begin-test {
             background-color: #008365;
@@ -247,33 +248,34 @@
         <h1 class="display-4 mb-4">Study Training Content</h1>
         <hr style="border-top: 1px solid #ccc;"/>
         <p style="color: black;">Select the subject you'd like to study below.</p>
-        <form asp-action="Train" method="get" class="filter-form d-flex justify-content-center mb-4 gap-2">
-            <div class="filter-group">
-                <select name="categoryId" class="form-select w-auto" onchange="this.form.submit()">
-                    <option value="">-- Select Category --</option>
-                    @foreach (var category in (SelectList)ViewBag.Categories)
+        <form asp-action="Train" method="get" class="filter-form text-center mb-4" id="trainingFilterForm">
+            <div class="d-flex justify-content-center gap-2 mb-3">
+                <div class="filter-group">
+                    <select name="categoryId" class="form-select w-auto" id="categorySelect" onchange="updateSubcategories()">
+                        <option value="">Select Category</option>
+                        @foreach (var category in (SelectList)ViewBag.Categories)
+                        {
+                            var selected = Context.Request.Query["categoryId"] == category.Value ? "selected" : "";
+                            @:<option value="@category.Value" @selected>@category.Text</option>
+                        }
+                    </select>
+                </div>
+               <div class="filter-group">
+                <select name="subcategoryId" class="form-select w-auto" id="subcategorySelect" disabled>
+                    <option value="">Select Subcategory</option>
+                    @if (!string.IsNullOrEmpty(Context.Request.Query["categoryId"]))
                     {
-                        var selected = Context.Request.Query["categoryId"] == category.Value ? "selected" : "";
-                        @:<option value="@category.Value" @selected>@category.Text</option>
+                        foreach (var sub in (SelectList)ViewBag.Subcategories)
+                        {
+                            var selected = Context.Request.Query["subcategoryId"] == sub.Value ? "selected" : "";
+                            @:<option value="@sub.Value" @selected>@sub.Text</option>
+                        }
                     }
                 </select>
             </div>
-           <div class="filter-group">
-            @{
-                var hasCategory = !string.IsNullOrEmpty(Context.Request.Query["categoryId"]);
-            }
-
-            <select name="subcategoryId" class="form-select w-auto" onchange="this.form.submit()" @(hasCategory ? "" : "disabled")>
-                <option value="">-- Select Subcategory --</option>
-                @if (hasCategory)
-                {
-                    foreach (var sub in (SelectList)ViewBag.Subcategories)
-                    {
-                        var selected = Context.Request.Query["subcategoryId"] == sub.Value ? "selected" : "";
-                        @:<option value="@sub.Value" @selected>@sub.Text</option>
-                    }
-                }
-            </select>
+        </div>
+        <div class="filter-form">
+            <button type="submit" class="btn btn-begin-test">Start</button>
         </div>
         </form>
     </div>
@@ -337,3 +339,28 @@
     }
 
 </div>
+<script>
+    function updateSubcategories() {
+        const categoryId = document.getElementById("categorySelect").value;
+        const subSelect = document.getElementById("subcategorySelect");
+
+        if (!categoryId) {
+            subSelect.disabled = true;
+            subSelect.innerHTML = '<option value="">Select Subcategory</option>';
+            return;
+        }
+
+        fetch(`/Training/GetSubcategories?categoryId=${categoryId}`)
+            .then(response => response.json())
+            .then(data => {
+                subSelect.disabled = false;
+                subSelect.innerHTML = '<option value="">Select Subcategory</option>';
+                data.forEach(sub => {
+                    const option = document.createElement("option");
+                    option.value = sub.id;
+                    option.text = sub.type;
+                    subSelect.appendChild(option);
+                });
+            });
+    }
+</script>

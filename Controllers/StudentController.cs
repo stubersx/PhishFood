@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PhishFood.Helpers;
 using PhishFood.Models;
+using PhishFood.ViewModels;
 
 namespace PhishFood.Controllers
 {
@@ -21,53 +23,50 @@ namespace PhishFood.Controllers
 
         // GET: Student
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string sortOrder, string searchQuery)
+        public async Task<IActionResult> Index(string sortOrder, string searchQuery, int pageNumber = 1)
         {
+            int pageSize = 100;
+
+            var query = _context.Students
+                .AsNoTracking()
+                .Select(s => new StudentListViewModel
+                {
+                    ID = s.ID,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName
+                });
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                var lower = searchQuery.Trim().ToLower();  // Make search case-insensitive
+
+                query = query.Where(t =>
+                    t.FirstName.ToLower().Contains(lower) ||  // Search by First Name
+                    t.LastName.ToLower().Contains(lower) ||   // Search by Last Name
+                    t.ID.ToString().ToLower().Contains(lower)  // Search by ID (ensure ID is converted to string for the comparison)
+                );
+            }
+
+            query = sortOrder switch
+            {
+                "id_desc" => query.OrderByDescending(s => s.ID),
+                "FirstName" => query.OrderBy(s => s.FirstName),
+                "firstname_desc" => query.OrderByDescending(s => s.FirstName),
+                "LastName" => query.OrderBy(s => s.LastName),
+                "lastname_desc" => query.OrderByDescending(s => s.LastName),
+                _ => query.OrderBy(s => s.ID)
+            };
+
+            var paginatedData = await PaginatedList<StudentListViewModel>.CreateAsync(query, pageNumber, pageSize);
 
             ViewData["CurrentSort"] = sortOrder;
             ViewData["IDSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewData["FirstNameSortParm"] = sortOrder == "FirstName" ? "firstname_desc" : "FirstName";
             ViewData["LastNameSortParm"] = sortOrder == "LastName" ? "lastname_desc" : "LastName";
             ViewData["searchQuery"] = searchQuery;
+            ViewBag.Pagination = paginatedData;
 
-
-            var studentsQuery = _context.Students.AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchQuery))
-            {
-                var normalizedSearchQuery = searchQuery.Trim().ToLower();  // Make search case-insensitive
-
-                studentsQuery = studentsQuery.Where(t =>
-                    t.FirstName.ToLower().Contains(normalizedSearchQuery) ||  // Search by First Name
-                    t.LastName.ToLower().Contains(normalizedSearchQuery) ||   // Search by Last Name
-                    t.ID.ToString().ToLower().Contains(normalizedSearchQuery)  // Search by ID (ensure ID is converted to string for the comparison)
-                );
-            }
-
-            switch (sortOrder)
-            {
-                case "id_desc":
-                    studentsQuery = studentsQuery.OrderByDescending(s => s.ID);
-                    break;
-                case "FirstName":
-                    studentsQuery = studentsQuery.OrderBy(s => s.FirstName);
-                    break;
-                case "firstname_desc":
-                    studentsQuery = studentsQuery.OrderByDescending(s => s.FirstName);
-                    break;
-                case "LastName":
-                    studentsQuery = studentsQuery.OrderBy(s => s.LastName);
-                    break;
-                case "lastname_desc":
-                    studentsQuery = studentsQuery.OrderByDescending(s => s.LastName);
-                    break;
-                default:
-                    studentsQuery = studentsQuery.OrderBy(s => s.ID);
-                    break;
-            }
-            var students = await studentsQuery.ToListAsync();
-
-            return View(students);  // Return the filtered students to the View
+            return View(paginatedData);
         }
 
         // GET: Student/Details/5
