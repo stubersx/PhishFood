@@ -88,9 +88,13 @@ namespace PhishFood.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [Display(Name = "First Name")]
+            [StringLength(20, ErrorMessage = "First name cannot exceed 20 characters.")]
+            [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "Only letters are allowed.")]
             public string FirstName { get; set; }
             [Required]
             [Display(Name = "Last Name")]
+            [StringLength(20, ErrorMessage = "Last name cannot exceed 20 characters.")]
+            [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "Only letters are allowed.")]
             public string LastName { get; set; }
             [Required]
             [EmailAddress]

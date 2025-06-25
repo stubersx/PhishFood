@@ -6,6 +6,8 @@ namespace PhishFood.Models
     {
         public int ID { get; set; }
         [Required(ErrorMessage = "The Subcategory Name is required.")]
+        [StringLength(30, ErrorMessage = "Subcategory name cannot exceed 30 characters.")]
+        [RegularExpression("^[a-zA-Z]+$", ErrorMessage = "Only letters are allowed.")]
         [Display(Name = "Subcategory Name")]
         public string Type { get; set; } = string.Empty;
 
