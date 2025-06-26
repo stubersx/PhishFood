@@ -122,16 +122,16 @@ namespace PhishFood.Controllers
 
         // GET: Subcategory/Delete/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? ID)
         {
-            if (id == null)
+            if (ID == null)
             {
                 return NotFound();
             }
 
             var subcategory = await _context.Subcategories
                 .Include(s => s.Category)
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == ID);
             if (subcategory == null)
             {
                 return NotFound();
@@ -144,9 +144,9 @@ namespace PhishFood.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int ID)
         {
-            var subcategory = await _context.Subcategories.FindAsync(id);
+            var subcategory = await _context.Subcategories.FindAsync(ID);
             if (subcategory != null)
             {
                 _context.Subcategories.Remove(subcategory);

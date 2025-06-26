@@ -6,70 +6,101 @@
 
 <style>
     body {
-        background: linear-gradient(to bottom right, #e8f5e9, #008365);
-        min-height: 100vh;
+        background-color: #f4f6f8;
         font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
-    .forest-card {
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1rem;
+    }
+
+    .register-card {
         background-color: #ffffff;
-        border: 2px solid #388e3c;
-        border-radius: 20px;
-        box-shadow: 0 4px 12px rgba(56, 142, 60, 0.3);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        width: 100%;
+        max-width: 450px;
     }
 
-    .forest-btn {
-        background-color: #008365;
-        border: none;
-        color: white;
-        font-weight: 600;
-        transition: background-color 0.3s ease;
-    }
-
-    .forest-btn:hover {
-        color: white;
-        background-color: #008365;
-        transform: translateY(-3%) scale(1.01);
-        box-shadow: 0 4px 8px rgba(0, 131, 101, 0.5);
-    }
-
-    .forest-btn:active {
-        transform: translateY(-3%) scale(0.99);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .forest-heading {
+    .register-title {
+        text-align: center;
         color: #008365;
-        font-weight: bold;
+        font-weight: 600;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
     }
 
-    .forest-link {
-        color: #1b5e20;
+    .google-section-title {
+        font-size: 1.25rem;
+        color: #333;
+        font-weight: 500;
+        margin-top: 1.5rem;
+        text-align: center;
+    }
+
+    .btn-google {
+        background-color: #008365;
+        color: white;
+        font-weight: 500;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-google:hover {
+        color: white;
+        background-color: #008365;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    }
+
+    .btn-google:active {
+        transform: scale(0.98);
+    }
+
+    hr {
+        margin: 1.5rem 0;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .text-muted {
+        font-size: 0.9rem;
+        color: #777;
+    }
+
+    .accent-link {
+        color: #2e7d32;
         text-decoration: underline;
     }
 
-    .forest-link:hover {
-        color: #2e7d32;
+    .accent-link:hover {
+        color: #1b5e20;
     }
 </style>
 
-<h1 class="text-center forest-heading mt-4">@ViewData["Title"]</h1>
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-title">@ViewData["Title"]</div>
 
-<div class="d-flex justify-content-center align-items-center mt-4" style="min-height: 70vh;">
-    <div class="card forest-card p-4" style="width: 100%; max-width: 400px;">
         <section>
-            <h3 class="text-center forest-heading mb-3">Register with an External Provider</h3>
+            <div class="google-section-title">Register with Google</div>
             <hr />
             @if ((Model.ExternalLogins?.Count ?? 0) == 0)
             {
-                <div class="text-center">
-                    <p>
-                        No external authentication services are configured.<br />
-                        See this
-                        <a class="forest-link" href="https://go.microsoft.com/fwlink/?LinkID=532715" target="_blank">
-                            setup guide
-                        </a>.
-                    </p>
+                <div class="text-center text-muted">
+                    No external authentication services are configured.<br />
+                    See this
+                    <a class="accent-link" href="https://go.microsoft.com/fwlink/?LinkID=532715" target="_blank">
+                        setup guide
+                    </a>.
                 </div>
             }
             else
@@ -77,7 +108,7 @@
                 <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="d-grid gap-3">
                     @foreach (var provider in Model.ExternalLogins!)
                     {
-                        <button type="submit" class="btn forest-btn btn-lg rounded-pill" name="provider" value="@provider.Name"
+                        <button type="submit" class="btn btn-google w-100" name="provider" value="@provider.Name"
                                 title="Register using your @provider.DisplayName account">
                             Register with @provider.DisplayName
                         </button>
