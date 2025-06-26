@@ -1,0 +1,162 @@
+﻿@page "/Admin/Login"
+@model PhishFood.Areas.Admin.Pages.AdminLoginModel
+@{
+    ViewData["Title"] = "Administrator Login";
+}
+
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+        body {
+            background: radial-gradient(ellipse at center, #000000 0%, #1a1a1a 100%);
+            background-image: url('/images/hell.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Cinzel', serif;
+            color: #f2f2f2;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-top: 1rem;
+            color: #ff3c00;
+            text-shadow: 0 0 10px #ff3c00, 0 0 20px #ff6f00;
+        }
+
+        .admin-card {
+            background-color: rgba(30, 30, 30, 0.95);
+            border: 2px solid #ff3c00;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(255, 60, 0, 0.5);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-control {
+            background-color: #1e1e1e;
+            border: 1px solid #ff6f00;
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: #ccc;
+        }
+
+        .form-control:focus {
+            border-color: #ff3c00;
+            box-shadow: 0 0 10px #ff3c00;
+            background-color: #2b2b2b;
+        }
+
+        .btn-hellfire {
+            background-color: #ff3c00;
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-hellfire:hover {
+            background-color: #ff6f00;
+            color: #111;
+            box-shadow: 0 0 12px #ff3c00;
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        .flame-divider {
+            height: 3px;
+            background: linear-gradient(to right, #ff3c00, #ff6f00, #ff3c00);
+            margin: 1.5rem 0;
+            border: none;
+        }
+
+        .validation-summary-errors {
+            color: #ff6666;
+            text-align: center;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .skull-logo {
+            width: 100px;
+            height: 100px;
+            animation: pulseSkull 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px #ff3c00);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .skull-logo:hover {
+            transform: scale(1.1) rotate(-5deg);
+            filter: drop-shadow(0 0 15px #ff6f00) hue-rotate(30deg);
+        }
+
+        @@keyframes pulseSkull {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px #ff3c00);
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 20px #ff6f00);
+            }
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px #ff3c00);
+            }
+        }
+    </style>
+
+<div class="content-container" style="min-height: 100vh;">
+    <div class="skull-logo-container mb-3">
+        <img src="~/images/skull-fire.gif" alt="Flaming Skull" class="skull-logo" />
+    </div>
+
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="admin-card mt-4">
+        <form method="post" class="d-flex flex-column align-items-center w-100">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All" class="validation-summary-errors text-center w-100"></div>
+
+            <div class="mb-3 w-100" style="max-width: 350px;">
+                <label asp-for="Input.Email" class="form-label text-center d-block">Username</label>
+                <input asp-for="Input.Email" class="form-control text-center" placeholder="Username" />
+            </div>
+
+
+            <div class="mb-3 w-100" style="max-width: 350px;">
+                <label asp-for="Input.Password" class="form-label text-center d-block">Password</label>
+                <input asp-for="Input.Password" class="form-control text-center" type="password" placeholder="Password" />
+            </div>
+
+            <hr class="flame-divider w-100" style="max-width: 350px;" />
+
+            <button type="submit" class="btn btn-hellfire px-4 mx-auto d-block">
+                🔥 Enter the Abyss 🔥
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
