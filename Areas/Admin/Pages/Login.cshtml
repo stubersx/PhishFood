@@ -4,125 +4,270 @@
     ViewData["Title"] = "Administrator Login";
 }
 
-    <style>
-        @@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 
-        body {
-            background: radial-gradient(ellipse at center, #000000 0%, #1a1a1a 100%);
-            background-image: url('/images/hell.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            font-family: 'Cinzel', serif;
-            color: #f2f2f2;
-            min-height: 100vh;
-            margin: 0;
+    body {
+        background: radial-gradient(ellipse at center, #000000 0%, #1a1a1a 100%);
+        background-image: url('/images/fire.gif');
+        background-size: cover;
+        background-repeat: no-repeat;
+        font-family: 'Cinzel', serif;
+        color: #f2f2f2;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    label {
+        display: block;
+    }
+
+    .content-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .input-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-top: 1rem;
+        color: #ff3c00;
+        text-shadow: 0 0 10px #ff3c00, 0 0 20px #ff6f00;
+    }
+
+    .admin-card {
+        background-color: rgba(30, 30, 30, 0.95);
+        border: 2px solid #ff3c00;
+        border-radius: 16px;
+        box-shadow: 0 0 20px rgba(255, 60, 0, 0.5);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 450px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .form-control {
+        background-color: #1e1e1e;
+        border: 1px solid #ff6f00;
+        color: #fff;
+    }
+
+    .form-control::placeholder {
+        color: #ccc;
+    }
+
+    .form-control:focus {
+        border-color: #ff3c00;
+        box-shadow: 0 0 10px #ff3c00;
+        background-color: #2b2b2b;
+    }
+
+    .btn-hellfire {
+        background-color: #ff3c00;
+        color: black;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-hellfire:hover {
+        background-color: #ff6f00;
+        color: #111;
+        box-shadow: 0 0 12px #ff3c00;
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+
+    .flame-divider {
+        height: 3px;
+        background: linear-gradient(to right, #ff3c00, #ff6f00, #ff3c00);
+        margin: 1.5rem 0;
+        border: none;
+    }
+
+    .validation-summary-errors {
+        color: #ff6666;
+        text-align: center;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+
+    .skull-logo {
+        width: 100px;
+        height: 100px;
+        animation: pulseSkull 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px #ff3c00);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .skull-logo:hover {
+        transform: scale(1.1) rotate(-5deg);
+        filter: drop-shadow(0 0 15px #ff6f00) hue-rotate(30deg);
+    }
+
+    @@keyframes pulseSkull {
+        0% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 10px #ff3c00);
+        }
+        50% {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px #ff6f00);
+        }
+        100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 10px #ff3c00);
+        }
+    }
+    /* Glitch Overlay for full page */
+    .glitch-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(255, 60, 0, 0.03) 0px,
+            rgba(255, 60, 0, 0.03) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+        z-index: 9999;
+        pointer-events: none;
+        animation: glitch-screen-anim 0.3s steps(2, end) infinite;
+        display: none;
+}
+
+    @@keyframes glitch-screen-anim {
+        0% { transform: translate(0px, 0px) scaleY(1.01); opacity: 0.3; }
+        20% { transform: translate(-3px, 2px) scaleY(1); opacity: 0.6; }
+        40% { transform: translate(3px, -1px) scaleY(0.99); opacity: 0.4; }
+        60% { transform: translate(-1px, 2px) scaleY(1.02); opacity: 0.5; }
+        80% { transform: translate(2px, -3px) scaleY(1); opacity: 0.3; }
+        100% { transform: translate(0px, 0px) scaleY(1.01); opacity: 0.6; }
+    }
+
+    /* Quick screen shake */
+    body.glitching {
+        animation: screen-shake 0.25s linear;
+    }
+
+    @@keyframes screen-shake {
+        0% { transform: translate(0, 0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(2px, -2px); }
+        60% { transform: translate(-2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        100% { transform: translate(0, 0); }
+    }
+
+    .floating-skulls {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 999;
+    }
+
+    .floating-skull {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        opacity: 0.6;
+        top: var(--y);
+        left: var(--x);
+        animation: floatChaos var(--d) ease-in-out infinite alternate;
+        will-change: transform;
+    }
+
+    @@keyframes floatChaos {
+        0% {
+            transform: translate(0, 0) rotate(0deg) scale(1);
         }
 
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        25% {
+            transform: translate(15px, -10px) rotate(15deg) scale(1.1);
         }
 
+        50% {
+            transform: translate(-10px, 10px) rotate(-10deg) scale(0.9);
+        }
+
+        75% {
+            transform: translate(5px, -5px) rotate(5deg) scale(1);
+        }
+
+        100% {
+            transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+    }
+
+    @@media (prefers-reduced-motion: no-preference) {
         h1 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-top: 1rem;
-            color: #ff3c00;
-            text-shadow: 0 0 10px #ff3c00, 0 0 20px #ff6f00;
+            animation: flicker 2s infinite alternate;
         }
 
         .admin-card {
-            background-color: rgba(30, 30, 30, 0.95);
-            border: 2px solid #ff3c00;
-            border-radius: 16px;
-            box-shadow: 0 0 20px rgba(255, 60, 0, 0.5);
-            padding: 2.5rem;
-            width: 100%;
-            max-width: 450px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            animation: cardPulse 3s infinite;
+        }
+    }
+
+    @@keyframes flicker {
+        0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+            text-shadow: 0 0 5px #ff3c00, 0 0 10px #ff6f00;
+        }
+        20%, 24%, 55% {
+            text-shadow: none;
+        }
+    }
+
+    @@keyframes cardPulse {
+        0% { box-shadow: 0 0 10px #ff3c00; }
+        50% { box-shadow: 0 0 30px #ff6f00; }
+        100% { box-shadow: 0 0 10px #ff3c00; }
+    }
+
+    .spark {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: radial-gradient(circle, #ff3c00 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: spark-fade 0.5s ease-out;
+        z-index: 9999;
+    }
+
+    @@keyframes spark-fade {
+        0% {
+            opacity: 1;
+            transform: scale(1);
         }
 
-        .form-control {
-            background-color: #1e1e1e;
-            border: 1px solid #ff6f00;
-            color: #fff;
+        100% {
+            opacity: 0;
+            transform: scale(2);
         }
+    }
 
-        .form-control::placeholder {
-            color: #ccc;
-        }
-
-        .form-control:focus {
-            border-color: #ff3c00;
-            box-shadow: 0 0 10px #ff3c00;
-            background-color: #2b2b2b;
-        }
-
-        .btn-hellfire {
-            background-color: #ff3c00;
-            color: black;
-            font-weight: bold;
-            text-transform: uppercase;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 8px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .btn-hellfire:hover {
-            background-color: #ff6f00;
-            color: #111;
-            box-shadow: 0 0 12px #ff3c00;
-            transform: scale(1.05);
-            cursor: pointer;
-        }
-
-        .flame-divider {
-            height: 3px;
-            background: linear-gradient(to right, #ff3c00, #ff6f00, #ff3c00);
-            margin: 1.5rem 0;
-            border: none;
-        }
-
-        .validation-summary-errors {
-            color: #ff6666;
-            text-align: center;
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-        }
-
-        .skull-logo {
-            width: 100px;
-            height: 100px;
-            animation: pulseSkull 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 10px #ff3c00);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .skull-logo:hover {
-            transform: scale(1.1) rotate(-5deg);
-            filter: drop-shadow(0 0 15px #ff6f00) hue-rotate(30deg);
-        }
-
-        @@keyframes pulseSkull {
-            0% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 10px #ff3c00);
-            }
-            50% {
-                transform: scale(1.05);
-                filter: drop-shadow(0 0 20px #ff6f00);
-            }
-            100% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 10px #ff3c00);
-            }
-        }
-    </style>
+</style>
 
 <div class="content-container" style="min-height: 100vh;">
     <div class="skull-logo-container mb-3">
@@ -137,15 +282,16 @@
 
             <div asp-validation-summary="All" class="validation-summary-errors text-center w-100"></div>
 
-            <div class="mb-3 w-100" style="max-width: 350px;">
+            <div class="mb-3 w-100 input-container" style="max-width: 350px;">
                 <label asp-for="Input.Email" class="form-label text-center d-block">Username</label>
-                <input asp-for="Input.Email" class="form-control text-center" placeholder="Username" />
+                <input asp-for="Input.Email" class="form-control text-center"/>
             </div>
 
+            <br />
 
-            <div class="mb-3 w-100" style="max-width: 350px;">
+            <div class="mb-3 w-100 input-container" style="max-width: 350px;">
                 <label asp-for="Input.Password" class="form-label text-center d-block">Password</label>
-                <input asp-for="Input.Password" class="form-control text-center" type="password" placeholder="Password" />
+                <input asp-for="Input.Password" class="form-control text-center" type="password"/>
             </div>
 
             <hr class="flame-divider w-100" style="max-width: 350px;" />
@@ -156,6 +302,46 @@
         </form>
     </div>
 </div>
+
+<div class="floating-skulls">
+    <img src="~/images/human.png" class="floating-skull" style="--x: 20vw; --y: 80vh; --d: 10s;">
+    <img src="~/images/human.png" class="floating-skull" style="--x: 90vw; --y: 95vh; --d: 8s;">
+    <img src="~/images/human.png" class="floating-skull" style="--x: 5vw; --y: 15vh; --d: 12s;">
+    <img src="~/images/human.png" class="floating-skull" style="--x: 80vw; --y: 40vh; --d: 14s;">
+    <img src="~/images/human.png" class="floating-skull" style="--x: 40vw; --y: 70vh; --d: 18s;">
+</div>
+
+<div id="glitchOverlay" class="glitch-screen"></div>
+
+<script>
+    // Define globally
+    window.triggerGlitch = function () {
+        const overlay = document.getElementById('glitchOverlay');
+        if (!overlay) return;
+
+        document.body.classList.add('glitching');
+        overlay.style.display = 'block';
+
+        setTimeout(() => {
+            document.body.classList.remove('glitching');
+            overlay.style.display = 'none';
+        }, 500);
+    };
+
+    // Auto-trigger glitch every 8 seconds
+    setInterval(() => {
+        window.triggerGlitch();
+    }, 4000);
+
+    document.addEventListener("mousemove", function (e) {
+        const spark = document.createElement("div");
+        spark.classList.add("spark");
+        spark.style.left = e.pageX + "px";
+        spark.style.top = e.pageY + "px";
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 500);
+    });
+</script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
