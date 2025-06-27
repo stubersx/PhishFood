@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    var isAdmin = User.IsInRole("Admin");
 }
 
 @section style {
@@ -12,45 +13,65 @@
             padding: 0;
         }
 
-        .home-header {
-            background: linear-gradient(90deg, #2e7d32 0%, #43a047 100%);
+        .banner {
+            position: relative;
+            background: url('/images/banner.jpg') center/cover no-repeat;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            padding: 3rem 1rem;
-            text-align: center;
         }
 
-            .home-header h1 {
-                font-size: 2.5rem;
-                font-weight: 700;
-            }
+        .banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .banner h1 {
+            position: relative;
+            font-size: 2.75rem;
+            font-weight: 700;
+            z-index: 1;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+        }
 
         .content-section {
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem 2rem;
             margin-top: 2rem;
+            font-size: 1.05rem;
         }
 
         .admin-section h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #2e7d32;
             margin-top: 1.5rem;
         }
 
-        .admin-section p {
+        .admin-section p,
+        .user-section p {
             color: #444;
-        }
-
-        .btn-action {
-            padding: 0.75rem 1.5rem;
-            font-size: 1.1rem;
-            border-radius: 6px;
-            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         .cta-buttons {
             margin-top: 2rem;
+        }
+
+        .btn-action {
+            padding: 0.8rem 1.6rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
         }
 
         .btn-outline-primary {
@@ -58,68 +79,76 @@
             color: #2e7d32;
         }
 
-            .btn-outline-primary:hover {
-                background-color: #2e7d32;
-                color: white;
-            }
+        .btn-outline-primary:hover {
+            background-color: #2e7d32;
+            color: white;
+        }
 
         .btn-outline-danger {
             border-color: #c62828;
             color: #c62828;
         }
 
-            .btn-outline-danger:hover {
-                background-color: #c62828;
-                color: white;
-            }
+        .btn-outline-danger:hover {
+            background-color: #c62828;
+            color: white;
+        }
     </style>
 }
 
 @section script {
     <script>
-        document.getElementById("wrapper").classList.replace("container", "container-fluid");
-        document.getElementsByClassName("navbar")[0].classList.remove("mb-3");
+        document.getElementById("wrapper")?.classList.replace("container", "container-fluid");
+        document.getElementsByClassName("navbar")[0]?.classList.remove("mb-3");
     </script>
 }
 
-<div class="home-header">
+<!-- Banner -->
+<div class="banner">
     <h1>
-        @(User.IsInRole("Admin")
+        @(isAdmin
             ? "ADMIN ACCESS"
             : "Northwestern Michigan College's Cyber Awareness Portal")
     </h1>
 </div>
 
+<!-- Main Content -->
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8 content-section @(User.IsInRole("Admin") ? "admin-section" : "")">
+        <div class="col-12 col-md-10 col-lg-8 content-section @(isAdmin ? "admin-section" : "user-section")">
 
-            @if (User.IsInRole("Admin"))
+            @if (isAdmin)
             {
                 <h2><i class="bi bi-image-fill me-2"></i>Image Policy</h2>
                 <p>
-                    Images uploaded to the "Training" and "Testing" sections must be under 500x500 pixels to prevent performance issues.
-                    Use tools like <a href="https://imageresizer.com/" target="_blank">imageresizer.com</a> to optimize your images.
+                    Images uploaded to the Training and Testing sections must be under 500×500 pixels to avoid performance issues. Use tools like
+                    <a href="https://imageresizer.com/" target="_blank">imageresizer.com</a> to optimize them.
                 </p>
+
                 <hr />
+
                 <h2><i class="bi bi-check-circle me-2"></i>Testing Portal</h2>
                 <p>
-                    Tests shown to students contain up to 10 questions. Ensure there are at least 10 questions flagged for inclusion in each category for valid test scoring.
+                    Students receive 10 questions per test. Ensure at least 10 questions are marked for inclusion per category to enable accurate scoring.
                 </p>
+
                 <hr />
+
                 <h2><i class="bi bi-journal-code me-2"></i>Training Portal</h2>
                 <p>
-                    All training entries marked for inclusion will appear to students. Unlike tests, there's no maximum number of training entries shown per subcategory.
+                    All training items flagged for inclusion appear to students. There is no limit on the number shown within a subcategory.
                 </p>
             }
             else
             {
                 <p>
-                    <strong>Welcome</strong> to NMC's cyber security education platform. This portal empowers students to explore cyber threats, learn safe online practices, and validate their knowledge through interactive assessments.
+                    <strong>Welcome</strong> to NMC's Cyber Awareness platform. Here, you can explore digital threats, learn best practices, and validate your knowledge through interactive assessments.
                 </p>
+
                 <p>
-                    Understanding the tactics of malicious actors helps protect NMC students and staff from identity theft, data loss, and digital harm. Explore the resources below to deepen your awareness or test what you already know.
+                    Understanding cybercriminal tactics helps safeguard your personal data, devices, and identity. Use the buttons below to begin learning or test your knowledge.
                 </p>
+
                 <div class="text-center cta-buttons">
                     <a asp-controller="Training" asp-action="Train" class="btn btn-outline-primary btn-action mx-2">Learn More</a>
                     <a asp-controller="Testing" asp-action="TestSelection" class="btn btn-outline-danger btn-action mx-2">Take a Test</a>
