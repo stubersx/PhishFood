@@ -261,7 +261,7 @@
                     </select>
                 </div>
                <div class="filter-group">
-                <select name="subcategoryId" class="form-select w-auto" id="subcategorySelect" disabled>
+                <select name="subcategoryId" class="form-select w-auto" id="subcategorySelect" disabled onchange="this.form.submit()">
                     <option value="">Select Subcategory</option>
                     @if (!string.IsNullOrEmpty(Context.Request.Query["categoryId"]))
                     {
@@ -288,14 +288,13 @@
             i++;
             <div class="slides fade-in">
                 <div class="num text-center">@i / @ViewBag.Count</div>
+                <h3 class="text-center">@Html.DisplayFor(modelItem => item.Name)</h3>
                 <div class="content ql-editor" onclick="showModal(@i)">
-                    <h3 class="text-center">@Html.DisplayFor(modelItem => item.Name)</h3>
-                    <hr />
                     @Html.Raw(item.Content)
                 </div>
                 <br />
                 <div class="center">
-                    <button onclick="showModal(@i)" class="btn-begin-test">See Explanation</button>
+                    <button onclick="showModal(@i)" class="btn-begin-test">Learn More</button>
                 </div>
             </div>
 
@@ -305,7 +304,7 @@
                         <button class="close" onclick="closeModal()">&times;</button>
                     </div>
                     <div class="modal-body ql-editor">
-                        <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explanation</h4>
+                        <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name)</h4>
                         <div>@Html.Raw(item.Notes)</div>
                     </div>
                 </div>

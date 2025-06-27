@@ -25,27 +25,11 @@ namespace PhishFood.Controllers
         // Training/Train
         public async Task<IActionResult> Train(int? categoryId, int? subcategoryId)
         {
-            IQueryable<Training> trainings = _context.Trainings
-                .Include(t => t.Category)
-                .Include(t => t.Subcategory)
-                .Where(t => t.IsActive);
-
-            int count = 0;
-
-            if (categoryId.HasValue && subcategoryId.HasValue)
-            {
-                trainings = trainings
-                    .Include(t => t.Category)
-                    .Include(t => t.Subcategory)
-                    .Where(t => t.CategoryID == categoryId.Value && t.SubcategoryID == subcategoryId.Value);
-
-                count = await trainings.CountAsync();
-            }
-
-            var trainingsList = await trainings.ToListAsync();
-            ViewBag.Count = count;
-
-            ViewBag.Categories = new SelectList(_context.Categories.OrderBy(c => c.Type), "ID", "Type", categoryId);
+            ViewBag.Categories = new SelectList(
+                _context.Categories.OrderBy(c => c.Type),
+                "ID",
+                "Type",
+                categoryId);
 
             if (categoryId.HasValue)
             {
@@ -62,8 +46,32 @@ namespace PhishFood.Controllers
                 ViewBag.Subcategories = new SelectList(Enumerable.Empty<SelectListItem>());
             }
 
+            if (!(categoryId.HasValue && subcategoryId.HasValue))
+            {
+                ViewBag.Count = 0;
+                return View(new List<Training>());
+            }
+
+            var trainingsList = await _context.Trainings
+                .AsNoTracking()
+                .Where(t =>
+                    t.IsActive &&
+                    t.CategoryID == categoryId.Value &&
+                    t.SubcategoryID == subcategoryId.Value)
+                .Select(t => new Training
+                {
+                    ID = t.ID,
+                    Name = t.Name,
+                    Content = t.Content,
+                    Notes = t.Notes
+                })
+                .ToListAsync();
+
+            ViewBag.Count = trainingsList.Count;
+
             return View(trainingsList);
         }
+
 
         [Authorize(Roles = "Admin")]
         // GET: Training
