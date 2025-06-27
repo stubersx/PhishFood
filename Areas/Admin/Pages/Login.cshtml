@@ -3,7 +3,149 @@
 @{
     ViewData["Title"] = "Administrator Login";
 }
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
+    body {
+        background-color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #222;
+        min-height: 100vh;
+    }
+
+    .content-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #f5f5f5;
+    }
+
+    .logo {
+        max-width: 200px;
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+        color: #008365;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .admin-card {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin: .5rem 0;
+        display: block;
+        color: #444;
+    }
+
+    input.form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+    input.form-control:focus {
+        outline: none;
+        border-color: #4caf50;
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    }
+
+    .btn-submit {
+        background-color: #008365;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        background-color: #4caf50;
+        cursor: pointer;
+    }
+
+    .validation-summary-errors {
+        color: #c62828;
+        background-color: #fbe9e7;
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        display: none; /* hidden by default */
+    }
+
+    .validation-summary-errors.visible {
+        display: block; /* only show when errors exist */
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 1.5rem 0;
+    }
+</style>
+
+<div class="content-container">
+    <a href="/">
+        <img src="/images/logo_green.png" alt="Site Logo" class="logo" />
+    </a>
+    <h1>@ViewData["Title"]</h1>
+    <div class="admin-card">
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            @{
+                var hasErrors = !ViewData.ModelState.IsValid;
+            }
+
+            <div class="validation-summary-errors @(hasErrors ? "visible" : "")" asp-validation-summary="All"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label">Username</label>
+                <input asp-for="Input.Email" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label">Password</label>
+                <input asp-for="Input.Password" class="form-control" type="password" />
+            </div>
+
+            <hr />
+
+            <button type="submit" class="btn-submit">
+                Log in as Administrator
+            </button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- hellish alternative to admin login 
 <style>
     @@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 
@@ -342,7 +484,7 @@
         setTimeout(() => spark.remove(), 500);
     });
 </script>
-
+-->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
