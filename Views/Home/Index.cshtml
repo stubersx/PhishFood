@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity;
-
+﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -12,69 +11,120 @@
         #wrapper {
             padding: 0;
         }
+
+        .home-header {
+            background: linear-gradient(90deg, #2e7d32 0%, #43a047 100%);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+            .home-header h1 {
+                font-size: 2.5rem;
+                font-weight: 700;
+            }
+
+        .content-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .admin-section h2 {
+            font-size: 1.5rem;
+            color: #2e7d32;
+            margin-top: 1.5rem;
+        }
+
+        .admin-section p {
+            color: #444;
+        }
+
+        .btn-action {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .cta-buttons {
+            margin-top: 2rem;
+        }
+
+        .btn-outline-primary {
+            border-color: #2e7d32;
+            color: #2e7d32;
+        }
+
+            .btn-outline-primary:hover {
+                background-color: #2e7d32;
+                color: white;
+            }
+
+        .btn-outline-danger {
+            border-color: #c62828;
+            color: #c62828;
+        }
+
+            .btn-outline-danger:hover {
+                background-color: #c62828;
+                color: white;
+            }
     </style>
 }
 
 @section script {
     <script>
-        var element = document.getElementById("wrapper");
-        element.classList.remove("container");
-        element.classList.add("container-fluid");
-
-        var menu = document.getElementsByClassName("navbar")[0];
-        menu.classList.remove("mb-3");
+        document.getElementById("wrapper").classList.replace("container", "container-fluid");
+        document.getElementsByClassName("navbar")[0].classList.remove("mb-3");
     </script>
 }
 
-<div class="row home">
-    @if (User.IsInRole("Admin"))
-    {
-        <h1 class="mt-5 mt-sm-0">ADMIN ACCESS</h1>
-    }
-    else
-    {
-        <h1 class="mt-5 mt-sm-0">Northwestern Michigan College's Cyber Awareness Portal</h1>
-    }
+<div class="home-header">
+    <h1>
+        @(User.IsInRole("Admin")
+            ? "ADMIN ACCESS"
+            : "Northwestern Michigan College's Cyber Awareness Portal")
+    </h1>
 </div>
 
-<div class="row m-5 mb-0 p-5 cover">
-    @if (User.IsInRole("Admin"))
-    {
-        <h2>Image Policy:</h2>
-        <p>When uploading images to the "training" and "testing" pages, they must be less than 500p x 500p. Large image uploads over time 
-            will significantly slow the performance of the site.
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 content-section @(User.IsInRole("Admin") ? "admin-section" : "")">
 
-            Utilize websites to alter the size of your images, such as: https://imageresizer.com/
-        </p>
-        <hr />
-        <h2>Testing Portal:</h2>
-        <p>
-            When tests are displayed to students, only 10 questions will populate out of however many have been marked
-            for inclusion. If a student takes a test with less then 10 questions, they will receive a score of less
-            than 10, even if they answered every question correctly. Therefore, before students take a test, be sure 
-            there are at least 10 questions created and marked for inclusion in an overarching category.
-        </p>
-        <hr />
-        <h2>Training Portal:</h2>
-        <p>
-            The training portal will only include marked content to display to students, although unlike the testing 
-            portal, there is no limit on the number of training entries students can view. ALL marked training data
-            within a specific subcategory will be displayed to students.
-        </p>
-    }
-    else
-    {
-        <p>
-            <span style="font-size: 2rem; font-weight: bold;">W</span>elcome to NMC's cyber testing and learning platform. Here, students can learn more about cyber security issues in an ever-evolving malicious space, test their knowledge,
-            and share their results with instructors and staff.
-        </p>
-        <p>
-            Understanding how criminals take advantage of users keeps students and staff at NMC safe from harmful acts of identity theft, computer destruction, stalking, and more. It's important to learn the practices of what are called
-            "bad actors" in order to safeguard yourself and others from having your life, or your things, violated by strangers. To learn more about the various tactics used by cyber criminals, or to take a test on what you already know, follow the links at the bottom of the page.
-        </p>
-        <div class="text-center mt-5">
-            <a asp-controller="Training" asp-action="Train" class="btn btn-outline-primary fw-bold" style="margin: 10px;">Learn more</a>
-            <a asp-controller="Testing" asp-action="TestSelection" class="btn btn-outline-danger fw-bold" style="margin: 10px;">Take a Test</a>
+            @if (User.IsInRole("Admin"))
+            {
+                <h2><i class="bi bi-image-fill me-2"></i>Image Policy</h2>
+                <p>
+                    Images uploaded to the "Training" and "Testing" sections must be under 500x500 pixels to prevent performance issues.
+                    Use tools like <a href="https://imageresizer.com/" target="_blank">imageresizer.com</a> to optimize your images.
+                </p>
+                <hr />
+                <h2><i class="bi bi-check-circle me-2"></i>Testing Portal</h2>
+                <p>
+                    Tests shown to students contain up to 10 questions. Ensure there are at least 10 questions flagged for inclusion in each category for valid test scoring.
+                </p>
+                <hr />
+                <h2><i class="bi bi-journal-code me-2"></i>Training Portal</h2>
+                <p>
+                    All training entries marked for inclusion will appear to students. Unlike tests, there's no maximum number of training entries shown per subcategory.
+                </p>
+            }
+            else
+            {
+                <p>
+                    <strong>Welcome</strong> to NMC's cyber security education platform. This portal empowers students to explore cyber threats, learn safe online practices, and validate their knowledge through interactive assessments.
+                </p>
+                <p>
+                    Understanding the tactics of malicious actors helps protect NMC students and staff from identity theft, data loss, and digital harm. Explore the resources below to deepen your awareness or test what you already know.
+                </p>
+                <div class="text-center cta-buttons">
+                    <a asp-controller="Training" asp-action="Train" class="btn btn-outline-primary btn-action mx-2">Learn More</a>
+                    <a asp-controller="Testing" asp-action="TestSelection" class="btn btn-outline-danger btn-action mx-2">Take a Test</a>
+                </div>
+            }
         </div>
-    }
+    </div>
 </div>

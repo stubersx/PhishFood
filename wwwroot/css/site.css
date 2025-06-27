@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('/fonts/HelveticaNeue-Medium.woff2') format('woff2'), url('/fonts/HelveticaNeue-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
 html {
     font-size: 14px;
 }
@@ -21,6 +29,7 @@ body {
     margin-bottom: 60px;
     opacity: 0;
     animation: fadeIn 0.2s ease-in forwards;
+    font-family: 'Helvetica Neue', sans-serif;
 }
 
 @keyframes fadeIn {

@@ -288,7 +288,7 @@
             i++;
             <div class="slides fade-in">
                 <div class="num text-center">@i / @ViewBag.Count</div>
-                <div class="content" onclick="showModal(@i)">
+                <div class="content ql-editor" onclick="showModal(@i)">
                     <h3 class="text-center">@Html.DisplayFor(modelItem => item.Name)</h3>
                     <hr />
                     @Html.Raw(item.Content)
@@ -304,7 +304,7 @@
                     <div class="modal-header">
                         <button class="close" onclick="closeModal()">&times;</button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body ql-editor">
                         <h4 class="mb-3 text-center">@Html.DisplayFor(modelItem => item.Name) Explanation</h4>
                         <div>@Html.Raw(item.Notes)</div>
                     </div>

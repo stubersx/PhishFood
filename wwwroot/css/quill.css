@@ -43,5 +43,22 @@
 
 
 /* bulleted list */
+
+.ql-editor ul {
+    padding-left: 1.5em;
+    list-style-type: disc;
+    margin: 1em 0;
+}
+
+.ql-editor ol {
+    padding-left: 1.5em;
+    list-style-type: decimal;
+    margin: 1em 0;
+}
+
+.ql-editor li {
+    margin-bottom: 0.3em;
+}
+
 /* image */
 /* indent */

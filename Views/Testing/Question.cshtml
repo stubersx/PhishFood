@@ -11,7 +11,7 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h4 class="card-title">Question @(@Model.CurrentIndex + 1) of @Model.Questions.Count</h4>
-                    <p class="card-text fs-5">@Html.Raw(@question.Question)</p>
+                    <span class="card-text fs-5 ql-editor">@Html.Raw(@question.Question)</span>
 
                     @if (!Model.ShowExplanation)
                     {
@@ -31,7 +31,7 @@
                     {
                         <div class="alert @(Model.IsCorrect ? "alert-success" : "alert-danger") mt-3">
                             <strong>@(Model.IsCorrect ? "Correct!" : "Incorrect.")</strong><br />
-                            <span>@Html.Raw(@question.Explanation)</span>
+                            <span class="ql-editor">@Html.Raw(@question.Explanation)</span>
                         </div>
 
                         <form asp-action="NextQuestion" method="post">
