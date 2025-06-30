@@ -11,13 +11,14 @@
         font-family: 'Segoe UI', sans-serif;
         margin: 0;
         padding: 0;
+        overflow: hidden;
     }
 
     .login-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
+        height: calc(100vh - 60px);
         padding: 1rem;
     }
 
@@ -28,6 +29,8 @@
         padding: 2rem;
         width: 100%;
         max-width: 450px;
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
     }
 
     .login-title {
